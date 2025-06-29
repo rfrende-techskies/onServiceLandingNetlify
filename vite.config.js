@@ -8,5 +8,28 @@ export default defineConfig({
     vue(),
     tailwindcss(),
   ],
-  base: '/'
+  base: '/',
+  build: {
+    target: 'es2015',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'three': ['three'],
+          'gsap': ['gsap'],
+          'vue': ['vue'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+  },
+  optimizeDeps: {
+    include: ['three', 'gsap'],
+  },
 })

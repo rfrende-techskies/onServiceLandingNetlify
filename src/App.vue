@@ -1,26 +1,11 @@
 <script setup>
-import { onMounted, onBeforeUnmount, ref, nextTick } from "vue";
-import ButtonAnimate from "./components/ButtonAnimate.vue";
+import { ref, nextTick, computed, Transition, watch, onMounted, onBeforeUnmount } from "vue";
+import Header from "./components/Header.vue";
+import CircuitBackground from "./components/CircuitBackground.vue";
+import CodePromptBlock from "./components/CodePromptBlock.vue";
+import AgentResponseBlock from "./components/AgentResponseBlock.vue";
+import UseCasesTabs from './components/UseCasesTabs.vue';
 import ParticleBackground from "./components/ParticleBackground.vue";
-import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollToPlugin, ScrollTrigger);
-
-const words = [
-  "customer support",
-  "flight reservations",
-  "e-commerce",
-  "travel assistance",
-  "ticket changes",
-  "AI chat agents",
-  "boarding services",
-  "flight check-ins",
-  "24/7 support",
-  "loyalty programs",
-  "baggage queries",
-];
 
 const questions = ref({
   1: false,
@@ -135,6 +120,10 @@ const team = [
   },
 ];
 
+// Memoización de arrays grandes
+const memoizedTeam = computed(() => team);
+const memoizedFeatures = computed(() => features);
+
 let wordIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
@@ -145,926 +134,784 @@ const scrollBtn = ref(null);
 const underline = ref(null);
 const cards = ref([]);
 
-function typeEffect() {
-  const current = words[wordIndex];
-  charIndex += isDeleting ? -1 : 1;
-  typing.value = current.substring(0, charIndex);
+const teamTrack = ref(null);
+let teamScrollTrigger = null;
+let resizeTimeout = null;
 
-  if (!isDeleting && charIndex === current.length) {
-    setTimeout(() => (isDeleting = true), 1000);
-  } else if (isDeleting && charIndex === 0) {
-    isDeleting = false;
-    wordIndex = (wordIndex + 1) % words.length;
-  }
-
-  setTimeout(typeEffect, isDeleting ? 50 : 100);
-}
-
-function hoverIn(i) {
-  gsap.to(cards.value[i], {
-    scale: 1.05,
-    rotation: 1,
-    duration: 0.4,
-    ease: "power2.out",
-  });
-  
-  // Agregar efecto de brillo
-  gsap.to(cards.value[i].querySelector('.feature-glow'), {
-    opacity: 1,
-    duration: 0.3,
-    ease: "power2.out",
-  });
-  
-  // Animar el icono
-  gsap.to(cards.value[i].querySelector('.feature-icon'), {
-    scale: 1.1,
-    rotation: 5,
-    duration: 0.3,
-    ease: "back.out(1.7)",
-  });
-}
-
-function hoverOut(i) {
-  gsap.to(cards.value[i], {
-    scale: 1,
-    rotation: 0,
-    duration: 0.4,
-    ease: "power2.inOut",
-  });
-  
-  // Quitar efecto de brillo
-  gsap.to(cards.value[i].querySelector('.feature-glow'), {
-    opacity: 0,
-    duration: 0.3,
-    ease: "power2.in",
-  });
-  
-  // Resetear el icono
-  gsap.to(cards.value[i].querySelector('.feature-icon'), {
-    scale: 1,
-    rotation: 0,
-    duration: 0.3,
-    ease: "power2.inOut",
-  });
-}
-
-function handleScroll() {
-  if (window.scrollY > 300 && !showScrollTop.value) {
-    showScrollTop.value = true;
-    nextTick(() => {
-      gsap.fromTo(
-        scrollBtn.value,
-        { opacity: 0, scale: 0, y: 20 },
-        { opacity: 1, scale: 1, y: 0, duration: 1.4, ease: "back.out(1.5)" }
-      );
-      gsap.to(scrollBtn.value, {
-        y: -6,
-        duration: 1.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: 0.5,
-      });
-    });
-  } else if (window.scrollY <= 300 && showScrollTop.value) {
-    gsap.to(scrollBtn.value, {
-      opacity: 0,
-      scale: 0,
-      duration: 0.2,
-      ease: "power2.in",
-      opacity: 0,
-      scale: 0,
-      y: 20,
-      duration: 0.3,
-      ease: "power1.inOut",
-      onComplete: () => (showScrollTop.value = false),
-    });
-  }
-}
-
-function scrollToTop() {
-  gsap.to(window, { duration: 0.3, scrollTo: { y: 0 }, ease: "power2.out" });
-}
-
-const openLink = (url) => {
-  window.open(url, "_blank");
-};
-
-function faqEnter(el, done) {
-  // Asegúrate de ocultar overflow
-  el.style.overflow = "hidden";
-  // Capturamos la altura y paddings finales
-  const finalHeight = el.scrollHeight;
-  const style = getComputedStyle(el);
-  const padTop = parseFloat(style.paddingTop);
-  const padBot = parseFloat(style.paddingBottom);
-
-  gsap.fromTo(
-    el,
-    {
-      height: 0,
-      opacity: 0,
-      paddingTop: 0,
-      paddingBottom: 0,
-    },
-    {
-      height: finalHeight,
-      opacity: 1,
-      paddingTop: padTop,
-      paddingBottom: padBot,
-      duration: 0.5,
-      ease: "power2.out",
-      onComplete: () => {
-        // limpiamos estilos para que sea responsivo
-        el.style.height = "auto";
-        el.style.overflow = "";
-        el.style.paddingTop = "";
-        el.style.paddingBottom = "";
-        done();
-      },
-    }
-  );
-}
-
-function faqLeave(el, done) {
-  el.style.overflow = "hidden";
-  // Animamos de vuelta a 0
-  gsap.to(el, {
-    height: 0,
-    opacity: 0,
-    paddingTop: 0,
-    paddingBottom: 0,
-    duration: 0.4,
-    ease: "power2.in",
-    onComplete: done,
-  });
-}
-
-function toggleFAQ(n) {
-  if (questions.value[n]) {
-    // si ya estaba abierto, cerramos sin loader
-    questions.value[n] = false;
-    return;
-  }
-  loading.value[n] = true;
-  // esperamos 800ms simulando "pensar"
-  setTimeout(async () => {
-    loading.value[n] = false;
-    // dejamos que Vue renderice el <p> antes de animar
-    await nextTick();
-    questions.value[n] = true;
-  }, 800);
-}
-
-// Utilidad para dividir el array de team en slides de 3 (web) o 1 (mobile)
 function getTeamSlides() {
   const isMobile = window.innerWidth < 768;
   const perSlide = isMobile ? 1 : 3;
   const slides = [];
-  for (let i = 0; i < team.length; i += perSlide) {
-    slides.push(team.slice(i, i + perSlide));
+  for (let i = 0; i < memoizedTeam.value.length; i += perSlide) {
+    slides.push(memoizedTeam.value.slice(i, i + perSlide));
   }
   return slides;
 }
 
 const teamSlides = ref(getTeamSlides());
 
-window.addEventListener('resize', () => {
-  teamSlides.value = getTeamSlides();
+// Debounced resize handler
+function debouncedResize() {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    teamSlides.value = getTeamSlides();
+  }, 150);
+}
+
+window.addEventListener('resize', debouncedResize);
+
+const prompts = {
+  airline: {
+    label: 'Aerolínea',
+    examples: [
+      [
+        '✈️ # System Prompt',
+        'Eres AeroBot, tu asistente virtual de aerolíneas.',
+        'Tono cordial y profesional.',
+        'Responde en español claro.',
+        'Ayuda con reservas, check-in y vuelos.',
+        '# Ejemplo',
+        '$ User: "¿Puedo cambiar mi vuelo?"'
+      ],
+      [
+        '🛫 # System Prompt',
+        'Hola, soy AeroBot, asistente digital de la aerolínea.',
+        'Responde con amabilidad y precisión.',
+        'Brinda información sobre equipaje y reservas.',
+        '# Ejemplo',
+        '$ User: "¿Cuánto equipaje puedo llevar en cabina?"'
+      ],
+      [
+        '✈️ # System Prompt',
+        'AeroBot, asistente de vuelos.',
+        'Tono profesional y empático.',
+        'Responde dudas sobre horarios y servicios.',
+        '# Ejemplo',
+        '$ User: "¿El vuelo AM123 está demorado?"'
+      ],
+      [
+        '🛬 # System Prompt',
+        'Eres AeroBot, experto en atención al pasajero.',
+        'Responde en español neutro.',
+        'Ayuda con selección de asientos y embarque.',
+        '# Ejemplo',
+        '$ User: "¿Puedo seleccionar mi asiento online?"'
+      ],
+      [
+        '✈️ # System Prompt',
+        'AeroBot, asistente de aerolínea.',
+        'Tono cercano y resolutivo.',
+        'Brinda soporte para servicios especiales.',
+        '# Ejemplo',
+        '$ User: "¿Cómo solicito asistencia especial para mi vuelo?"'
+      ]
+    ]
+  },
+  travel: {
+    label: 'Viajes',
+    examples: [
+      [
+        '🌍 # System Prompt',
+        'Eres TravelGuru, experto en viajes internacionales.',
+        'Tono amigable y claro.',
+        'Recomienda destinos y tips de viaje.',
+        '# Ejemplo',
+        '$ User: "¿Necesito visa para viajar a Brasil?"'
+      ],
+      [
+        '🧳 # System Prompt',
+        'TravelGuru, tu asesor de vacaciones.',
+        'Tono cercano y entusiasta.',
+        'Sugiere destinos y actividades.',
+        '# Ejemplo',
+        '$ User: "¿Qué destino recomendás para vacaciones en invierno?"'
+      ],
+      [
+        '🌏 # System Prompt',
+        'Eres TravelGuru, guía de viajes.',
+        'Tono informativo y cordial.',
+        'Ayuda a reservar tours y excursiones.',
+        '# Ejemplo',
+        '$ User: "¿Cómo reservo un tour en París?"'
+      ],
+      [
+        '🗾 # System Prompt',
+        'TravelGuru, experto en cultura y turismo.',
+        'Tono claro y detallista.',
+        'Responde sobre mejores épocas para viajar.',
+        '# Ejemplo',
+        '$ User: "¿Cuál es la mejor época para visitar Japón?"'
+      ],
+      [
+        '🚗 # System Prompt',
+        'Eres TravelGuru, asistente de viajes.',
+        'Tono práctico y directo.',
+        'Brinda información sobre alquiler de autos.',
+        '# Ejemplo',
+        '$ User: "¿Qué documentos necesito para alquilar un auto en Europa?"'
+      ]
+    ]
+  },
+  it: {
+    label: 'Soporte IT',
+    examples: [
+      [
+        '💻 # System Prompt',
+        'Eres ITBot, soporte técnico de la empresa.',
+        'Tono técnico y resolutivo.',
+        'Ayuda con acceso a sistemas y correo.',
+        '# Ejemplo',
+        '$ User: "No puedo acceder a mi correo corporativo."'
+      ],
+      [
+        '🔒 # System Prompt',
+        'ITBot, tu asistente de tecnología.',
+        'Tono profesional y paciente.',
+        'Guía para configurar VPN y acceso remoto.',
+        '# Ejemplo',
+        '$ User: "¿Cómo configuro la VPN en mi laptop?"'
+      ],
+      [
+        '🖥️ # System Prompt',
+        'Eres ITBot, experto en soporte digital.',
+        'Tono claro y directo.',
+        'Responde sobre sistemas y tickets.',
+        '# Ejemplo',
+        '$ User: "¿El sistema de tickets está caído?"'
+      ],
+      [
+        '🔑 # System Prompt',
+        'ITBot, asistente de soporte.',
+        'Tono resolutivo y cordial.',
+        'Ayuda a restablecer contraseñas.',
+        '# Ejemplo',
+        '$ User: "¿Cómo restablezco mi contraseña?"'
+      ],
+      [
+        '💾 # System Prompt',
+        'Eres ITBot, soporte informático.',
+        'Tono técnico y claro.',
+        'Brinda ayuda sobre instalaciones de software.',
+        '# Ejemplo',
+        '$ User: "¿Puedo instalar software en mi equipo?"'
+      ]
+    ]
+  }
+};
+
+const agentResponses = {
+  airline: [
+    [
+      'User: "¿Puedo cambiar mi vuelo?"',
+      'Agent: "¡Por supuesto! ¿Podrías indicarme tu número de reserva?"',
+      'User: "Es 123456."',
+      'Agent: "Gracias. Verificando... Tu tarifa permite un cambio con costo adicional. ¿Deseas continuar?"'
+    ],
+    [
+      'User: "¿Cuánto equipaje puedo llevar en cabina?"',
+      'Agent: "Puedes llevar una pieza de hasta 10kg en cabina. ¿Te gustaría saber sobre equipaje en bodega?"'
+    ],
+    [
+      'User: "¿El vuelo AM123 está demorado?"',
+      'Agent: "El vuelo AM123 está programado para salir a tiempo. ¿Necesitas información de la puerta de embarque?"'
+    ],
+    [
+      'User: "¿Puedo seleccionar mi asiento online?"',
+      'Agent: "Sí, puedes seleccionar tu asiento desde la web o la app hasta 24h antes del vuelo."'
+    ],
+    [
+      'User: "¿Cómo solicito asistencia especial para mi vuelo?"',
+      'Agent: "Claro, puedo ayudarte a solicitar asistencia especial. ¿Requieres silla de ruedas o asistencia en el embarque?"'
+    ]
+  ],
+  travel: [
+    [
+      'User: "¿Necesito visa para viajar a Brasil?"',
+      'Agent: "No necesitas visa para viajes turísticos menores a 90 días si eres ciudadano argentino."'
+    ],
+    [
+      'User: "¿Qué destino recomendás para vacaciones en invierno?"',
+      'Agent: "Bariloche es ideal para esquí y paisajes nevados. ¿Te gustaría info de hoteles o actividades?"'
+    ],
+    [
+      'User: "¿Cómo reservo un tour en París?"',
+      'Agent: "Puedo ayudarte a reservar tours en París. ¿Prefieres museos, gastronomía o paseos guiados?"'
+    ],
+    [
+      'User: "¿Cuál es la mejor época para visitar Japón?"',
+      'Agent: "La primavera (marzo-abril) es famosa por los cerezos en flor. ¿Te gustaría recomendaciones de ciudades?"'
+    ],
+    [
+      'User: "¿Qué documentos necesito para alquilar un auto en Europa?"',
+      'Agent: "Necesitarás tu pasaporte, licencia de conducir internacional y una tarjeta de crédito."'
+    ]
+  ],
+  it: [
+    [
+      'User: "No puedo acceder a mi correo corporativo."',
+      'Agent: "¿Recibes algún mensaje de error al intentar ingresar?"',
+      'User: "Sí, dice contraseña incorrecta."',
+      'Agent: "Te ayudo a restablecerla. ¿Prefieres recibir el enlace por email o SMS?"'
+    ],
+    [
+      'User: "¿Cómo configuro la VPN en mi laptop?"',
+      'Agent: "Debes descargar el cliente VPN desde el portal interno y seguir la guía paso a paso. ¿Te la envío?"'
+    ],
+    [
+      'User: "¿El sistema de tickets está caído?"',
+      'Agent: "No se reportan incidentes. ¿Qué error ves al intentar ingresar?"'
+    ],
+    [
+      'User: "¿Cómo restablezco mi contraseña?"',
+      'Agent: "Puedes restablecerla desde el portal de autoservicio o te envío un enlace. ¿Qué prefieres?"'
+    ],
+    [
+      'User: "¿Puedo instalar software en mi equipo?"',
+      'Agent: "Depende del software. ¿Cuál necesitas instalar? Te ayudo con el proceso o la autorización."'
+    ]
+  ]
+};
+
+const agentTab = ref('airline');
+const promptTyping = ref(true);
+const responseTyping = ref(true);
+const currentExampleIdx = ref(0);
+
+// --- AUTOAVANCE DE EJEMPLO ---
+const autoAdvanceTimeout = ref(null);
+const showPromptAndResponse = ref(true);
+
+watch([
+  promptTyping,
+  responseTyping,
+  agentTab,
+  currentExampleIdx
+], ([isPromptTyping, isResponseTyping, tab, idx], [oldPrompt, oldResponse, oldTab, oldIdx]) => {
+  clearTimeout(autoAdvanceTimeout.value);
+  // Solo avanza si ambas animaciones terminaron y hay más ejemplos
+  if (!isPromptTyping && !isResponseTyping && prompts[tab].examples.length > 1) {
+    autoAdvanceTimeout.value = setTimeout(() => {
+      if (!promptTyping.value && !responseTyping.value && agentTab.value === tab) {
+        // No ocultar los bloques antes del cambio, solo avanzar el ejemplo
+        currentExampleIdx.value = (currentExampleIdx.value + 1) % prompts[tab].examples.length;
+      }
+    }, 4000); // 4 segundos de espera
+  }
 });
 
-onMounted(async () => {
-  typeEffect();
-  gsap.to(cursor.value, {
-    opacity: 1,
-    duration: 0.6,
-    ease: "power1.inOut",
-    repeat: -1,
-    yoyo: true,
-  });
-  gsap.to(underline.value, { scaleX: 1, duration: 0.6, ease: "power3.out" });
+function onPromptTyping(val) {
+  promptTyping.value = val;
+}
 
-  await nextTick();
-  gsap.from(".feature-card", {
-    scrollTrigger: {
-      trigger: "#features",
-      start: "top 80%",
-      toggleActions: "play none none none",
-    },
-    opacity: 0,
-    y: 20,
-    duration: 0.7,
-    ease: "power3.out",
-    stagger: 0.12,
-    clearProps: "all",
-  });
+function onResponseTyping(val) {
+  responseTyping.value = val;
+}
 
-  gsap.from(".feature-ball", {
-    scrollTrigger: {
-      trigger: "#features",
-      start: "top 80%",
-      toggleActions: "play none none none",
-    },
-    y: -40,
-    opacity: 0,
-    duration: 0.9,
-    ease: "back.out(1.7)",
-    stagger: 0.12,
-    clearProps: "all",
-  });
+function onTabChange(tab) {
+  agentTab.value = tab;
+  currentExampleIdx.value = 0;
+}
 
-  // GSAP horizontal swipe tipo slide para el team
-  const panels = document.querySelectorAll(".team-panel-slide");
-  const track = document.querySelector(".team-panel-track");
-  if (panels.length && track) {
-    gsap.to(track, {
-      xPercent: -100 * (panels.length - 1),
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".team-horizontal-scroll",
-        start: "top top",
-        end: () => `+=${window.innerWidth * panels.length}`,
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-        snap: 1 / (panels.length - 1),
-      },
-    });
-    // Animación de entrada para cada slide
-    panels.forEach((panel, i) => {
-      gsap.from(panel.querySelectorAll('.team-name, .team-role, .team-desc, .avatar'), {
-        scrollTrigger: {
-          trigger: panel,
-          containerAnimation: ScrollTrigger.getById('teamSwipe'),
-          start: "left center",
-        },
-        opacity: 0,
-        y: 40,
-        duration: 0.7,
-        stagger: 0.1,
-        ease: "power3.out",
-        delay: 0.1,
-      });
-    });
+const promptBlockHeight = ref(null);
+const promptBlockRef = ref(null);
+
+function updatePromptBlockHeight() {
+  if (promptBlockRef.value) {
+    promptBlockHeight.value = promptBlockRef.value.offsetHeight;
   }
+}
 
-  // Animación del video con parallax
-  gsap.from(".video-container", {
-    scrollTrigger: {
-      trigger: ".video-container",
-      start: "top center+=100",
-      end: "bottom center-=100",
-      scrub: 1,
-    },
-    y: 100,
-    opacity: 0,
-    scale: 0.95,
-    duration: 1,
-    ease: "power2.out",
+watch([
+  () => agentTab.value,
+  () => currentExampleIdx.value,
+  promptTyping,
+], () => {
+  nextTick(() => {
+    updatePromptBlockHeight();
   });
+});
 
-  // Timeline para animar el Hero completo
-  const tl = gsap.timeline();
-  tl.from(".gsap-hero span.block", {
-    opacity: 0,
-    y: 40,
-    duration: 0.8,
-    stagger: 0.2,
-    ease: "power3.out",
-  })
-    .from(
-      ".hero-desc",
-      { opacity: 0, y: 20, duration: 0.6, ease: "power3.out" },
-      "-=0.4"
-    )
-    .from(
-      ".hero-cta",
-      {
-        opacity: 0,
-        scale: 0.8,
-        duration: 0.6,
-        ease: "back.out(1.4)",
-        stagger: 0.2,
-      },
-      "-=0.4"
-    )
-    .from(
-      ".arrow",
-      { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" },
-      "-=0.4"
-    );
-  gsap.to(".arrow", {
+function backToTopEnter(el, done) {
+  gsap.fromTo(
+    el,
+    { opacity: 0, scale: 0.3, y: 40 },
+    {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      duration: 0.5,
+      ease: "back.out(1.7)",
+      onComplete: done,
+    }
+  );
+  // Animación flotante
+  gsap.to(el, {
     y: -8,
-    duration: 1.2,
-    ease: "sine.inOut",
+    duration: 2,
     repeat: -1,
     yoyo: true,
-    delay: 1.5,
+    ease: "sine.inOut",
+    delay: 0.5,
   });
+}
 
-  window.addEventListener("scroll", handleScroll);
-
-  // Animación del título y subtítulo del FAQ mejorada
-  gsap.from("#faq .text-center > *", {
-    scrollTrigger: {
-      trigger: "#faq .text-center",
-      start: "top 90%",
-      toggleActions: "play none none reverse",
-    },
-    y: 30,
+function backToTopLeave(el, done) {
+  gsap.killTweensOf(el); // Limpia animaciones previas
+  gsap.to(el, {
     opacity: 0,
-    duration: 0.8,
-    stagger: 0.15,
-    ease: "power3.out",
+    scale: 0.3,
+    y: 40,
+    duration: 0.4,
+    ease: "back.in(1.7)",
+    onComplete: done,
   });
+}
 
-  // Animación de cada pregunta (fade-in + slide) mejorada
-  gsap.utils.toArray("#faq .faq-item").forEach((item, index) => {
-    gsap.from(item, {
-      scrollTrigger: {
-        trigger: item,
-        start: "top 95%",
-        toggleActions: "play none none reverse",
-      },
-      y: 30,
-      opacity: 0,
-      duration: 0.6,
-      delay: index * 0.1,
-      ease: "power3.out",
-    });
-  });
-
-  // Animación del CTA section con parallax
-  gsap.from(".cta-section", {
-    scrollTrigger: {
-      trigger: ".cta-section",
-      start: "top center+=100",
-      end: "bottom center-=100",
-      scrub: 1,
-    },
-    y: 50,
-    opacity: 0,
-    scale: 0.98,
-    duration: 1,
-    ease: "power2.out",
-  });
-
-  gsap.from(".gsap-hero", {
-    opacity: 0,
-    y: 60,
-    duration: 1.2,
-    ease: "power3.out",
-  });
-
-  gsap.from("header", {
-    y: -80,
-    opacity: 0,
-    duration: 0.8,
-    ease: "power2.out",
-  });
-
-  const container = document.querySelector(".panel-track");
-
-  if (container) {
-    console.log(container, "container");
+function scrollTeamToStart() {
+  const st = window.ScrollTrigger && window.ScrollTrigger.getById && window.ScrollTrigger.getById('teamPin');
+  if (st) {
+    window.scrollTo({ top: st.start, behavior: 'smooth' });
   } else {
-    console.warn("⚠️ .panel-track no encontrado en el DOM");
+    const section = document.getElementById('team');
+    if (section) window.scrollTo({ top: section.offsetTop, behavior: 'smooth' });
   }
+}
+
+function scrollTeamToEnd() {
+  const st = window.ScrollTrigger && window.ScrollTrigger.getById && window.ScrollTrigger.getById('teamPin');
+  if (st) {
+    window.scrollTo({ top: st.end, behavior: 'smooth' });
+  } else {
+    const section = document.getElementById('team');
+    if (section) window.scrollTo({ top: section.offsetTop + section.offsetHeight - window.innerHeight, behavior: 'smooth' });
+  }
+}
+
+function sectionEnter(el, done) {
+  gsap.fromTo(
+    el,
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", onComplete: done }
+  );
+}
+function sectionLeave(el, done) {
+  gsap.to(el, { opacity: 0, y: 40, duration: 0.5, ease: "power2.in", onComplete: done });
+}
+
+function featuresEnter(el, done) {
+  gsap.fromTo(
+    el,
+    { opacity: 0, y: 40 },
+    { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", onComplete: done }
+  );
+}
+function featuresLeave(el, done) {
+  gsap.to(el, { opacity: 0, y: 40, duration: 0.5, ease: "power2.in", onComplete: done });
+}
+
+const clientLogos = [
+  { src: '/aeromexico.png', alt: 'Aeromexico' },
+  { src: '/avianca.png', alt: 'Avianca' },
+  { src: '/clic.png', alt: 'Clic' },
+  { src: '/vite.svg', alt: 'Vite' },
+  { src: '/logo.png', alt: 'OnService' },
+  { src: '/aws-partner-badge.png', alt: 'AWS Partner', badge: true, label: 'Partner oficial de AWS' },
+];
+const currentSlide = ref(0);
+const slideCount = clientLogos.length;
+let autoSlideInterval = null;
+
+function nextSlide() {
+  currentSlide.value = (currentSlide.value + 1) % slideCount;
+}
+function prevSlide() {
+  currentSlide.value = (currentSlide.value - 1 + slideCount) % slideCount;
+}
+
+onMounted(() => {
+  autoSlideInterval = setInterval(nextSlide, 3500);
+});
+onBeforeUnmount(() => {
+  clearInterval(autoSlideInterval);
+  clearTimeout(resizeTimeout);
+  window.removeEventListener('resize', debouncedResize);
 });
 
+const iaModels = [
+  {
+    name: 'Claude 3.5 Haiku',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Anthropic_logo.svg',
+    desc: 'Ultra rápido, ideal para chat y tareas de soporte.',
+    tags: [
+      { label: 'Chatbot', icon: '💬' },
+      { label: 'Soporte', icon: '🤖' }
+    ],
+    color: 'bg-blue-500',
+    speed: '≈1s',
+    context: '200K tokens',
+    price: '$0.25/millón tokens',
+    link: 'https://www.anthropic.com/news/claude-3-5-haiku'
+  },
+  {
+    name: 'GPT-4o',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/OpenAI_Logo.svg',
+    desc: 'Multimodal, excelente para análisis, generación de texto e imágenes.',
+    tags: [
+      { label: 'Multimodal', icon: '🖼️' },
+      { label: 'Creatividad', icon: '✨' }
+    ],
+    color: 'bg-violet-500',
+    speed: '≈2s',
+    context: '128K tokens',
+    price: '$5/millón tokens',
+    link: 'https://openai.com/index/gpt-4o/'
+  },
+  {
+    name: 'Gemini 2.5 Pro',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg',
+    desc: 'IA de Google para análisis avanzado y procesamiento de datos.',
+    tags: [
+      { label: 'Análisis', icon: '📊' },
+      { label: 'Datos', icon: '🔢' }
+    ],
+    color: 'bg-cyan-500',
+    speed: '≈1.5s',
+    context: '1M tokens',
+    price: '$3/millón tokens',
+    link: 'https://deepmind.google/technologies/gemini/'
+  },
+  {
+    name: 'Amazon Nova Premier',
+    logo: '/aws-partner-badge.png',
+    desc: 'IA de Amazon para automatización y procesamiento empresarial.',
+    tags: [
+      { label: 'Automatización', icon: '⚙️' },
+      { label: 'Negocios', icon: '💼' }
+    ],
+    color: 'bg-amber-500',
+    speed: '≈2s',
+    context: '512K tokens',
+    price: '$2/millón tokens',
+    link: 'https://aws.amazon.com/bedrock/amazon-nova/'
+  },
+  {
+    name: 'Claude Opus 4',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Anthropic_logo.svg',
+    desc: 'IA de Anthropic para tareas complejas y razonamiento avanzado.',
+    tags: [
+      { label: 'Razonamiento', icon: '🧠' },
+      { label: 'Complejidad', icon: '🧩' }
+    ],
+    color: 'bg-green-500',
+    speed: '≈3s',
+    context: '200K tokens',
+    price: '$15/millón tokens',
+    link: 'https://www.anthropic.com/news/claude-3-opus'
+  },
+];
+const selectedModelIdx = ref(0);
+const tabRefs = ref([]);
+const focusTab = idx => {
+  tabRefs.value[idx]?.focus();
+};
+const handleKeydown = e => {
+  if (e.key === 'ArrowDown') {
+    selectedModelIdx.value = (selectedModelIdx.value + 1) % iaModels.length;
+    nextTick(() => focusTab(selectedModelIdx.value));
+  } else if (e.key === 'ArrowUp') {
+    selectedModelIdx.value = (selectedModelIdx.value - 1 + iaModels.length) % iaModels.length;
+    nextTick(() => focusTab(selectedModelIdx.value));
+  }
+};
+const techs = [
+  { name: 'AWS', logo: '/aws-partner-badge.png', link: 'https://aws.amazon.com/' },
+  { name: 'GitHub', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg', link: 'https://github.com/' },
+  { name: 'GitLab', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg', link: 'https://gitlab.com/' },
+  { name: 'Vue.js', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg', link: 'https://vuejs.org/' },
+  { name: 'OpenAI', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4b/OpenAI_Logo.svg', link: 'https://openai.com/' },
+  { name: 'Sentry', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sentry/sentry-original.svg', link: 'https://sentry.io/' },
+  { name: 'PostgreSQL', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg', link: 'https://www.postgresql.org/' },
+  { name: 'Snowflake', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/snowflake/snowflake-original.svg', link: 'https://www.snowflake.com/' },
+  { name: 'Notion', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/notion/notion-original.svg', link: 'https://www.notion.so/' },
+  { name: 'Slack', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/slack/slack-original.svg', link: 'https://slack.com/' },
+  { name: 'Airtable', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/airtable/airtable-original.svg', link: 'https://airtable.com/' },
+  { name: 'Google Drive', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg', link: 'https://drive.google.com/' },
+];
+const featuredIdx = ref(0);
+let badgeInterval = null;
+
+onMounted(() => {
+  badgeInterval = setInterval(() => {
+    featuredIdx.value = (featuredIdx.value + 1) % techs.length;
+  }, 4000);
+});
 onBeforeUnmount(() => {
-  window.removeEventListener("scroll", handleScroll);
-  ScrollTrigger.getAll().forEach((t) => t.kill());
+  clearInterval(badgeInterval);
 });
 </script>
 
 <template>
   <div class="flex min-h-screen flex-col bg-black">
-    <!-- Header -->
-    <header
-      class="fixed top-0 left-0 w-full z-50 glass-header transition-all duration-300"
-    >
-      <div class="flex h-20 items-center justify-between px-4 md:px-6">
-        <img src="/logo.png" alt="OnService" class="h-10 hover:scale-105 transition-transform duration-300" />
-      </div>
-    </header>
-
-    <main class="flex-1 bg-black">
-      <!-- Hero Section -->
-      <section
-        class="bg-black text-white pt-24 md:py-28 px-4 sm:px-6 text-center flex flex-col items-center justify-center min-h-[90vh] w-full overflow-hidden relative"
-      >
-        <!-- Efectos de partículas flotantes -->
-        <ParticleBackground />
-        
-        <!-- Gradiente animado de fondo -->
-        <div class="absolute inset-0 bg-gradient-radial from-violet-500/10 via-transparent to-transparent animate-pulse"></div>
-        
-        <div class="w-full max-w-screen-md px-4 relative z-10">
-          <h1
-            class="gsap-hero text-4xl sm:text-5xl md:text-7xl font-bold leading-tight mb-4"
-          >
-            <span class="block">The new evolution of</span>
-
-            <!-- Typing con cursor -->
-            <span class="inline-block min-w-[11ch] text-violet-500 typing">
-              {{ typing
-              }}<span ref="cursor" class="inline-block opacity-0">|</span>
-            </span>
-
-            <span class="block">for airlines.</span>
-          </h1>
-        </div>
-
-        <p
-          class="hero-desc text-gray-400 text-xl md:text-[1.25rem] leading-relaxed tracking-wide max-w-2xl mx-auto mt-6 sm:mt-8 mb-10 px-4 sm:px-0 relative z-10"
-        >
-          Our AI solution transforms customer experiences and boosts sales
-          through <strong class="text-white font-medium">WhatsApp</strong> —
-          soon expanding to
-          <strong class="text-white font-medium">Telegram</strong>,
-          <strong class="text-white font-medium">WeChat</strong>, and
-          <strong class="text-white font-medium">iMessage</strong>.
-        </p>
-
-        <div
-          class="hero-cta flex flex-col sm:flex-row gap-4 px-4 justify-center mt-6 relative z-10"
-        >
-          <a
-            href="https://wa.me/5491130261625"
-            target="_blank"
-            class="px-8 py-3.5 bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition-all duration-300 text-base font-semibold shadow-lg hover:shadow-violet-500/25 h-12 flex items-center justify-center min-w-[200px] transform hover:scale-105"
-          >
-            Chat with Agent AI
-          </a>
-          <ButtonAnimate />
-        </div>
-
-        <div class="arrow mt-16 text-gray-500 relative z-10">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-8 h-8 mx-auto"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </div>
-      </section>
-
-      <!-- videoiframe -->
-
-      <section class="pb-32 pt-20 relative w-full flex justify-center bg-black">
-        <div
-          class="video-container rounded-lg border bg-card shadow-xl overflow-hidden w-full max-w-4xl"
-        >
-          <div class="aspect-video">
-            <iframe
-              class="w-full h-full"
-              src="https://www.youtube.com/embed/sX2DjnrrJYM"
-              title="Meet OnService.AI Concierge, the First AI Solution for Airlines' E-Commerce and Customer Service"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen
-            >
-            </iframe>
-          </div>
-        </div>
-      </section>
-
-      <!-- horizontal scroll -->
-      <!-- <section class="horizontal-scroll relative w-full overflow-x-hidden">
-        <div class="panel-container flex">
-          <div class="panel-track flex w-[300vw]">
-            <div
-              class="panel w-screen h-screen bg-gradient-to-br from-violet-700 via-purple-800 to-black text-white flex items-center justify-center px-8"
-            >
-              <div class="max-w-xl text-center">
-                <img
-                  src="/conversation.png"
-                  alt="Chat onboarding"
-                  class="mx-auto mb-6 w-40 h-40"
-                />
-                <h2 class="text-3xl font-bold mb-4">
-                  Automated chat onboarding
-                </h2>
-                <p class="text-lg text-gray-300">
-                  Guide your users with smart flows powered by AI. Start
-                  conversations in seconds.
-                </p>
-              </div>
-            </div>
-
-            <div
-              class="panel w-screen h-screen bg-black text-white flex items-center justify-center px-8"
-            >
-              <div class="max-w-xl text-center">
-                <img
-                  src="/bot.png"
-                  alt="Intefrations"
-                  class="mx-auto mb-6 w-40 h-40"
-                />
-                <h2 class="text-3xl font-bold mb-4">
-                  Integrates with your tools
-                </h2>
-                <p class="text-lg text-gray-300">
-                  Connect to WhatsApp, Telegram, iMessage, CRMs, and more
-                  without writing code.
-                </p>
-              </div>
-            </div>
-
-            <div
-              class="panel w-screen h-screen bg-gradient-to-br from-black to-violet-600 text-white flex items-center justify-center px-8"
-            >
-              <div class="max-w-xl text-center">
-                <img
-                  src="/clipboard.png"
-                  alt="Metrics"
-                  class="mx-auto mb-6 w-40 h-40"
-                />
-                <h2 class="text-3xl font-bold mb-4">Real-time metrics</h2>
-                <p class="text-lg text-gray-300">
-                  Track performance, satisfaction and conversion in one
-                  dashboard.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> -->
-
-      <!-- clients? dont show -->
-      <section class="py-20 md:py-28" v-if="false">
-        <div class="container flex flex-col items-center text-center">
-          <h1
-            class="text-3xl md:text-6xl font-semibold tracking-tight mb-12 max-w-4xl"
-          >
-            Trusted by leading companies to elevate customer service.
-          </h1>
-          <div class="flex gap-4 items-center mt-4">
-            <div class="scroll-container w-full max-w-5xl">
-              <div class="scroll-content">
-                <img
-                  class="h-28 mr-8 opacity-50 hover:opacity-100 transition-all cursor-pointer"
-                  src="/aeromexico.png"
-                  alt="Aeromexico"
-                  @click="openLink('https://www.aeromexico.com')"
-                />
-                <img
-                  class="h-28 mr-8 opacity-50 hover:opacity-100 transition-all cursor-pointer"
-                  src="/avianca.png"
-                  alt="Avianca"
-                  @click="openLink('https://www.avianca.com')"
-                />
-                <img
-                  class="h-28 mr-8 opacity-50 hover:opacity-100 transition-all cursor-pointer"
-                  src="/clic.png"
-                  alt="Clic"
-                  @click="openLink('https://clicair.co/')"
-                />
-                <img
-                  class="h-28 mr-8 opacity-50 hover:opacity-100 transition-all cursor-pointer"
-                  src="/aeromexico.png"
-                  alt="Aeromexico"
-                  @click="openLink('https://www.aeromexico.com')"
-                />
-                <img
-                  class="h-28 mr-8 opacity-50 hover:opacity-100 transition-all cursor-pointer"
-                  src="/avianca.png"
-                  alt="Avianca"
-                  @click="openLink('https://www.avianca.com')"
-                />
-                <img
-                  class="h-28 mr-8 opacity-50 hover:opacity-100 transition-all cursor-pointer"
-                  src="/clic.png"
-                  alt="Clic"
-                  @click="openLink('https://clicair.co/')"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Features Section -->
-      <section id="features" class="py-20 bg-black overflow-hidden">
-        <div class="container mx-auto px-4">
-          <!-- Título con pequeño underline animado -->
-          <div class="text-center mb-16 relative">
-            <h2 class="text-3xl md:text-4xl font-semibold mb-2">
-              Powerful Features
-            </h2>
-            <div
-              class="mx-auto mt-1 h-1 w-24 bg-violet-600 origin-left scale-x-0"
-              ref="underline"
-            ></div>
-            <p class="text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
-              OnService.AI comes packed with features designed to make your life
-              easier and more productive.
+    <Header />
+    <main class="flex-1 bg-black pt-16 md:pt-20">
+      <!-- HERO con fondo animado tipo circuito -->
+      <section id="hero" class="relative w-full flex flex-col md:flex-row items-start justify-center px-4 md:px-10 py-20 md:py-28 gap-8 bg-black overflow-hidden min-h-[520px] md:min-h-[600px]">
+        <CircuitBackground class="absolute inset-0 w-full h-full pointer-events-none z-0" />
+        <div class="flex-1 flex flex-col items-start justify-center max-w-full md:max-w-2xl z-10 min-w-0">
+          <div class="glass-hero-panel mx-auto px-4 py-8 md:px-10 md:py-10 rounded-2xl shadow-lg border border-white/10 backdrop-blur-md bg-black/40 w-full max-w-xl flex flex-col items-center text-center">
+            <h1 class="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-tight">
+              La nueva generación de <span class="text-violet-400">IA</span> para tu empresa
+            </h1>
+            <p class="text-base sm:text-lg md:text-xl text-gray-300 my-8 md:my-14">
+              Soluciones de inteligencia artificial para potenciar ventas, soporte y operaciones.
             </p>
-          </div>
-
-          <!-- Grid de tarjetas -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div
-              v-for="(feature, i) in features"
-              :key="i"
-              class="feature-card relative rounded-2xl p-20 pt-24 mt-12 bg-[#111] !text-white cursor-pointer group"
-              @mouseenter="hoverIn(i)"
-              @mouseleave="hoverOut(i)"
-            >
-              <!-- Efecto de brillo -->
-              <div class="feature-glow absolute inset-0 bg-gradient-to-r from-violet-500/20 via-purple-500/20 to-violet-500/20 opacity-0 transition-opacity duration-300"></div>
-              
-              <!-- Fondo circular degradado -->
-              <div
-                class="feature-ball absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-20 w-20 rounded-full bg-gradient-to-br from-violet-700 to-purple-500 opacity-20 pointer-events-none"
-              ></div>
-
-              <!-- Icono -->
-              <div
-                class="feature-icon absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-20 w-20 rounded-full bg-gradient-to-br from-violet-700 to-purple-500 flex items-center justify-center pointer-events-none transition-all duration-300"
-              >
-                <img
-                  :src="feature.icon"
-                  :alt="feature.title"
-                  class="h-10 w-10 filter brightness-0 invert-100"
-                />
-              </div>
-
-              <!-- Texto -->
-              <h3 class="relative z-10 text-xl font-semibold mb-2 group-hover:text-violet-300 transition-colors duration-300">
-                {{ feature.title }}
-              </h3>
-              <p class="relative z-10 text-gray-300 group-hover:text-gray-200 transition-colors duration-300">
-                {{ feature.desc }}
-              </p>
+            <div class="flex flex-col sm:flex-row gap-4 mb-2 justify-center w-full">
+              <a href="#contact" class="px-8 py-3.5 rounded-xl font-semibold shadow-lg border-0 focus:outline-none focus:ring-2 focus:ring-violet-400 btn-contacto-gradient text-base min-w-[170px] text-center">Solicitar demo</a>
+              <a href="https://playground.kiut.ai" target="_blank" rel="noopener" class="px-8 py-3.5 rounded-xl font-semibold border border-violet-500 text-violet-200 bg-black/60 hover:bg-violet-900/20 transition text-base min-w-[170px] text-center">Probar playground</a>
             </div>
           </div>
         </div>
+        <div class="flex-1 flex flex-col items-start justify-center w-full max-w-xl z-10 min-w-[320px] md:min-w-[420px]">
+          <div class="prompt-chat-stack" style="gap: 2rem; align-items: stretch; width: 100%; max-width: 560px; margin: 0 auto;">
+            <div ref="promptBlockRef" style="width: 100%;">
+              <CodePromptBlock
+                :tab="agentTab"
+                :example-idx="currentExampleIdx"
+                :prompts="prompts"
+                @tab-change="onTabChange"
+                @typing="onPromptTyping"
+              />
+            </div>
+            <Transition name="fade-slide">
+              <AgentResponseBlock
+                v-if="!promptTyping"
+                class="w-full"
+                :responses="agentResponses[agentTab]"
+                :typing="true"
+                :tab="agentTab"
+                :example-idx="currentExampleIdx"
+                @typing="onResponseTyping"
+                :sync-height="promptBlockHeight"
+              />
+            </Transition>
+          </div>
+        </div>
       </section>
 
-      <!-- FAQ Section -->
-      <section id="faq" class="py-20 bg-black">
-        <div class="container mx-auto px-4">
-          <div class="text-center mb-16">
-            <h2 class="text-3xl md:text-4xl font-semibold mb-4 text-white">
-              Frequently Asked Questions
-            </h2>
-            <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Got questions? We've got answers.
-            </p>
+      <!-- Clientes -->
+      <section id="clients" class="py-20 bg-black">
+        <div class="container mx-auto px-4 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-12 relative inline-block animate-fade-in-title">
+            Confían en nosotros
+            <span class="block h-1 w-full max-w-[220px] min-w-[64px] mx-auto mt-2 bg-gradient-to-r from-violet-500 via-cyan-400 to-blue-400 rounded-full animate-underline"></span>
+          </h2>
+          <div class="relative flex items-center justify-center max-w-3xl mx-auto py-8">
+            <button @click="prevSlide" aria-label="Anterior" class="absolute left-0 z-10 bg-black/60 hover:bg-violet-700/40 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-200">
+              <span>&lt;</span>
+            </button>
+            <div class="overflow-hidden w-full">
+              <ul class="flex transition-transform duration-700" :style="{ transform: `translateX(-${currentSlide * 100}%)` }">
+                <li v-for="(logo, idx) in clientLogos" :key="logo.src" class="flex flex-col items-center justify-center min-w-full py-6">
+                  <img :src="logo.src" :alt="logo.alt" class="h-16 mx-auto mb-4" :class="logo.badge ? 'drop-shadow-lg' : ''" loading="lazy" />
+                  <span v-if="logo.badge" class="text-xs text-amber-400 font-semibold mt-2">{{ logo.label }}</span>
+                </li>
+              </ul>
+            </div>
+            <button @click="nextSlide" aria-label="Siguiente" class="absolute right-0 z-10 bg-black/60 hover:bg-violet-700/40 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-200">
+              <span>&gt;</span>
+            </button>
           </div>
+          <div class="flex justify-center gap-3 mt-8">
+            <button v-for="(logo, idx) in clientLogos" :key="'dot-'+idx" @click="currentSlide = idx" :class="['w-3 h-3 rounded-full', currentSlide === idx ? 'bg-violet-400' : 'bg-gray-600']" aria-label="Ir al logo" />
+          </div>
+        </div>
+      </section>
 
-          <div class="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
-            <div
-              v-for="n in 6"
-              :key="n"
-              class="faq-item border rounded-lg p-6 shadow-violet-700 hover:shadow-sm transition-all duration-300 cursor-pointer"
-              @click="toggleFAQ(n)"
-            >
-              <header class="flex justify-between items-center">
-                <h3 class="text-lg font-medium text-white">
-                  <!-- tus preguntas originales aquí -->
-                  {{
-                    [
-                      "How does OnService.AI differ from other AI assistants?",
-                      "Can I integrate OnService.AI with my existing tools?",
-                      "Is my data secure with OnService.AI?",
-                      "What happens if I exceed my message limit?",
-                      "Can I use OnService.AI offline?",
-                      "How do I cancel my subscription?",
-                    ][n - 1]
-                  }}
-                </h3>
-                <img
-                  src="/arrow.svg"
-                  alt="Toggle"
-                  class="w-5 h-5 text-white transition-transform duration-300"
-                  :class="{ 'rotate-180': questions[n] }"
-                />
-              </header>
-
-              <!-- loader de 3 puntitos -->
-              <div
-                v-if="loading[n]"
-                class="faq-loader flex items-center justify-center mt-4 h-6"
-              >
-                <span
-                  class="dot mx-1 inline-block w-2 h-2 bg-white rounded-full"
-                ></span>
-                <span
-                  class="dot mx-1 inline-block w-2 h-2 bg-white rounded-full"
-                ></span>
-                <span
-                  class="dot mx-1 inline-block w-2 h-2 bg-white rounded-full"
-                ></span>
-              </div>
-
-              <!-- Transition GSAP -->
-              <transition @enter="faqEnter" @leave="faqLeave">
-                <p
-                  v-show="questions[n]"
-                  class="text-muted-foreground mt-4 overflow-hidden"
-                >
-                  <!-- tus respuestas originales aquí -->
-                  {{
-                    [
-                      "OnService.AI uses a proprietary language model specifically trained to understand context better and provide more natural, helpful responses. It also learns from your interactions to become more personalized over time.",
-                      "Yes! OnService.AI offers API access on our Enterprise plan, allowing you to integrate it with your existing workflows, apps, and services. We also offer pre-built integrations with popular platforms.",
-                      "Absolutely. We use end-to-end encryption for all conversations, and your data is never used to train our models without your explicit permission. We also offer enterprise-grade security features for businesses.",
-                      "On the Free plan, once you reach your daily limit, you'll need to wait until the next day to send more messages. You can also upgrade to the Pro plan for unlimited messages at any time.",
-                      "The Pro and Enterprise plans include desktop and mobile apps that can function with limited capabilities while offline. Full functionality requires an internet connection.",
-                      "You can cancel your subscription at any time from your account settings. If you cancel, you'll still have access to your plan until the end of your current billing period.",
-                    ][n - 1]
-                  }}
-                </p>
-              </transition>
+      <!-- Tecnologías IA -->
+      <section id="ai-tech" class="relative py-24 overflow-hidden">
+        <ParticleBackground class="absolute inset-0 w-full h-full z-0" />
+        <div class="container mx-auto px-4 text-center relative z-10">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-20">Tecnologías y Cloud
+            <span class="block h-1 w-full max-w-[220px] min-w-[64px] mx-auto mt-2 bg-gradient-to-r from-violet-500 via-cyan-400 to-blue-400 rounded-full animate-underline"></span>
+          </h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8 max-w-5xl mx-auto mb-20">
+            <div v-for="tech in techs" :key="tech.name" class="tech-card group relative flex flex-col items-center justify-center p-6 rounded-2xl glass-tech shadow-xl transition-all duration-300 cursor-pointer">
+              <a :href="tech.link" target="_blank" rel="noopener" class="flex flex-col items-center justify-center w-full h-full">
+                <img :src="tech.logo" :alt="tech.name" class="h-12 w-12 object-contain mb-3 transition-all duration-300 group-hover:scale-110" loading="lazy" />
+                <span class="text-sm text-white/80 font-medium">{{ tech.name }}</span>
+              </a>
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- CTA Section -->
-      <section
-        class="cta-section relative overflow-hidden bg-gradient-to-br from-[#1b0c34] via-[#2d0e59] to-[#381171] px-8 py-24 md:py-32 text-center"
-      >
-        <div
-          class="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-purple-500/40 blur-3xl"
-        ></div>
-        <div
-          class="pointer-events-none absolute -bottom-20 -right-20 h-72 w-72 rounded-full bg-violet-600/30 blur-3xl"
-        ></div>
-        <h2 class="text-4xl md:text-5xl font-bold text-white">
-          Ready to experience the future of AI chat?
-        </h2>
-        <p class="mx-auto mt-4 max-w-xl text-base text-gray-300">
-          Join thousands of users already boosting their customer service with
-          OnService.AI.
-        </p>
-        <div class="mt-8 inline-block">
-          <ButtonAnimate />
-        </div>
-      </section>
-
-      <!-- Team Section -->
-      <section id="team" class="relative w-full overflow-x-hidden py-32 bg-black">
-        <div class="container mx-auto px-4">
-          <div class="text-center mb-16 relative">
-            <h2 class="text-3xl md:text-4xl font-semibold mb-2 text-white">
-              Meet the Team
-            </h2>
-            <div class="mx-auto mt-1 h-1 w-24 bg-violet-600 origin-left scale-x-100"></div>
-            <p class="text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
-              The minds behind our AI solutions.
-            </p>
-          </div>
-        </div>
-        <div class="team-horizontal-scroll relative w-full">
-          <div class="team-panel-track flex">
-            <div
-              v-for="(slide, sidx) in teamSlides"
-              :key="'slide-' + sidx"
-              class="team-panel-slide flex-shrink-0 w-screen min-w-[100vw] h-[80vh] flex items-center justify-center px-4 relative"
-            >
-              <div class="absolute inset-0 z-0 bg-gradient-to-br from-violet-900/40 via-black/60 to-violet-800/30 blur-2xl"></div>
-              <div class="flex flex-col md:flex-row gap-8 w-full h-full items-center justify-center z-10">
-                <div
-                  v-for="(member, idx) in slide"
-                  :key="member.name"
-                  class="team-member-card flex-1 max-w-md bg-[#18181b] rounded-3xl shadow-xl flex flex-col items-center justify-center p-8 relative mx-auto"
-                >
-                  <!-- Avatar randomuser -->
-                  <div class="avatar mb-6">
-                    <img :src="`https://randomuser.me/api/portraits/men/${(sidx*3+idx)%50}.jpg`" alt="avatar" class="w-28 h-28 rounded-full object-cover border-4 border-violet-500 shadow-lg" />
+          <h2 class="text-3xl md:text-4xl font-bold text-white my-20">Modelos de IA
+            <span class="block h-1 w-full max-w-[220px] min-w-[64px] mx-auto mt-2 bg-gradient-to-r from-violet-500 via-cyan-400 to-blue-400 rounded-full animate-underline"></span>
+          </h2>
+          <div class="flex flex-col md:flex-row gap-8 md:gap-12 max-w-5xl mx-auto items-stretch animate-fade-in-section">
+            <!-- Tabs verticales -->
+            <div class="flex md:flex-col flex-row md:w-56 w-full md:items-stretch items-center md:justify-start justify-center gap-2 md:gap-3 mb-4 md:mb-0 relative">
+              <div class="hidden md:block absolute right-[-28px] top-0 h-full w-[2px] bg-gradient-to-b from-violet-500/60 via-cyan-400/40 to-blue-400/20 rounded-full"></div>
+              <button v-for="(model, idx) in iaModels" :key="model.name"
+                ref="el => tabRefs.value[idx] = el"
+                @click="selectedModelIdx = idx"
+                @keydown="handleKeydown"
+                :tabindex="idx === selectedModelIdx ? 0 : -1"
+                :aria-selected="idx === selectedModelIdx"
+                :aria-label="model.name"
+                :title="model.name"
+                :class="['flex items-center gap-3 px-4 py-3 md:py-4 rounded-xl font-semibold transition-all duration-200 w-full md:w-auto outline-none focus-visible:ring-2 focus-visible:ring-cyan-400',
+                  idx === selectedModelIdx
+                    ? 'bg-gradient-to-r from-violet-600 via-cyan-500 to-blue-400 text-white shadow-2xl scale-105 border-l-4 border-cyan-400 animate-gradient-border'
+                    : 'bg-[#23233a] text-white/70 hover:bg-violet-800/40 hover:scale-105']">
+                <img :src="model.logo" :alt="model.name" class="h-7 w-7 object-contain transition-transform duration-300" :class="{'animate-pop': idx === selectedModelIdx}" loading="lazy" />
+                <span class="hidden md:inline">{{ model.name }}</span>
+                <span class="md:hidden">{{ model.name.split(' ')[0] }}</span>
+              </button>
+            </div>
+            <!-- Panel de detalle -->
+            <transition name="fade-slide-scale" mode="out-in">
+              <div :key="iaModels[selectedModelIdx].name" class="ia-model-card flex flex-col md:flex-row items-center md:items-stretch bg-[rgba(35,35,58,0.85)] backdrop-blur-lg rounded-2xl shadow-2xl p-6 md:p-10 w-full animate-fade-in-card border border-cyan-400/10">
+                <div class="flex-shrink-0 flex items-center justify-center w-20 h-20 md:w-32 md:h-32 rounded-xl bg-black/30 mr-0 md:mr-10 mb-4 md:mb-0">
+                  <img :src="iaModels[selectedModelIdx].logo" :alt="iaModels[selectedModelIdx].name" class="h-12 w-12 md:h-20 md:w-20 object-contain transition-transform duration-300 animate-pop" :title="iaModels[selectedModelIdx].name" loading="lazy" />
+                </div>
+                <div class="flex-1 flex flex-col items-center md:items-start">
+                  <span class="text-xl md:text-2xl font-bold text-white mb-2">{{ iaModels[selectedModelIdx].name }}</span>
+                  <span class="text-base text-white/80 mb-4">{{ iaModels[selectedModelIdx].desc }}</span>
+                  <div class="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
+                    <span v-for="tag in iaModels[selectedModelIdx].tags" :key="tag.label" :class="['px-3 py-1 rounded-full text-xs font-semibold text-white flex items-center gap-1', iaModels[selectedModelIdx].color]">
+                      <span>{{ tag.icon }}</span> {{ tag.label }}
+                    </span>
                   </div>
-                  <h3 class="text-2xl font-bold text-white mb-1 team-name">{{ member.name }}</h3>
-                  <p class="text-violet-400 font-semibold mb-2 team-role">{{ member.role }}</p>
-                  <p class="text-gray-200 text-center text-base mb-2 team-desc max-w-xs md:max-w-sm">{{ member.desc }}</p>
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full mb-4">
+                    <div class="flex flex-col items-center md:items-start">
+                      <span class="text-xs text-white/60">Velocidad</span>
+                      <span class="font-semibold text-white">{{ iaModels[selectedModelIdx].speed }}</span>
+                    </div>
+                    <div class="flex flex-col items-center md:items-start">
+                      <span class="text-xs text-white/60">Contexto</span>
+                      <span class="font-semibold text-white">{{ iaModels[selectedModelIdx].context }}</span>
+                    </div>
+                    <div class="flex flex-col items-center md:items-start">
+                      <span class="text-xs text-white/60">Precio</span>
+                      <span class="font-semibold text-white">{{ iaModels[selectedModelIdx].price }}</span>
+                    </div>
+                    <div class="flex flex-col items-center md:items-start">
+                      <span class="text-xs text-white/60">Web</span>
+                      <a :href="iaModels[selectedModelIdx].link" target="_blank" rel="noopener" class="text-cyan-400 underline hover:text-violet-400 transition-colors text-xs">Ver más</a>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </transition>
+          </div>
+        </div>
+      </section>
+
+      <!-- Casos de uso -->
+      <section id="usecases" class="py-20 bg-black">
+        <div class="container mx-auto px-4">
+          <UseCasesTabs />
+        </div>
+      </section>
+
+      <!-- Métricas -->
+      <section id="metrics" class="py-20 bg-gradient-to-b from-black via-[#18181b] to-black">
+        <div class="container mx-auto px-4 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 relative inline-block animate-fade-in-title">
+            Resultados en números
+            <span class="block h-1 w-full max-w-[220px] min-w-[64px] mx-auto mt-2 bg-gradient-to-r from-violet-500 via-cyan-400 to-blue-400 rounded-full animate-underline"></span>
+          </h2>
+          <div class="flex flex-wrap justify-center gap-12">
+            <div class="flex flex-col items-center">
+              <span class="text-5xl font-bold text-violet-400">+98%</span>
+              <span class="text-gray-300 mt-2">Satisfacción de clientes</span>
             </div>
+            <div class="flex flex-col items-center">
+              <span class="text-5xl font-bold text-violet-400">-40%</span>
+              <span class="text-gray-300 mt-2">Costos operativos</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span class="text-5xl font-bold text-violet-400">+3x</span>
+              <span class="text-gray-300 mt-2">Ventas por canal digital</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pricing (sin precios) -->
+      <section id="pricing" class="py-20 bg-black">
+        <div class="container mx-auto px-4 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 relative inline-block animate-fade-in-title">
+            Planes y características
+            <span class="block h-1 w-full max-w-[220px] min-w-[64px] mx-auto mt-2 bg-gradient-to-r from-violet-500 via-cyan-400 to-blue-400 rounded-full animate-underline"></span>
+          </h2>
+          <div class="flex flex-wrap justify-center gap-8">
+            <div class="rounded-2xl bg-[#18181b] p-10 shadow-lg text-white max-w-xs w-full flex flex-col items-center">
+              <h3 class="text-xl font-semibold mb-4">Starter</h3>
+              <ul class="text-gray-300 text-left mb-6 space-y-2">
+                <li>✔️ Chatbot IA multicanal</li>
+                <li>✔️ Integración básica</li>
+                <li>✔️ Soporte por email</li>
+              </ul>
+              <button class="px-6 py-2 rounded-xl bg-violet-600 text-white font-semibold shadow-lg hover:bg-violet-700 transition-all duration-300">Solicitar info</button>
+            </div>
+            <div class="rounded-2xl bg-[#18181b] p-10 shadow-lg text-white max-w-xs w-full flex flex-col items-center border-2 border-violet-600">
+              <h3 class="text-xl font-semibold mb-4">Pro</h3>
+              <ul class="text-gray-300 text-left mb-6 space-y-2">
+                <li>✔️ Todo lo de Starter</li>
+                <li>✔️ Integraciones avanzadas</li>
+                <li>✔️ Soporte prioritario</li>
+                <li>✔️ Analítica avanzada</li>
+              </ul>
+              <button class="px-6 py-2 rounded-xl bg-violet-600 text-white font-semibold shadow-lg hover:bg-violet-700 transition-all duration-300">Solicitar info</button>
+            </div>
+            <div class="rounded-2xl bg-[#18181b] p-10 shadow-lg text-white max-w-xs w-full flex flex-col items-center">
+              <h3 class="text-xl font-semibold mb-4">Enterprise</h3>
+              <ul class="text-gray-300 text-left mb-6 space-y-2">
+                <li>✔️ Todo lo de Pro</li>
+                <li>✔️ Integraciones personalizadas</li>
+                <li>✔️ SLA dedicado</li>
+                <li>✔️ Consultoría IA</li>
+              </ul>
+              <button class="px-6 py-2 rounded-xl bg-violet-600 text-white font-semibold shadow-lg hover:bg-violet-700 transition-all duration-300">Solicitar info</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Equipo (dummy, como antes) -->
+      <section id="team" class="py-20 bg-gradient-to-b from-black via-[#18181b] to-black">
+        <div class="container mx-auto px-4 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 relative inline-block animate-fade-in-title">
+            Nuestro equipo
+            <span class="block h-1 w-full max-w-[220px] min-w-[64px] mx-auto mt-2 bg-gradient-to-r from-violet-500 via-cyan-400 to-blue-400 rounded-full animate-underline"></span>
+          </h2>
+          <div class="flex flex-wrap justify-center gap-8">
+            <div v-for="i in 6" :key="i" class="rounded-2xl bg-[#18181b] p-8 shadow-lg text-white max-w-xs w-full flex flex-col items-center">
+              <div class="w-24 h-24 rounded-full bg-violet-700 mb-4"></div>
+              <h3 class="text-xl font-semibold mb-1">Nombre Apellido</h3>
+              <p class="text-violet-400 font-semibold mb-2">Rol</p>
+              <p class="text-gray-300 text-center">Breve descripción del integrante del equipo y su aporte.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Imágenes IA (dummy) -->
+      <section id="ia-images" class="py-20 bg-black">
+        <div class="container mx-auto px-4 text-center">
+          <h2 class="text-3xl md:text-4xl font-bold text-white mb-8 relative inline-block animate-fade-in-title">
+            Imágenes generadas por IA
+            <span class="block h-1 w-full max-w-[220px] min-w-[64px] mx-auto mt-2 bg-gradient-to-r from-violet-500 via-cyan-400 to-blue-400 rounded-full animate-underline"></span>
+          </h2>
+          <div class="flex flex-wrap justify-center gap-8">
+            <img src="https://placehold.co/400x300?text=IA+Image+1" alt="IA 1" class="rounded-2xl shadow-lg w-64 h-40 object-cover" loading="lazy" />
+            <img src="https://placehold.co/400x300?text=IA+Image+2" alt="IA 2" class="rounded-2xl shadow-lg w-64 h-40 object-cover" loading="lazy" />
+            <img src="https://placehold.co/400x300?text=IA+Image+3" alt="IA 3" class="rounded-2xl shadow-lg w-64 h-40 object-cover" loading="lazy" />
           </div>
         </div>
       </section>
     </main>
-    <!-- back to top -->
-    <div
-      v-if="showScrollTop"
-      ref="scrollBtn"
-      @click="scrollToTop"
-      class="fixed bottom-8 right-8 z-50 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-violet-600 shadow-xl hover:bg-violet-700 scroll-to-top-btn transition-all duration-300 hover:scale-110"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="h-6 w-6 text-white"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 15l7-7 7 7"
-        />
-      </svg>
-    </div>
-
-    <footer class="bg-[#09090b] text-gray-400 pt-16 pb-10">
-      <div class="container mx-auto px-4">
-        <!-- 3 columnas: Logo/Descripción – Quick Links – Contacto -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <!-- Columna 1: Logo + Descripción + Terminos/Privacidad -->
-          <div class="flex flex-col items-center md:items-start">
-            <img src="/logo.png" alt="OnService.AI" class="h-10 mb-4" />
-            <p class="text-sm text-center md:text-left mb-4">
-              The next generation of AI chat assistants, designed to help you
-              achieve more.
-            </p>
-            <div
-              class="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-4"
-            >
-              <a href="/privacy" class="hover:text-white text-sm"
-                >Privacy Policy</a
-              >
-              <a href="/terms" class="hover:text-white text-sm"
-                >Terms of Service</a
-              >
-            </div>
-          </div>
-
-          <!-- Columna 2: Quick Links -->
-          <div class="flex flex-col items-center">
-            <h4 class="text-white font-semibold mb-4">Quick Links</h4>
-            <ul class="space-y-2 text-sm">
-              <li><a href="#features" class="hover:text-white">Features</a></li>
-              <li><a href="#faq" class="hover:text-white">FAQ</a></li>
-              <li><a href="#pricing" class="hover:text-white">Pricing</a></li>
-              <li>
-                <a href="#demo" class="hover:text-white">Schedule a Demo</a>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Columna 3: Contacto -->
-          <div class="flex flex-col items-center md:items-end">
-            <h4 class="text-white font-semibold mb-4">Contact Us</h4>
-            <p class="text-sm mb-2">
-              Email:
-              <a href="mailto:hello@onservice.ai" class="hover:text-white">
-                hello@onservice.ai
-              </a>
-            </p>
-            <p class="text-sm mb-2">
-              Phone:
-              <a href="tel:+5491130261625" class="hover:text-white">
-                +54 9 11 3026 1625
-              </a>
-            </p>
-            <p class="text-sm text-center md:text-right">
-              16192 Coastal Highway<br />
-              Lewes, DE 19958
-            </p>
-          </div>
-        </div>
-
-        <!-- Divider -->
-        <div class="mt-12 border-t border-white/10"></div>
-
-        <!-- Bottom row: copyright + compañía + redes -->
-        <div
-          class="mt-6 flex flex-col md:flex-row items-center justify-between text-xs space-y-2 md:space-y-0"
-        >
-          <p>
-            © {{ new Date().getFullYear() }} OnService.AI. All rights reserved.
-          </p>
-          <p>AI Travel Technologies Inc.</p>
-          <div class="flex space-x-4">
-            <a
-              href="https://linkedin.com/company/onservice"
-              class="hover:text-white"
-              >LinkedIn</a
-            >
-            <a href="https://twitter.com/onservice" class="hover:text-white"
-              >Twitter</a
-            >
-          </div>
-        </div>
-      </div>
-    </footer>
   </div>
 </template>
-
-<script></script>
 
 <style>
 :root {
@@ -1358,6 +1205,48 @@ section:not(:first-child):not(:last-child)::before {
 .scroll-to-top-btn {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(139, 92, 246, 0.2);
+  background-color: #7c3aed; /* bg-violet-600 */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, box-shadow;
+}
+.scroll-to-top-btn:hover {
+  background-color: #6d28d9; /* bg-violet-700 */
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4);
+  transform: translateY(-2px) scale(1.05);
+}
+.scroll-to-top-btn:active {
+  transform: translateY(0) scale(0.95);
+  transition: all 0.1s ease;
+}
+
+/* Efecto de pulso sutil */
+.scroll-to-top-btn::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(168, 85, 247, 0.3));
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
 }
 
 /* Animaciones de entrada mejoradas */
@@ -1447,6 +1336,220 @@ section:not(:first-child):not(:last-child)::before {
   .team-member-card {
     max-width: 90vw;
     min-width: 0;
+  }
+}
+
+@keyframes scroll-x {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-scroll-x {
+  animation: scroll-x 24s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.team-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: rgba(124, 58, 237, 0.18);
+  color: #fff;
+  border: none;
+  border-radius: 9999px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px 0 rgba(124, 58, 237, 0.12);
+  opacity: 0.5;
+  transition: opacity 0.2s, background 0.2s, box-shadow 0.2s;
+}
+.team-nav-btn:hover {
+  opacity: 1;
+  background: rgba(124, 58, 237, 0.35);
+  box-shadow: 0 4px 24px 0 rgba(124, 58, 237, 0.18);
+}
+
+.btn-contacto-gradient {
+  background: linear-gradient(90deg, #7c3aed 0%, #38bdf8 100%);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 16px 0 rgba(139, 92, 246, 0.18);
+  border: none;
+  transition: box-shadow 0.18s, filter 0.18s;
+  filter: brightness(1);
+}
+.btn-contacto-gradient:hover, .btn-contacto-gradient:focus {
+  filter: brightness(1.08) saturate(1.2);
+  box-shadow: 0 4px 32px 0 rgba(56, 189, 248, 0.18);
+}
+
+.glass-hero-panel {
+  background: rgba(17, 18, 28, 0.40);
+  backdrop-filter: blur(8px) saturate(1.1);
+  -webkit-backdrop-filter: blur(8px) saturate(1.1);
+  border: 1.5px solid rgba(139, 92, 246, 0.10);
+  box-shadow: 0 4px 24px 0 rgba(124, 58, 237, 0.08);
+  z-index: 10;
+}
+
+.fade-slide-enter-active, .fade-slide-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+}
+.fade-slide-enter-from, .fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(32px);
+}
+.fade-slide-enter-to, .fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.prompt-chat-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.code-block-container,
+.agent-chat-outer-glass {
+  min-width: 320px;
+  max-width: 520px;
+  width: 100%;
+  min-height: 340px;
+  height: 340px;
+  margin: 0;
+  padding: 0;
+}
+.agent-chat-glass.glass-hero-panel {
+  justify-content: flex-start !important;
+  padding-bottom: 1.1rem !important;
+}
+
+/* Slider styles */
+#clients ul { min-width: 100%; }
+#clients li { transition: opacity 0.4s; }
+
+.glass-tech {
+  background: rgba(24, 24, 32, 0.45);
+  backdrop-filter: blur(8px) saturate(1.1);
+  border: 1.5px solid rgba(139, 92, 246, 0.13);
+  box-shadow: 0 4px 24px 0 rgba(124, 58, 237, 0.08);
+  transition: box-shadow 0.25s, border 0.25s, background 0.25s;
+}
+.tech-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 120px;
+  transition: transform 0.25s, box-shadow 0.25s;
+  will-change: transform;
+  transform: translateZ(0);
+  background: rgba(24, 24, 32, 0.45);
+  /* backdrop-filter: blur(8px) saturate(1.1); */
+  border: 1.5px solid rgba(139, 92, 246, 0.13);
+  box-shadow: 0 4px 24px 0 rgba(124, 58, 237, 0.08);
+}
+.tech-card:hover {
+  transform: translateY(-8px) scale(1.06) translateZ(0);
+  box-shadow: 0 8px 32px 0 rgba(56, 189, 248, 0.18);
+  z-index: 2;
+}
+.ia-model-card {
+  border: 1.5px solid rgba(139, 92, 246, 0.13);
+  box-shadow: 0 4px 24px 0 rgba(124, 58, 237, 0.08);
+  transition: box-shadow 0.25s, border 0.25s, background 0.25s, transform 0.25s;
+  will-change: transform, box-shadow;
+  transform: translateZ(0);
+}
+.ia-model-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(56, 189, 248, 0.18);
+  border-color: #38bdf8;
+  transform: translateZ(0);
+}
+@media (max-width: 768px) {
+  .tech-card {
+    background: rgba(24, 24, 32, 0.85) !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    border: 1.5px solid rgba(139, 92, 246, 0.08) !important;
+    padding: 1.1rem 0.5rem !important;
+  }
+  .ia-model-card {
+    padding: 1.2rem !important;
+  }
+  #ai-tech .flex.md\:flex-col {
+    flex-direction: row !important;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    gap: 0.5rem !important;
+  }
+  #ai-tech button[aria-selected="true"] {
+    border-left: none;
+    border-bottom: 4px solid #06b6d4;
+    background: linear-gradient(90deg, #7c3aed 0%, #06b6d4 100%);
+  }
+  #ai-tech .absolute.right-\[-28px\] {
+    display: none;
+  }
+  .glass-hero-panel {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 98vw !important;
+  }
+  #hero h1 {
+    font-size: 2.1rem !important;
+    line-height: 2.5rem !important;
+  }
+  #hero p {
+    font-size: 1rem !important;
+    margin-top: 1.2rem !important;
+    margin-bottom: 1.2rem !important;
+  }
+  #hero .flex.flex-col.sm\:flex-row {
+    flex-direction: column !important;
+    gap: 0.7rem !important;
+  }
+  #hero .btn-contacto-gradient, #hero a {
+    min-width: 0 !important;
+    width: 100%;
+    font-size: 1rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+  /* Tabs swipeables */
+  .prompt-chat-stack .flex.flex-row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.5rem !important;
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+    scrollbar-width: none;
+  }
+  .prompt-chat-stack .flex.flex-row::-webkit-scrollbar {
+    display: none;
+  }
+  /* Bloque de código/prompt responsive */
+  .code-block-glass, .agent-chat-outer-glass, .agent-chat-glass.glass-hero-panel {
+    max-width: 98vw !important;
+    min-width: 0 !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    font-size: 13px !important;
+  }
+  .editor-code, .editor-gutter {
+    font-size: 12px !important;
+  }
+  .editor-line {
+    min-height: 1.1em !important;
   }
 }
 </style>
