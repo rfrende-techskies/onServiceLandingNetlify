@@ -3,22 +3,14 @@
     <div class="code-block-glass code-block-terminal glass-hero-panel">
       <div class="terminal-bar flex items-center gap-2 mb-2">
         <span class="flex-1"></span>
-        <span v-for="tab in tabs" :key="tab.key" :class="['example-tab-underline', tab.key === props.tab ? 'active' : '']" @click="setTab(tab.key)">
+        <span v-for="tab in tabs" :key="tab.key" :class="['example-tab-underline', tab.key === props.tab ? 'active pointer-events-none cursor-default' : '']" @click="tab.key !== props.tab && setTab(tab.key)">
           {{ tab.label }}
         </span>
       </div>
       <div class="editor-block">
-        <div class="editor-gutter">
-          <span v-for="idx in typingLineIdx + 1" :key="'gutter-' + idx" class="gutter-line">{{ idx }}</span>
-        </div>
-        <div class="editor-code" tabindex="0">
-          <div v-for="(line, idx) in visibleLines" :key="'code-' + idx" class="editor-line">
-            <span v-if="idx < typingLineIdx" v-html="colorize(line)"></span>
-            <span v-else-if="idx === typingLineIdx">
-              {{ line }}<span v-if="showCursor && typingCharIdx > 0" class="editor-cursor">|</span>
-            </span>
-            <span v-else></span>
-          </div>
+        <div v-for="(line, idx) in codeLines" :key="idx" class="editor-line-flex">
+          <span class="gutter-line">{{ idx + 1 }}</span>
+          <pre class="editor-code-line" v-html="colorizeBlock(line + (showCursor && idx === codeLines.length - 1 ? '<span class=\'editor-cursor\'>|</span>' : ''))"></pre>
         </div>
       </div>
     </div>
@@ -41,94 +33,56 @@ const tabs = computed(() => [
   { key: 'it', label: props.prompts.it.label }
 ]);
 
-const visibleLines = ref([]);
-const typingLineIdx = ref(-1);
-const typingCharIdx = ref(-1);
+const animatedText = ref('');
 const showCursor = ref(true);
 let typingTimeout = null;
-let typingLoopTimeout = null;
 
 const currentPrompt = computed(() => props.prompts[props.tab]);
 const currentExampleIdx = computed(() => props.exampleIdx ?? 0);
 
+// NUEVO: Computed para dividir el texto animado en líneas sin agregar líneas vacías extra
+const codeLines = computed(() => {
+  // Split normal, sin agregar línea vacía extra
+  return animatedText.value.split('\n');
+});
+
 function setTab(tabKey) {
   clearTimeout(typingTimeout);
-  clearTimeout(typingLoopTimeout);
   typingTimeout = null;
-  typingLoopTimeout = null;
   emit('tab-change', tabKey);
 }
 
 function startTyping() {
   clearTimeout(typingTimeout);
-  clearTimeout(typingLoopTimeout);
   typingTimeout = null;
-  typingLoopTimeout = null;
-  visibleLines.value = [];
-  typingLineIdx.value = -1;
-  typingCharIdx.value = -1;
+  animatedText.value = '';
   showCursor.value = true;
   emit('typing', true);
-  const linesArr = currentPrompt.value.examples[currentExampleIdx.value];
-  if (!linesArr || !Array.isArray(linesArr)) {
-    showCursor.value = false;
-    emit('typing', false);
-    return;
-  }
-  const lines = linesArr;
-  let i = 0;
-  function typeNextLine() {
-    if (i < lines.length) {
-      typingLineIdx.value = i;
-      typingCharIdx.value = 0;
-      typeCharInLine();
+  const linesArr = currentPrompt.value?.examples?.[currentExampleIdx.value] || [];
+  const fullText = linesArr.join('\n');
+  let charIdx = 0;
+  function typeChar() {
+    if (charIdx <= fullText.length) {
+      animatedText.value = fullText.slice(0, charIdx);
+      charIdx++;
+      typingTimeout = setTimeout(typeChar, 35);
     } else {
       showCursor.value = false;
       emit('typing', false);
     }
   }
-  function typeCharInLine() {
-    const linesArr = [...visibleLines.value];
-    const line = lines[typingLineIdx.value];
-    if (typingCharIdx.value <= line.length) {
-      linesArr[typingLineIdx.value] = line.slice(0, typingCharIdx.value);
-      visibleLines.value = linesArr;
-      typingCharIdx.value++;
-      typingTimeout = setTimeout(typeCharInLine, 32);
-    } else {
-      linesArr[typingLineIdx.value] = line;
-      visibleLines.value = linesArr;
-      i++;
-      typingTimeout = setTimeout(typeNextLine, 180);
-    }
-  }
-  visibleLines.value = Array(lines.length).fill('');
-  typeNextLine();
+  typeChar();
 }
 
-function colorize(line) {
-  // 1. Extraer strings y reemplazar por placeholders
-  const stringRegex = /"[^"]*"/g;
-  const strings = [];
-  let safeLine = line.replace(stringRegex, (match) => {
-    strings.push(match);
-    return `___STR${strings.length - 1}___`;
-  });
-
-  // 2. Colorear tokens fuera de los strings
-  safeLine = safeLine
-    .replace(/^\$ /, '<span class="prompt-blue">$</span> ')
-    .replace(/^# /, '<span class="prompt-violet">#</span> ')
-    .replace(/User:/, '<span class="user-label">User:</span>')
-    .replace(/Assistant:/, '<span class="assistant-label">Assistant:</span>')
-    .replace(/(System Prompt|Ejemplo)/, '<span class="keyword">$1</span>');
-
-  // 3. Restaurar los strings resaltados
-  safeLine = safeLine.replace(/___STR(\d+)___/g, (_, idx) => {
-    return `<span class=\"string\">${strings[idx]}</span>`;
-  });
-
-  return safeLine;
+function colorizeBlock(text) {
+  // Resalta palabras clave y roles en todo el bloque
+  return text
+    .replace(/("[^"]*")/g, '<span class="string">$1</span>')
+    .replace(/^\$ /gm, '<span class="prompt-blue">$</span> ')
+    .replace(/^# /gm, '<span class="prompt-violet">#</span> ')
+    .replace(/User:/g, '<span class="user-label">User:</span>')
+    .replace(/Assistant:/g, '<span class="assistant-label">Assistant:</span>')
+    .replace(/(System Prompt|Ejemplo)/g, '<span class="keyword">$1</span>');
 }
 
 onMounted(() => {
@@ -141,9 +95,7 @@ watch(() => [props.tab, props.exampleIdx, props.prompts], () => {
 
 onBeforeUnmount(() => {
   clearTimeout(typingTimeout);
-  clearTimeout(typingLoopTimeout);
   typingTimeout = null;
-  typingLoopTimeout = null;
 });
 </script>
 
@@ -151,30 +103,34 @@ onBeforeUnmount(() => {
 .code-block-container {
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 560px;
-  max-width: 560px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 .code-block-glass.code-block-terminal {
-  background: rgba(17, 18, 28, 0.55);
-  box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.18);
-  border: 1.5px solid rgba(139, 92, 246, 0.13);
-  border-radius: 1.5rem;
-  padding: 0.7rem 1rem 1.1rem 1rem;
-  min-width: 560px;
-  max-width: 560px;
-  min-height: 180px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  background: rgba(24,24,32,0.85) !important;
+  box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.10), 0 2px 8px 0 rgba(56, 189, 248, 0.08) !important;
+  border: 1.5px solid rgba(139, 92, 246, 0.13) !important;
+  border-radius: 1.2rem;
+  padding: 1.2rem 1.2rem;
+  min-height: 0;
   height: auto;
-  max-height: 320px;
+  max-height: none;
   z-index: 10;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin: 0;
-  overflow-y: auto;
-  transition: box-shadow 0.25s, border 0.25s, background 0.25s;
+  font-size: 15px;
 }
 .terminal-bar {
   align-items: center;
@@ -198,6 +154,9 @@ onBeforeUnmount(() => {
 }
 .example-tab-underline.active {
   color: #fff;
+  background: rgba(124,58,237,0.13);
+  border-radius: 0.7rem;
+  font-weight: 700;
 }
 .example-tab-underline::after {
   content: '';
@@ -218,72 +177,69 @@ onBeforeUnmount(() => {
   transform: scaleX(1);
 }
 .editor-block {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  background: rgba(24,24,32,0.55);
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.08), 0 2px 8px 0 rgba(56, 189, 248, 0.06);
+  padding: 1.1rem 1.2rem;
+  color: #e5e7eb;
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+  border: 1.5px solid rgba(139, 92, 246, 0.13);
+  animation: fadeSlideIn 0.9s cubic-bezier(.4,1.6,.6,1);
+  overflow-x: auto;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(32px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.editor-line-flex {
   display: flex;
   flex-direction: row;
-  background: #18181b;
-  border: 2px solid #7c3aed;
-  border-radius: 1.1rem;
-  box-shadow: 0 2px 12px 0 rgba(124, 58, 237, 0.08);
-  padding: 0.7rem 1rem;
-  margin-top: 0.7rem;
-  margin-bottom: 0.2rem;
+  align-items: flex-start;
+  min-height: 1.5em;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
   width: 100%;
-  height: auto;
-  min-height: 120px;
-  max-height: 240px;
-  overflow: auto;
-  transition: box-shadow 0.18s, border 0.18s;
-}
-.editor-block:hover {
-  box-shadow: 0 4px 24px 0 rgba(124, 58, 237, 0.13);
-  border-color: #a78bfa;
-}
-.editor-gutter {
-  background: none;
-  color: #8b8fa3;
-  opacity: 0.5;
-  font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
-  font-size: 14px;
-  line-height: 1.18;
-  text-align: right;
-  padding-right: 1.2em;
-  user-select: none;
-  min-width: 2.2em;
-  margin-right: 0.5em;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
 }
 .gutter-line {
-  height: 1.5em;
-  display: block;
-}
-.editor-code {
-  font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
+  min-width: 2.5em;
+  width: 2.5em;
+  text-align: right;
+  color: #8b8fa3;
+  opacity: 0.6;
+  user-select: none;
   font-size: 14px;
-  line-height: 1.18;
-  color: #e5e7eb;
-  background: none;
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  margin-right: 1em;
+  font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
+  padding-right: 0.5em;
+  display: inline-block;
+  vertical-align: top;
 }
-.editor-line {
-  min-height: 1.5em;
-  display: flex;
-  align-items: center;
-  white-space: pre;
+.editor-code-line {
+  font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
+  font-size: clamp(14px, 1.1vw, 16px);
+  color: #e5e7eb;
+  white-space: pre-wrap;
+  word-break: break-word;
+  flex: 1 1 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 .prompt-blue {
-  color: #38bdf8;
+  color: #2563eb;
   font-weight: bold;
 }
 .prompt-violet {
-  color: #a78bfa;
+  color: #7c3aed;
   font-weight: bold;
 }
 .user-label {
@@ -295,10 +251,10 @@ onBeforeUnmount(() => {
   font-weight: bold;
 }
 .string {
-  color: #facc15;
+  color: #f59e42;
 }
 .keyword {
-  color: #7c3aed;
+  color: #a78bfa;
   font-weight: bold;
 }
 .comment {
@@ -306,39 +262,25 @@ onBeforeUnmount(() => {
   font-style: italic;
 }
 .editor-cursor {
-  color: #38bdf8;
+  color: #8b5cf6;
+  animation: blink 1s infinite;
   font-weight: bold;
-  animation: blink 1s steps(1) infinite;
-  margin-left: 0.1em;
+  text-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
 }
 @keyframes blink {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 1; }
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 @media (max-width: 900px) {
   .code-block-glass.code-block-terminal {
-    min-width: 90vw;
-    max-width: 98vw;
-    padding-left: 0.7rem;
-    padding-right: 0.7rem;
-    min-height: 120px;
+    min-height: 140px;
     height: auto;
-    max-height: 220px;
+    max-height: none;
+    padding: 0.8rem 0.7rem;
   }
   .editor-block {
-    font-size: 12px;
-    line-height: 1.13;
-    min-height: 80px;
-    max-height: 160px;
-    height: auto;
-    padding: 0.5rem 0.5rem;
-  }
-  .editor-gutter, .editor-code {
-    font-size: 12px;
-    line-height: 1.13;
-  }
-  .gutter-line, .editor-line {
-    min-height: 1.2em;
+    font-size: 15px !important;
+    padding: 0.8rem 0.7rem;
   }
 }
 @media (min-width: 768px) {
@@ -350,7 +292,7 @@ onBeforeUnmount(() => {
 @media (max-width: 768px) {
   .code-block-container {
     min-width: 0 !important;
-    max-width: 98vw !important;
+    max-width: 99vw !important;
     width: 100% !important;
     margin: 0 auto !important;
     justify-content: center !important;
@@ -358,22 +300,55 @@ onBeforeUnmount(() => {
   }
   .code-block-glass.code-block-terminal {
     min-width: 0 !important;
-    max-width: 98vw !important;
+    max-width: 99vw !important;
     width: 100% !important;
-    padding: 0.7rem 0.3rem 1.1rem 0.3rem !important;
-    min-height: 140px !important;
+    padding: 0.4rem 0.1rem 0.7rem 0.1rem !important;
+    min-height: 120px !important;
     height: auto !important;
-    max-height: 220px !important;
+    max-height: 340px !important;
     margin: 0 auto !important;
+    font-size: 13px !important;
   }
-  .editor-gutter {
-    min-width: 1.5em !important;
+  .editor-block {
+    font-size: 13px !important;
+    padding: 0.4rem 0.2rem !important;
+    gap: 0.05rem !important;
+  }
+  .gutter-line {
+    min-width: 1.1em !important;
+    width: 1.1em !important;
     text-align: right !important;
-    padding-right: 0.4em !important;
-    font-size: 12px !important;
+    padding-right: 0.2em !important;
+    font-size: 11px !important;
+    margin-right: 0.4em !important;
   }
-  .editor-line {
-    min-height: 1.1em !important;
+  .editor-line-flex {
+    min-height: 1em !important;
   }
+  .editor-code-line, pre.editor-code-line {
+    font-size: 13px !important;
+    word-break: break-word !important;
+    white-space: pre-line !important;
+    overflow-wrap: break-word !important;
+    line-height: 1.25 !important;
+  }
+}
+.code-block-container, .editor-block, .editor-line-flex, .editor-code-line {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  text-align: left !important;
+}
+pre.editor-code-line {
+  font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
+  font-size: clamp(14px, 1.1vw, 16px);
+  color: #e5e7eb;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: 0;
+  padding: 0;
 }
 </style> 

@@ -20,7 +20,7 @@ class Particle {
     this.vy = (Math.random() - 0.5) * 0.5;
     this.size = Math.random() * 3 + 1;
     this.opacity = Math.random() * 0.5 + 0.2;
-    this.color = `hsl(${Math.random() * 60 + 250}, 70%, 60%)`;
+    this.color = Math.random() < 0.5 ? '#7C3AED' : '#38BDF8';
   }
 
   update() {

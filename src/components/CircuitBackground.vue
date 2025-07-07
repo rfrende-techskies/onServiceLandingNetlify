@@ -295,10 +295,6 @@ onMounted(() => {
   
   resizeObs = new window.ResizeObserver(() => {
     updateSize();
-    scene.clear();
-    createOrganicCircuit();
-    addCircuitToScene();
-    addRays();
   });
   resizeObs.observe(container.value);
   
