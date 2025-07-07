@@ -190,35 +190,44 @@ function animate() {
   lastFrameTime = currentTime;
   
   const t = Date.now() * 0.002;
-  for (let i = 0; i < pulseObjs.length; i++) {
-    const obj = pulseObjs[i];
-    obj.material.opacity = 0.5 + 0.35 * Math.abs(Math.sin(t + i));
-    obj.material.needsUpdate = true;
-  }
-  for (let i = 0; i < rays.length; i++) {
-    const ray = rays[i];
-    const path = ray.userData.path;
-    if (!path) continue;
-    const segs = path.length - 1;
-    const total = segs * 70;
-    const frame = Math.floor(((Date.now() + ray.userData.offset * 1000) / 10) % total);
-    const seg = Math.floor(frame / 70);
-    const tSeg = (frame % 70) / 70;
-    if (seg < segs) {
-      const a = path[seg], b = path[seg + 1];
-      const x = a.x + (b.x - a.x) * tSeg;
-      const y = a.y + (b.y - a.y) * tSeg;
-      ray.geometry.setFromPoints([
-        new THREE.Vector3(a.x, a.y, 3),
-        new THREE.Vector3(x, y, 3)
-      ]);
-      ray.visible = true;
-    } else {
-      const newPath = circuitLines[Math.floor(Math.random() * circuitLines.length)];
-      ray.userData.path = newPath;
-      ray.visible = false;
+  
+  // Solo actualizar pulsos si hay objetos pulsantes
+  if (pulseObjs.length > 0) {
+    for (let i = 0; i < pulseObjs.length; i++) {
+      const obj = pulseObjs[i];
+      obj.material.opacity = 0.5 + 0.35 * Math.abs(Math.sin(t + i));
+      obj.material.needsUpdate = true;
     }
   }
+  
+  // Solo actualizar rayos si hay rayos
+  if (rays.length > 0) {
+    for (let i = 0; i < rays.length; i++) {
+      const ray = rays[i];
+      const path = ray.userData.path;
+      if (!path) continue;
+      const segs = path.length - 1;
+      const total = segs * 70;
+      const frame = Math.floor(((Date.now() + ray.userData.offset * 1000) / 10) % total);
+      const seg = Math.floor(frame / 70);
+      const tSeg = (frame % 70) / 70;
+      if (seg < segs) {
+        const a = path[seg], b = path[seg + 1];
+        const x = a.x + (b.x - a.x) * tSeg;
+        const y = a.y + (b.y - a.y) * tSeg;
+        ray.geometry.setFromPoints([
+          new THREE.Vector3(a.x, a.y, 3),
+          new THREE.Vector3(x, y, 3)
+        ]);
+        ray.visible = true;
+      } else {
+        const newPath = circuitLines[Math.floor(Math.random() * circuitLines.length)];
+        ray.userData.path = newPath;
+        ray.visible = false;
+      }
+    }
+  }
+  
   renderer.render(scene, camera);
   animationId = requestAnimationFrame(animate);
 }
@@ -261,7 +270,7 @@ function onScroll() {
   scrollTimeout = setTimeout(() => {
     isVisible = true;
     startAnimation();
-  }, 250);
+  }, 100);
 }
 
 onMounted(() => {

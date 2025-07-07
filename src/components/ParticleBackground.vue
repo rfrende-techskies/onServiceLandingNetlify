@@ -11,6 +11,8 @@ const canvas = ref(null);
 let ctx = null;
 let animationId = null;
 let particles = [];
+let isVisible = true;
+let scrollTimeout = null;
 
 class Particle {
   constructor(x, y) {
@@ -53,32 +55,69 @@ function initParticles() {
 }
 
 function animate() {
+  if (!isVisible) return;
+  
   ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
   
+  // Actualizar y dibujar partículas
   particles.forEach(particle => {
     particle.update();
     particle.draw();
   });
   
-  // Conectar partículas cercanas
-  particles.forEach((particle, i) => {
-    particles.slice(i + 1).forEach(otherParticle => {
+  // Conectar partículas cercanas con optimización
+  const connectionDistance = 100;
+  for (let i = 0; i < particles.length; i++) {
+    const particle = particles[i];
+    for (let j = i + 1; j < particles.length; j++) {
+      const otherParticle = particles[j];
       const dx = particle.x - otherParticle.x;
       const dy = particle.y - otherParticle.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
       
-      if (distance < 100) {
+      if (distance < connectionDistance) {
         ctx.beginPath();
         ctx.moveTo(particle.x, particle.y);
         ctx.lineTo(otherParticle.x, otherParticle.y);
-        ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (1 - distance / 100)})`;
+        ctx.strokeStyle = `rgba(139, 92, 246, ${0.1 * (1 - distance / connectionDistance)})`;
         ctx.lineWidth = 1;
         ctx.stroke();
       }
-    });
-  });
+    }
+  }
   
   animationId = requestAnimationFrame(animate);
+}
+
+function startAnimation() {
+  if (!animationId) animate();
+}
+
+function stopAnimation() {
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+function onScroll() {
+  isVisible = false;
+  stopAnimation();
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(() => {
+    isVisible = true;
+    startAnimation();
+  }, 100);
+}
+
+function onVisibilityChange() {
+  if (document.hidden) {
+    isVisible = false;
+    stopAnimation();
+  } else {
+    isVisible = true;
+    startAnimation();
+  }
 }
 
 function resizeCanvas() {
@@ -96,6 +135,8 @@ onMounted(() => {
     animate();
     
     window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('visibilitychange', onVisibilityChange);
   }
 });
 
@@ -104,6 +145,9 @@ onBeforeUnmount(() => {
     cancelAnimationFrame(animationId);
   }
   window.removeEventListener('resize', resizeCanvas);
+  window.removeEventListener('scroll', onScroll);
+  document.removeEventListener('visibilitychange', onVisibilityChange);
+  clearTimeout(scrollTimeout);
 });
 </script>
 
