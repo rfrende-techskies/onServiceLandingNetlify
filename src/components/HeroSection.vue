@@ -1,31 +1,21 @@
 <template>
-  <section class="relative w-full min-h-[calc(100vh-80px)] pt-26 pb-20 flex items-center justify-center px-4 md:px-0 bg-transparent overflow-hidden">
+  <section class="relative w-full min-h-[calc(100vh-80px)] pt-26 pb-20 flex items-center justify-center bg-transparent overflow-hidden">
     <!-- Circuit background decorativo -->
     <div class="absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
       <CircuitBackground />
     </div>
-    <div class="relative z-10 max-w-6xl 2xl:max-w-5xl mx-auto flex flex-col-reverse md:flex-row items-center justify-center gap-8 md:gap-14 min-h-[60vh] md:min-h-[60vh]">
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10 flex flex-col-reverse md:flex-row items-center justify-center gap-8 md:gap-20 min-h-[60vh] md:min-h-[60vh] mt-20">
       <!-- Columna izquierda: texto con fondo glass -->
-      <div class="flex-1 flex flex-col items-center justify-center text-center max-w-lg md:pr-8 animate-fade-in-up">
-        <div class="w-full bg-white/70 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/30 dark:border-white/10 px-4 md:px-8 py-8 md:py-10 flex flex-col items-center">
+      <div class="flex-1 flex flex-col items-center justify-center text-center md:pr-8 animate-fade-in-up">
+        <div class="w-full bg-white/70 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/30 dark:border-white/10 py-8 md:py-10 flex flex-col items-center">
           <h1 class="text-3xl md:text-4xl font-extrabold leading-tight tracking-tight mb-7 text-gray-900 dark:text-white">
-            La nueva generación de <span class="text-violet-500">IA</span> para tu empresa
+            {{ t('hero.title_pre') }} <span class="text-violet-500">{{ t('hero.title_highlight') }}</span> {{ t('hero.title_post') }}
           </h1>
-          <p class="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-6 font-medium">
-            Soluciones de inteligencia artificial para potenciar ventas, soporte y operaciones.
-          </p>
-          <p class="text-sm md:text-base text-gray-500 dark:text-gray-300 mb-10 max-w-md mx-auto">
-            Automatizá la atención y hacé crecer tu negocio con OnService.
-          </p>
+          <p class="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-6 font-medium">{{ t('hero.subtitle') }}</p>
+          <p class="text-sm md:text-base text-gray-500 dark:text-gray-300 mb-10 max-w-md mx-auto">{{ t('hero.description') }}</p>
           <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center">
-            <a href="#demo" class="group px-7 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-violet-500 to-cyan-400 shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base">
-              <svg class="w-5 h-5 text-white opacity-80 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-              Comenzar Demo
-            </a>
-            <a href="#usecases" class="group px-7 py-2.5 rounded-xl font-bold text-violet-700 dark:text-cyan-200 bg-white/80 dark:bg-gray-900 border border-violet-200 dark:border-cyan-700 shadow hover:bg-violet-50 dark:hover:bg-gray-800 hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base">
-              <svg class="w-5 h-5 text-violet-500 dark:text-cyan-300 opacity-80 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 19V5a2 2 0 012-2h8a2 2 0 012 2v14M9 7h6M9 11h6M9 15h2"/></svg>
-              Ver Casos de Uso
-            </a>
+            <a href="#demo" class="group px-7 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-violet-500 to-cyan-400 shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base">{{ t('hero.cta_demo') }}</a>
+            <a href="#usecases" class="group px-7 py-2.5 rounded-xl font-bold text-violet-700 dark:text-cyan-200 bg-white/80 dark:bg-gray-900 border border-violet-200 dark:border-cyan-700 shadow hover:bg-violet-50 dark:hover:bg-gray-800 hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base">{{ t('hero.cta_usecases') }}</a>
           </div>
         </div>
       </div>
@@ -42,8 +32,9 @@
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
 import CircuitBackground from './CircuitBackground.vue'
-// No props por ahora
+const { t } = useI18n()
 </script>
 
 <style scoped>

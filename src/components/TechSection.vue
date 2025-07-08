@@ -1,6 +1,6 @@
 <template>
   <section class="py-20 bg-gray-800 dark:bg-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full max-w-[1440px] mx-auto px-6 md:px-10">
       <div class="text-center mb-16">
         <h2 class="text-3xl md:text-4xl font-bold text-white dark:text-gray-900 mb-4">
           Tecnología de vanguardia

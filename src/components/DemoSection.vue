@@ -1,12 +1,12 @@
 <template>
-  <section id="demo" class="relative w-full min-h-[90vh] flex items-center justify-center px-2 md:px-0 bg-transparent overflow-hidden">
+  <section id="demo" class="relative w-full min-h-[70vh] flex items-center justify-center px-1 md:px-0 bg-transparent overflow-hidden">
     <!-- Circuit background decorativo -->
     <div class="absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
       <CircuitBackground />
     </div>
-    <div class="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 min-h-[70vh] py-8 md:py-16 animate-fade-in-up">
+    <div class="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 min-h-[40vh] py-2 md:py-6 animate-fade-in-up">
       <!-- Bloque Prompt (66%) -->
-      <div class="flex-[2_2_0%] w-full max-w-3xl bg-white/80 dark:bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/10 border border-white/30 dark:border-white/10 px-2 md:px-10 py-6 md:py-14 flex flex-col items-center animate-fade-in-up min-h-[420px] md:min-h-[540px] h-full">
+      <div class="flex-[2_2_0%] w-full max-w-3xl bg-white/80 dark:bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/10 border border-white/30 dark:border-white/10 px-3 md:px-6 py-5 md:py-8 flex flex-col items-center animate-fade-in-up min-h-[220px] md:min-h-[320px] h-full">
         <CodePromptBlock 
           :prompts="prompts" 
           :tab="currentTab" 
@@ -16,7 +16,7 @@
         />
       </div>
       <!-- Bloque Agent Response (33%) -->
-      <div class="flex-[1_1_0%] w-full max-w-xl bg-white/80 dark:bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/10 border border-white/30 dark:border-white/10 px-2 md:px-8 py-6 md:py-14 flex flex-col items-center animate-fade-in-up delay-150 min-h-[420px] md:min-h-[540px] h-full">
+      <div class="flex-[1_1_0%] w-full max-w-xl bg-white/80 dark:bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl shadow-black/10 border border-white/30 dark:border-white/10 px-3 md:px-6 py-5 md:py-8 flex flex-col items-center animate-fade-in-up delay-150 min-h-[220px] md:min-h-[320px] h-full">
         <AgentResponseBlock 
           :responses="agentResponses" 
           :tab="currentTab" 
@@ -198,65 +198,91 @@ const agentResponses = {
     ],
     [
       'User: "¿Cuánto equipaje puedo llevar en cabina?"',
-      'Agent: "Puedes llevar una pieza de hasta 10kg en cabina. ¿Te gustaría saber sobre equipaje en bodega?"'
+      'Agent: "Puedes llevar una pieza de hasta 10kg en cabina. ¿Te gustaría saber sobre equipaje en bodega?"',
+      'User: "¿Y en bodega?"',
+      'Agent: "En bodega puedes llevar hasta 23kg por pieza, según tu tarifa. ¿Necesitás ayuda con algo más?"'
     ],
     [
       'User: "¿El vuelo AM123 está demorado?"',
-      'Agent: "El vuelo AM123 está programado para salir a tiempo. ¿Necesitas información de la puerta de embarque?"'
+      'Agent: "Déjame verificar... El vuelo AM123 está programado para salir a horario. ¿Te gustaría recibir notificaciones de cambios?"',
+      'User: "Sí, por favor."',
+      'Agent: "Listo, te avisaré ante cualquier novedad. ¿Algo más en lo que pueda ayudarte?"'
     ],
     [
       'User: "¿Puedo seleccionar mi asiento online?"',
-      'Agent: "Sí, puedes seleccionar tu asiento desde la web o la app hasta 24h antes del vuelo."'
+      'Agent: "Sí, puedes seleccionar tu asiento desde la web o la app. ¿Te gustaría que te envíe el enlace?"',
+      'User: "Sí, envíamelo."',
+      'Agent: "Aquí tienes: www.aerolinea.com/seleccionar-asiento. ¿Algo más?"'
     ],
     [
       'User: "¿Cómo solicito asistencia especial para mi vuelo?"',
-      'Agent: "Claro, puedo ayudarte a solicitar asistencia especial. ¿Requieres silla de ruedas o asistencia en el embarque?"'
+      'Agent: "Puedes solicitar asistencia especial durante la reserva o llamando a nuestro call center. ¿Te gustaría que te ayude a gestionarlo?"',
+      'User: "Sí, por favor."',
+      'Agent: "Perfecto, ¿me indicas tu número de reserva?"'
     ]
   ],
   travel: [
     [
       'User: "¿Necesito visa para viajar a Brasil?"',
-      'Agent: "No necesitas visa para viajes turísticos menores a 90 días si eres ciudadano argentino."'
+      'Agent: "Si eres ciudadano argentino, no necesitas visa para turismo en Brasil. ¿Te gustaría saber sobre otros países?"',
+      'User: "¿Y para Estados Unidos?"',
+      'Agent: "Para Estados Unidos sí necesitas visa. ¿Te ayudo con el proceso?"'
     ],
     [
       'User: "¿Qué destino recomendás para vacaciones en invierno?"',
-      'Agent: "Bariloche es ideal para esquí y paisajes nevados. ¿Te gustaría info de hoteles o actividades?"'
+      'Agent: "Bariloche y Ushuaia son excelentes opciones en Argentina. ¿Prefieres playa o nieve?"',
+      'User: "Nieve."',
+      'Agent: "Entonces Ushuaia es ideal. ¿Te gustaría ver paquetes?"'
     ],
     [
       'User: "¿Cómo reservo un tour en París?"',
-      'Agent: "Puedo ayudarte a reservar tours en París. ¿Prefieres museos, gastronomía o paseos guiados?"'
+      'Agent: "Puedes reservar tours en París desde nuestra web o app. ¿Te envío el enlace?"',
+      'User: "Sí, por favor."',
+      'Agent: "Aquí tienes: www.tours.com/paris. ¿Algo más?"'
     ],
     [
       'User: "¿Cuál es la mejor época para visitar Japón?"',
-      'Agent: "La primavera (marzo-abril) es famosa por los cerezos en flor. ¿Te gustaría recomendaciones de ciudades?"'
+      'Agent: "La primavera (marzo-abril) es ideal por los cerezos en flor. ¿Te gustaría recomendaciones de itinerario?"',
+      'User: "Sí, por favor."',
+      'Agent: "Te armo un itinerario personalizado. ¿Cuántos días planeas viajar?"'
     ],
     [
       'User: "¿Qué documentos necesito para alquilar un auto en Europa?"',
-      'Agent: "Necesitarás tu pasaporte, licencia de conducir internacional y una tarjeta de crédito."'
+      'Agent: "Necesitás licencia internacional y pasaporte vigente. ¿Te ayudo a gestionar la licencia?"',
+      'User: "Sí, por favor."',
+      'Agent: "Perfecto, te envío los requisitos por email. ¿Algo más?"'
     ]
   ],
   it: [
     [
       'User: "No puedo acceder a mi correo corporativo."',
-      'Agent: "¿Recibes algún mensaje de error al intentar ingresar?"',
+      'Agent: "¿Recibiste algún mensaje de error?"',
       'User: "Sí, dice contraseña incorrecta."',
-      'Agent: "Te ayudo a restablecerla. ¿Prefieres recibir el enlace por email o SMS?"'
+      'Agent: "Te ayudo a restablecerla. ¿Quieres hacerlo ahora?"'
     ],
     [
       'User: "¿Cómo configuro la VPN en mi laptop?"',
-      'Agent: "Debes descargar el cliente VPN desde el portal interno y seguir la guía paso a paso. ¿Te la envío?"'
+      'Agent: "Debes descargar el software desde la intranet. ¿Te envío el enlace?"',
+      'User: "Sí, por favor."',
+      'Agent: "Aquí tienes: www.empresa.com/vpn. ¿Algo más?"'
     ],
     [
       'User: "¿El sistema de tickets está caído?"',
-      'Agent: "No se reportan incidentes. ¿Qué error ves al intentar ingresar?"'
+      'Agent: "Actualmente el sistema funciona con normalidad. ¿Quieres abrir un ticket nuevo?"',
+      'User: "Sí, necesito soporte."',
+      'Agent: "Por favor, describe el problema y lo derivaré al área correspondiente."'
     ],
     [
       'User: "¿Cómo restablezco mi contraseña?"',
-      'Agent: "Puedes restablecerla desde el portal de autoservicio o te envío un enlace. ¿Qué prefieres?"'
+      'Agent: "Puedes restablecerla desde la web o la app. ¿Te envío el enlace?"',
+      'User: "Sí, envíamelo."',
+      'Agent: "Aquí tienes: www.empresa.com/restablecer. ¿Algo más?"'
     ],
     [
       'User: "¿Puedo instalar software en mi equipo?"',
-      'Agent: "Depende del software. ¿Cuál necesitas instalar? Te ayudo con el proceso o la autorización."'
+      'Agent: "Depende del tipo de software. ¿Cuál necesitas instalar?"',
+      'User: "Adobe Reader."',
+      'Agent: "Puedes instalarlo desde la intranet. ¿Te envío el enlace?"'
     ]
   ]
 };

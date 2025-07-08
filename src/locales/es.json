@@ -1,0 +1,19 @@
+{
+  "header": {
+    "about": "Quiénes somos",
+    "usecases": "Casos de uso",
+    "team": "Equipo",
+    "clients": "Clientes",
+    "contact": "Contacto",
+    "demo": "Demo en vivo"
+  },
+  "hero": {
+    "title_pre": "La nueva generación de",
+    "title_highlight": "IA",
+    "title_post": "para tu empresa",
+    "subtitle": "Soluciones de inteligencia artificial para potenciar ventas, soporte y operaciones.",
+    "description": "Automatizá la atención y hacé crecer tu negocio con OnService.",
+    "cta_demo": "Comenzar Demo",
+    "cta_usecases": "Ver Casos de Uso"
+  }
+} 

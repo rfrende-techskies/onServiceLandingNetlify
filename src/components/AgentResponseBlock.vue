@@ -7,8 +7,8 @@
       <div class="agent-chat-glass">
         <div ref="chatContainer" class="chat-messages chat-scrollable">
           <transition-group name="fadeInMsgSeq" tag="div">
-            <div v-for="(msg, idx) in visibleMessages" :key="'msg-' + idx" :class="['chat-row', msg.role === 'Agent' ? 'chat-agent' : 'chat-user']" :style="{ transitionDelay: (idx * 200) + 'ms' }">
-              <div :class="['chat-bubble', msg.role === 'Agent' ? 'kai' : 'user', msg.role === 'user' && idx === visibleMessages.length - 1 ? 'last' : '']">
+            <div v-for="(msg, idx) in compactedMessages" :key="'msg-' + idx" :class="['chat-row', msg.role === 'Agent' ? 'chat-agent' : 'chat-user']" :style="{ transitionDelay: (idx * 200) + 'ms' }">
+              <div :class="['chat-bubble', msg.role === 'Agent' ? 'kai' : 'user', msg.role === 'user' && idx === compactedMessages.length - 1 ? 'last' : '']">
                 <span v-if="msg.role === 'user'" class="chat-badge user-badge">User</span>
                 <span v-else-if="msg.role === 'Agent'" class="chat-badge kai-badge">KAI</span>
                 <span class="chat-text" v-if="msg.role === 'Agent'">
@@ -63,6 +63,27 @@ const renderedMessages = computed(() => {
       return { ...msg, partial: false, text: msg.text };
     }
   });
+});
+
+// Nuevo: computed para compactar los mensajes de KAI en uno solo
+const compactedMessages = computed(() => {
+  if (!visibleMessages.value.length) return [];
+  const result = [];
+  let lastKai = null;
+  visibleMessages.value.forEach(msg => {
+    if (msg.role === 'Agent') {
+      if (lastKai) {
+        lastKai.text += '\n' + msg.text;
+      } else {
+        lastKai = { ...msg };
+        result.push(lastKai);
+      }
+    } else {
+      result.push({ ...msg });
+      lastKai = null;
+    }
+  });
+  return result;
 });
 
 function parseMessages(convArr) {
@@ -249,14 +270,14 @@ onBeforeUnmount(() => {
   box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.10), 0 2px 8px 0 rgba(56, 189, 248, 0.08) !important;
   border: 1.5px solid rgba(139, 92, 246, 0.13) !important;
   border-radius: 1.2rem;
-  padding-left: 1.2rem;
-  padding-right: 1.2rem;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
 }
 .agent-chat-outer-glass {
   min-width: 0;
   max-width: none;
   width: 100%;
-  min-height: 100px;
+  min-height: 60px;
   transition: opacity 0.3s;
 }
 .agent-chat-outer-glass[style*='display: none'] {
@@ -281,9 +302,9 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 1.1rem;
+  gap: 0.4rem;
   margin: 0;
-  padding: 1.3rem 1.5rem 1.3rem 1.5rem;
+  padding: 0.7rem 0.7rem 0.7rem 0.7rem;
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -311,7 +332,7 @@ onBeforeUnmount(() => {
   min-width: 0;
   margin-left: 0;
   margin-right: 0;
-  padding: 0.5rem 1.2rem;
+  padding: 1rem 1.5rem;
   border-radius: 1.1rem;
   font-size: clamp(14px, 1.1vw, 16px);
   font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
@@ -365,8 +386,8 @@ onBeforeUnmount(() => {
   align-self: flex-start;
   box-shadow: 0 0 18px 2px #7c3aed22, 0 2px 8px 0 #38bdf822;
   border-radius: 1.6rem;
-  padding: 1.25rem 1.9rem;
-  font-size: 1.13rem;
+  padding: 1.15rem 1.6rem;
+  font-size: 1rem;
   font-family: 'Figtree', 'Inter', sans-serif;
   margin-bottom: 0;
   margin-top: 0;
@@ -479,14 +500,12 @@ onBeforeUnmount(() => {
 }
 @media (max-width: 900px) {
   .agent-chat-outer-glass, .agent-chat-glass {
-    padding-left: 0.7rem;
-    padding-right: 0.7rem;
+    padding-left: 0.1rem;
+    padding-right: 0.1rem;
   }
   .chat-messages {
-    padding-left: 0.7rem;
-    padding-right: 0.7rem;
-    gap: 1.7rem;
-    padding: 1.1rem 0.5rem 1.1rem 0.5rem;
+    padding: 0.5rem 0.3rem 0.5rem 0.3rem;
+    gap: 0.5rem;
   }
   .agent-chat-outer-glass {
     min-height: 140px;
@@ -500,11 +519,12 @@ onBeforeUnmount(() => {
   }
   .chat-bubble {
     font-size: clamp(13px, 2vw, 15px);
+    padding: 0.85rem 1.1rem;
   }
   .chat-bubble.kai {
-    padding: 1.1rem 1.1rem;
-    font-size: 1rem;
-    border-radius: 1.2rem;
+    padding: 1rem 1.2rem;
+    font-size: 0.95rem;
+    border-radius: 1rem;
   }
 }
 .agent-response-hidden {

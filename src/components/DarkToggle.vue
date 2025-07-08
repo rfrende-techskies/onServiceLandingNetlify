@@ -52,9 +52,6 @@ const hasDarkClass = computed(() => {
 
 // Función para obtener el tema inicial
 function getInitialTheme() {
-  console.log('getInitialTheme called')
-  console.log('localStorage.theme:', localStorage.theme)
-  console.log('system prefers dark:', window.matchMedia('(prefers-color-scheme: dark)').matches)
   
   // Verificar localStorage primero
   if (localStorage.theme === 'dark' || localStorage.theme === 'light') {
@@ -67,29 +64,23 @@ function getInitialTheme() {
 
 // Función para aplicar el tema
 function applyTheme(dark) {
-  console.log('applyTheme called with:', dark)
   if (dark) {
     document.documentElement.classList.add('dark')
     localStorage.theme = 'dark'
-    console.log('Added dark class, localStorage set to dark')
   } else {
     document.documentElement.classList.remove('dark')
     localStorage.theme = 'light'
-    console.log('Removed dark class, localStorage set to light')
   }
-  console.log('Current classes:', document.documentElement.classList.toString())
 }
 
 // Función para alternar el tema
 function toggleDark() {
-  console.log('toggleDark called, current isDark:', isDark.value)
   isDark.value = !isDark.value
   applyTheme(isDark.value)
 }
 
 // Observar cambios en el tema
 watch(isDark, (newValue) => {
-  console.log('isDark changed to:', newValue)
   if (isMounted.value) {
     applyTheme(newValue)
   }
@@ -106,7 +97,6 @@ function handleSystemThemeChange(e) {
 }
 
 onMounted(() => {
-  console.log('DarkToggle mounted')
   isMounted.value = true
   
   // Inicializar el tema

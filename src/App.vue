@@ -60,14 +60,16 @@ function selectPanel(key) {
     <Header />
     <main>
       <HeroSection />
-      <DemoSection />
+      <section class="relative z-10 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-hidden rounded-t-[32px] md:rounded-t-[64px]">
+        <DemoSection />
+      </section>
       <section id="about" class="relative py-24 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-hidden">
         <!-- Particle background -->
         <div class="absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
           <ParticleBackground />
         </div>
-        <div class="relative z-10 max-w-5xl mx-auto px-4 flex flex-col items-center gap-12">
-          <div class="w-full bg-white/70 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-white/10 px-8 py-12 animate-fade-in-right">
+        <div class="relative z-10 max-w-screen-2xl w-full mx-auto px-4 md:px-8 flex flex-col items-center gap-12">
+          <div class="w-[95%] bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800 shadow-2xl dark:shadow-[0_8px_32px_0_rgba(124,58,237,0.10)] rounded-2xl px-8 py-12 animate-fade-in-right">
             <div class="flex items-center gap-3 mb-8">
               <span class="inline-flex items-center justify-center w-12 h-12 rounded-full shadow-md border-2 border-violet-200 dark:border-violet-700 bg-gray-100 dark:bg-gray-800">
                 <svg class="w-7 h-7 text-violet-500 dark:text-cyan-300" fill="none" viewBox="0 0 24 24">
@@ -82,25 +84,33 @@ function selectPanel(key) {
             <p class="text-lg md:text-xl text-gray-800 dark:text-gray-200 mb-8 font-medium animate-fade-in">
               Somos <span class="font-bold text-violet-500 dark:text-violet-400">OnService</span>, pioneros en la intersección de <span class="text-cyan-500 dark:text-cyan-400 font-bold">IA</span>, aviación y atención al cliente. Nuestra misión: transformar la experiencia de pasajeros y empresas con tecnología de vanguardia.
             </p>
-            <div class="flex flex-col md:flex-row gap-3 md:gap-6 mt-6 w-full min-h-[220px] md:min-h-[300px]">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mt-6">
               <div v-for="(panel, idx) in panels" :key="panel.key" @click="selectPanel(panel.key)"
+                :tabindex="0"
+                @keydown.enter.space="selectPanel(panel.key)"
                 :class="[
-                  'group cursor-pointer flex flex-col items-center justify-center transition-all duration-700 shadow-xl rounded-2xl border-2 overflow-hidden h-[120px] md:h-[300px] min-h-[120px] md:min-h-[300px] p-3 md:p-6',
+                  'group cursor-pointer flex flex-col justify-center items-center transition-all duration-300 rounded-2xl border-2 min-h-[220px] md:min-h-[260px] px-4 md:px-8 py-6 md:py-10 focus:outline-none w-full',
                   selectedPanel === panel.key
-                    ? panel.gradient + ' border-none text-white flex-[3_1_0%] scale-105 z-10'
-                    : 'bg-gray-900/40 dark:bg-gray-800/60 border border-white/10 text-white flex-1 scale-95 opacity-80',
+                    ? 'bg-[#7c3aed] border-[#7c3aed] text-white shadow-2xl scale-105 z-10 ring-2 ring-[#7c3aed]'
+                    : 'bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-800 dark:text-gray-200 shadow-md dark:shadow-xl hover:border-[#7c3aed] hover:shadow-xl hover:scale-105 focus:ring-2 focus:ring-[#7c3aed]',
                   idx === 0 ? 'animate-fade-in-up delay-100' : idx === 1 ? 'animate-fade-in-up delay-200' : 'animate-fade-in-up delay-300'
                 ]"
-                style="transition: flex-grow 0.7s cubic-bezier(.4,0,.2,1); min-width:0; min-height:0;">
-                <div :class="['w-12 h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full shadow-lg mb-2 transition-all duration-300', selectedPanel === panel.key ? 'bg-white/20' : panel.iconBg]" v-html="panel.icon"></div>
-                <h3 :class="['font-extrabold mb-1 transition-colors duration-300 text-center tracking-tight', selectedPanel === panel.key ? 'text-lg md:text-2xl md:text-3xl' : 'text-xs md:text-base font-semibold opacity-80']">{{ panel.title }}</h3>
-                <div class="w-full flex-1 flex flex-col justify-center items-center transition-all duration-700 overflow-hidden">
+                style="transition: flex-grow 0.5s cubic-bezier(.4,0,.2,1); min-width:0; min-height:0; margin:0;"
+                >
+                <div :class="[
+                  'flex items-center justify-center rounded-full shadow-lg mb-2 transition-all duration-300',
+                  selectedPanel === panel.key
+                    ? 'w-16 h-16 md:w-20 md:h-20 bg-[#6d28d9] text-white drop-shadow-lg'
+                    : 'w-14 h-14 md:w-16 md:h-16 bg-gray-100 dark:bg-gray-800 text-[#7c3aed]'
+                ]" v-html="panel.icon"></div>
+                <h3 :class="['font-extrabold mb-1 transition-colors duration-300 text-center tracking-tight', selectedPanel === panel.key ? 'text-xl md:text-2xl drop-shadow-lg' : 'text-base md:text-lg font-semibold opacity-90']">{{ panel.title }}</h3>
+                <div class="w-full flex-1 flex flex-col justify-center items-center transition-all duration-500 overflow-visible">
                   <transition name="fade-slide-panel-text">
                     <div v-if="selectedPanel === panel.key" class="w-full flex flex-col items-center">
-                      <p class="text-sm md:text-base lg:text-lg font-medium text-center mb-2 leading-snug tracking-tight" style="word-break:break-word;">{{ panel.text }}</p>
-                      <p v-if="panel.key === 'mision'" class="text-xs md:text-sm lg:text-base text-white/80 text-center leading-snug tracking-tight">Nos enfocamos en la eficiencia operativa, la reducción de tiempos de respuesta y la personalización de la atención, utilizando IA de última generación para resolver los desafíos más complejos del sector aéreo.</p>
-                      <p v-else-if="panel.key === 'vision'" class="text-xs md:text-sm lg:text-base text-white/80 text-center leading-snug tracking-tight">Aspiramos a liderar la transformación digital en la industria, integrando soluciones inteligentes que anticipen las necesidades de los pasajeros y mejoren la experiencia de viaje de principio a fin.</p>
-                      <p v-else-if="panel.key === 'valores'" class="text-xs md:text-sm lg:text-base text-white/80 text-center leading-snug tracking-tight">Creemos en la colaboración, la transparencia y la mejora continua, impulsando la innovación con un fuerte compromiso ético y humano.</p>
+                      <p class="text-base md:text-lg font-medium text-center mb-2 leading-snug tracking-tight text-white drop-shadow-lg break-words" style="word-break:break-word;">{{ panel.text }}</p>
+                      <p v-if="panel.key === 'mision'" class="text-xs md:text-sm lg:text-base text-white/90 text-center leading-snug tracking-tight break-words drop-shadow">Nos enfocamos en la eficiencia operativa, la reducción de tiempos de respuesta y la personalización de la atención, utilizando IA de última generación para resolver los desafíos más complejos del sector aéreo.</p>
+                      <p v-else-if="panel.key === 'vision'" class="text-xs md:text-sm lg:text-base text-white/90 text-center leading-snug tracking-tight break-words drop-shadow">Aspiramos a liderar la transformación digital en la industria, integrando soluciones inteligentes que anticipen las necesidades de los pasajeros y mejoren la experiencia de viaje de principio a fin.</p>
+                      <p v-else-if="panel.key === 'valores'" class="text-xs md:text-sm lg:text-base text-white/90 text-center leading-snug tracking-tight break-words drop-shadow">Creemos en la colaboración, la transparencia y la mejora continua, impulsando la innovación con un fuerte compromiso ético y humano.</p>
                     </div>
                   </transition>
                 </div>

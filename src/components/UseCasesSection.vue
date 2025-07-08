@@ -4,7 +4,7 @@
     <div class="absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
       <ParticleBackground />
     </div>
-    <div class="relative z-10 max-w-7xl mx-auto px-4">
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10">
       <!-- Header mejorado -->
       <div class="text-center mb-20">
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 text-sm font-semibold mb-6">
@@ -25,21 +25,21 @@
 
       <!-- Métricas impactantes - Simplificadas con violeta -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
-        <div class="text-center p-8 rounded-2xl bg-white/10 dark:bg-white/10 backdrop-blur-xl border border-white/20 dark:border-white/10">
+        <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">70%</div>
-          <div class="text-sm text-gray-300 dark:text-gray-300">Reducción de costos</div>
+          <div class="text-sm text-gray-800 dark:text-gray-300">Reducción de costos</div>
         </div>
-        <div class="text-center p-8 rounded-2xl bg-white/10 dark:bg-white/10 backdrop-blur-xl border border-white/20 dark:border-white/10">
+        <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">24/7</div>
-          <div class="text-sm text-gray-300 dark:text-gray-300">Disponibilidad</div>
+          <div class="text-sm text-gray-800 dark:text-gray-300">Disponibilidad</div>
         </div>
-        <div class="text-center p-8 rounded-2xl bg-white/10 dark:bg-white/10 backdrop-blur-xl border border-white/20 dark:border-white/10">
+        <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">95%</div>
-          <div class="text-sm text-gray-300 dark:text-gray-300">Satisfacción</div>
+          <div class="text-sm text-gray-800 dark:text-gray-300">Satisfacción</div>
         </div>
-        <div class="text-center p-8 rounded-2xl bg-white/10 dark:bg-white/10 backdrop-blur-xl border border-white/20 dark:border-white/10">
+        <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">3s</div>
-          <div class="text-sm text-gray-300 dark:text-gray-300">Tiempo respuesta</div>
+          <div class="text-sm text-gray-800 dark:text-gray-300">Tiempo respuesta</div>
         </div>
       </div>
 
@@ -84,7 +84,7 @@
 
       <!-- Casos de uso mejorados - Fondos neutros -->
       <div class="grid lg:grid-cols-2 gap-8">
-        <div class="group relative overflow-hidden rounded-3xl bg-white/70 dark:bg-white/10 backdrop-blur-xl border border-white/20 dark:border-white/10 p-8 hover:shadow-2xl transition-all duration-500 hover:scale-105">
+        <div class="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10">
           <div class="absolute top-4 right-4 w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -117,7 +117,7 @@
           </div>
         </div>
 
-        <div class="group relative overflow-hidden rounded-3xl bg-white/70 dark:bg-white/10 backdrop-blur-xl border border-white/20 dark:border-white/10 p-8 hover:shadow-2xl transition-all duration-500 hover:scale-105">
+        <div class="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10">
           <div class="absolute top-4 right-4 w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -150,7 +150,7 @@
           </div>
         </div>
 
-        <div class="group relative overflow-hidden rounded-3xl bg-white/70 dark:bg-white/10 backdrop-blur-xl border border-white/20 dark:border-white/10 p-8 hover:shadow-2xl transition-all duration-500 hover:scale-105">
+        <div class="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10">
           <div class="absolute top-4 right-4 w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -183,7 +183,7 @@
           </div>
         </div>
 
-        <div class="group relative overflow-hidden rounded-3xl bg-white/70 dark:bg-white/10 backdrop-blur-xl border border-white/20 dark:border-white/10 p-8 hover:shadow-2xl transition-all duration-500 hover:scale-105">
+        <div class="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10">
           <div class="absolute top-4 right-4 w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center">
             <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>

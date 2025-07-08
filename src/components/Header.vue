@@ -42,8 +42,7 @@
               <span class="relative z-10 flex items-center gap-1">
                 <span v-if="isActive(item.href)" class="inline-block w-1.5 h-1.5 rounded-full bg-gradient-to-r from-violet-400 to-cyan-400 mr-1"></span>
                 <span class="relative inline-block">
-                  {{ item.label }}
-                  <!-- Underline animado -->
+                  {{ $t('header.' + item.label) }}
                   <span v-if="isActive(item.href)" class="active-underline absolute left-0 right-0 bottom-[-6px] mx-auto"></span>
                   <span v-else class="hover-underline group-hover:opacity-100 transition-all duration-200 scale-x-0 group-hover:scale-x-100 origin-left"></span>
                 </span>
@@ -58,22 +57,25 @@
         href="#contact"
         class="hidden md:inline-block ml-2 px-4 py-1.5 rounded-lg font-semibold shadow-md border-0 bg-gradient-to-r from-violet-500 to-cyan-400 text-white text-sm mr-2 md:mr-4"
       >
-        Contacto
+        {{ $t('header.contact') }}
       </a>
 
       <!-- Toggle dark/light mode -->
-      <DarkToggle class="ml-2" />
+      <DarkToggle class="ml-2 bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white transition" />
+
+      <!-- Language toggle -->
+      <LanguageToggle class="ml-2 md:ml-2 ml-4 bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-700 text-gray-900 dark:text-white transition" />
 
       <!-- Mobile hamburger -->
       <button
-        class="md:hidden ml-auto z-20 flex items-center justify-center w-12 h-12 rounded-full bg-white/70 shadow-lg hover:bg-white/90 transition-all focus:outline-none focus:ring-2 focus:ring-violet-400"
+        class="md:hidden ml-4 md:ml-2 z-20 flex items-center justify-center w-12 h-12 rounded-full bg-white border border-gray-200 dark:bg-gray-800 dark:border-gray-700 shadow-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-all focus:outline-none focus:ring-2 focus:ring-violet-400"
         @click="menuOpen = !menuOpen"
         aria-label="Abrir menú"
       >
         <svg
           v-if="!menuOpen"
           xmlns="http://www.w3.org/2000/svg"
-          class="w-7 h-7 text-gray-900"
+          class="w-7 h-7 text-gray-900 dark:text-white"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -84,7 +86,7 @@
         <svg
           v-else
           xmlns="http://www.w3.org/2000/svg"
-          class="w-7 h-7 text-gray-900"
+          class="w-7 h-7 text-gray-900 dark:text-white"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -98,34 +100,37 @@
       <transition name="slide-down">
         <div
           v-if="menuOpen"
-          class="fixed inset-0 z-40 flex flex-col items-center justify-start pt-24 bg-white/80 backdrop-blur-2xl"
+          :class="[
+            'fixed inset-0 z-50 flex flex-col items-center justify-start backdrop-blur-lg',
+            'dark:bg-black/20',
+            'bg-white/30 rounded-3xl shadow-2xl'
+          ]"
           @click.self="menuOpen = false"
         >
           <nav
-            class="w-full max-w-xs mx-auto bg-white/90 rounded-2xl shadow-2xl p-6 flex flex-col gap-4 animate-fade-in-menu"
+            class="w-full max-w-xs mx-auto bg-white/70 dark:bg-gray-900/90 rounded-3xl shadow-2xl p-8 flex flex-col gap-6 animate-fade-in-menu z-50 mt-6"
+            style="box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18), 0 1.5px 8px 0 rgba(56, 189, 248, 0.08);"
           >
             <a
               v-for="item in navItems"
               :key="item.label"
               :href="item.href"
               @click.prevent="handleMobileNav(item.href)"
-              class="block text-lg font-semibold text-gray-900 py-3 px-4 rounded-xl text-center transition-all hover:bg-violet-100 focus:outline-none focus:ring-2 focus:ring-violet-400"
+              :class="[
+                'block text-lg font-semibold py-3 px-4 rounded-xl text-center transition-all focus:outline-none focus:ring-2 focus:ring-violet-400 relative',
+                isActive(item.href)
+                  ? 'text-violet-600 dark:text-cyan-400 font-bold after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-2 after:w-8 after:h-1 after:rounded after:bg-gradient-to-r after:from-violet-500 after:to-cyan-400 after:content-[\'\']'
+                  : 'text-gray-900 dark:text-white hover:bg-violet-100 dark:hover:bg-gray-800'
+              ]"
             >
-              {{ item.label }}
-            </a>
-            <a
-              href="#demo"
-              @click.prevent="handleMobileNav('#demo')"
-              class="mt-2 px-6 py-3 rounded-xl font-semibold text-gray-900 hover:bg-gray-100 transition"
-            >
-              Demo en vivo
+              {{ $t('header.' + item.label) }}
             </a>
             <a
               href="#contact"
               @click.prevent="handleMobileNav('#contact')"
-              class="mt-2 px-6 py-3 rounded-xl font-semibold bg-gradient-to-r from-violet-500 to-cyan-400 text-white text-lg text-center shadow-lg transition"
+              class="mt-2 px-4 py-2 rounded-xl font-semibold bg-gradient-to-r from-violet-500 to-cyan-400 text-white text-base text-center shadow-md border border-violet-200 dark:border-cyan-900 transition"
             >
-              Contacto
+              {{ $t('header.contact') }}
             </a>
           </nav>
         </div>
@@ -137,12 +142,13 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import DarkToggle from './DarkToggle.vue'
+import LanguageToggle from './LanguageToggle.vue'
 
 const navItems = [
-  { label: 'Quiénes somos', href: '#about', section: 'about' },
-  { label: 'Casos de uso', href: '#usecases', section: 'usecases' },
-  { label: 'Equipo', href: '#team', section: 'team' },
-  { label: 'Clientes', href: '#clients', section: 'clients' },
+  { label: 'about', href: '#about', section: 'about' },
+  { label: 'usecases', href: '#usecases', section: 'usecases' },
+  { label: 'team', href: '#team', section: 'team' },
+  { label: 'clients', href: '#clients', section: 'clients' },
 ]
 
 const activeSection = ref(null)
