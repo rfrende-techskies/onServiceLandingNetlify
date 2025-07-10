@@ -1,18 +1,19 @@
 <template>
   <button 
     @click="toggleDark" 
-    class="relative p-2 rounded-lg transition-all duration-300 hover:scale-105 focus:outline-none"
+    class="relative p-2 rounded-lg transition-all duration-300 focus:outline-none border shadow-sm"
     :class="[
-      isDark 
-        ? 'bg-gray-800 text-yellow-300 hover:bg-gray-700' 
-        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+      'bg-white/80 dark:bg-gray-900/80',
+      'border-gray-300 dark:border-gray-700',
+      'hover:shadow-md',
+      'backdrop-blur-md'
     ]"
     aria-label="Toggle dark mode"
   >
     <!-- Sun icon for light mode -->
     <svg 
       v-if="!isDark" 
-      class="w-5 h-5 transition-transform duration-300" 
+      class="w-5 h-5 transition-transform duration-300 text-gray-700" 
       fill="currentColor" 
       viewBox="0 0 20 20"
     >
@@ -22,7 +23,7 @@
     <!-- Moon icon for dark mode -->
     <svg 
       v-else 
-      class="w-5 h-5 transition-transform duration-300" 
+      class="w-5 h-5 transition-transform duration-300 text-yellow-300" 
       fill="currentColor" 
       viewBox="0 0 20 20"
     >

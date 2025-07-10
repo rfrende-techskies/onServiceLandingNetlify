@@ -6,12 +6,11 @@
     </div>
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Empresas que confían en nosotros
-        </h2>
-        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          Líderes en sus industrias que han transformado su atención al cliente con KIUT
-        </p>
+        <TypewriterTitle
+          :i18n-key="'sections.clients.title'"
+          :subtitle-i18n-key="'sections.clients.subtitle'"
+          :badge="{ icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>`, i18nKey: 'sections.clients.badge' }"
+        />
       </div>
 
       <!-- Client Logos Carousel -->
@@ -73,7 +72,7 @@ const clientLogos = [
   { src: '/avianca.png', alt: 'Avianca' },
   { src: '/clic.png', alt: 'Clic' },
   { src: '/vite.svg', alt: 'Vite' },
-  { src: '/logo.png', alt: 'OnService' },
+  { src: '/logo.png', alt: 'OnService.IA' },
   { src: '/aws-partner-badge.png', alt: 'AWS Partner', badge: true, label: 'Partner oficial de AWS' },
 ];
 

@@ -1,12 +1,13 @@
 <template>
-  <transition name="fade-slide">
+  <transition name="fade-slide-scale-block" mode="out-in">
     <div
-      class="agent-chat-outer-glass"
-      v-show="showAgentResponse"
+      class="agent-chat-outer-glass min-h-[540px] h-[540px]"
+      v-show="showAgentResponse || props.promptTyping || props.loading"
     >
-      <div class="agent-chat-glass">
-        <div ref="chatContainer" class="chat-messages chat-scrollable">
-          <transition-group name="fadeInMsgSeq" tag="div">
+      <div class="agent-chat-glass min-h-[540px] h-[540px]">
+        <div ref="chatContainer" class="chat-messages chat-scrollable min-h-[540px] h-[540px]">
+          <!-- Mensajes y loading como antes -->
+          <transition-group name="fadeInMsgSeq" tag="div" v-if="showAgentResponse">
             <div v-for="(msg, idx) in compactedMessages" :key="'msg-' + idx" :class="['chat-row', msg.role === 'Agent' ? 'chat-agent' : 'chat-user']" :style="{ transitionDelay: (idx * 200) + 'ms' }">
               <div :class="['chat-bubble', msg.role === 'Agent' ? 'kai' : 'user', msg.role === 'user' && idx === compactedMessages.length - 1 ? 'last' : '']">
                 <span v-if="msg.role === 'user'" class="chat-badge user-badge">User</span>
@@ -19,6 +20,51 @@
               </div>
             </div>
           </transition-group>
+          <transition name="fade-slide-scale-block" mode="out-in">
+            <div v-if="props.promptTyping" class="kai-thinking-placeholder min-h-[540px] h-[540px] flex items-center justify-center">
+              <div class="flex flex-col items-center justify-center w-full h-full">
+                <div class="kai-loading-avatar">
+                  <div class="kai-avatar-core"></div>
+                </div>
+                <transition-group name="fade-phrase" tag="div">
+                  <span :key="currentPhrase" class="main-loading-text block">{{ currentPhrase }}</span>
+                </transition-group>
+                <div class="flex items-center gap-2 text-gray-400 text-sm mt-1">
+                  <span class="spinner"></span>
+                  <span>KAI está iniciando...</span>
+                </div>
+              </div>
+            </div>
+          </transition>
+          <transition name="fade-slide-scale-block" mode="out-in">
+            <div v-if="(props.typing || props.loading) && compactedMessages.length === 0 && !props.promptTyping" class="kai-thinking-placeholder flex flex-col items-center justify-center w-full h-full min-h-[540px] h-[540px] py-8" aria-live="polite">
+              <div class="flex flex-col items-center gap-3 w-full">
+                <!-- Avatar de KAI con animación -->
+                <div class="kai-loading-avatar">
+                  <div class="kai-avatar-glow"></div>
+                  <div class="kai-avatar-core"></div>
+                </div>
+                <!-- Mensaje principal -->
+                <transition-group name="fade-phrase" tag="div">
+                  <span :key="currentPhrase" class="font-semibold text-lg md:text-xl text-violet-700 dark:text-cyan-300 animate-grow block text-center mb-2">{{ currentPhrase }}
+                    <span class="thinking-dots ml-1">
+                      <span v-for="i in 3" :key="i" class="dot-bounce" :class="['dot-bounce-'+i, { active: dotIdx === i }]">●</span>
+                    </span>
+                  </span>
+                </transition-group>
+                <!-- Mensaje secundario -->
+                <div class="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm mt-1">
+                  <span class="spinner"></span>
+                  <span v-if="props.typing">Configurando personalidad de KAI...</span>
+                  <span v-else>Por favor, espera unos segundos...</span>
+                </div>
+              </div>
+            </div>
+          </transition>
+          <!-- Placeholder invisible para evitar saltos de layout -->
+          <div class="invisible absolute pointer-events-none select-none h-0 overflow-hidden">
+            <div class="chat-row chat-agent"><div class="chat-bubble kai">KAI: Esta es una respuesta de ejemplo muy larga para reservar espacio y evitar saltos de layout en la UI. Puedes ajustar este texto según el máximo esperado.</div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -39,7 +85,7 @@ const props = defineProps({
   exampleIdx: Number,
   tab: String,
   syncHeight: Number, // nuevo: alto sincronizado desde el prompt
-  syncHeight: Number // nuevo: alto sincronizado desde el prompt
+  promptTyping: Boolean // NUEVO: typing del prompt
 });
 const visibleMessages = ref([]);
 const typingMsgIdx = ref(-1);
@@ -52,7 +98,9 @@ let autoNextTimeout = null;
 const dotIdx = ref(1);
 const chatContainer = ref(null);
 const emit = defineEmits(['example-change', 'typing', 'conversation-finished']);
-const showAgentResponse = ref(false);
+const showAgentResponse = computed(() =>
+  !props.promptTyping && !props.loading && !props.typing
+);
 
 const renderedMessages = computed(() => {
   // Devuelve los mensajes a mostrar, con typing parcial solo en el Agent que está animando
@@ -123,6 +171,8 @@ function startTyping() {
   clearTimeout(autoNextTimeout);
   typingTimeout = null;
   autoNextTimeout = null;
+  
+  // Limpiar inmediatamente para evitar saltos
   visibleMessages.value = [];
   typingMsgIdx.value = -1;
   typingCharIdx.value = -1;
@@ -160,7 +210,9 @@ function startTyping() {
       typingCharIdx.value = -1;
       typingText.value = '';
       emit('typing', false);
-      emit('conversation-finished');
+      setTimeout(() => {
+        emit('conversation-finished');
+      }, 1200); // 1.2 segundos igual que el loading
     }
   }
   
@@ -215,13 +267,13 @@ function colorize(text) {
 watch(() => props.tab, () => {
   clearTimeout(autoNextTimeout);
   autoNextTimeout = null;
-  if (!props.loading) startTyping();
+  if (!props.loading && !props.promptTyping) startTyping();
 });
 
 watch(() => props.exampleIdx, () => {
   clearTimeout(autoNextTimeout);
   autoNextTimeout = null;
-  if (!props.loading) startTyping();
+  if (!props.loading && !props.promptTyping) startTyping();
 });
 
 watch(() => props.loading, (val) => {
@@ -229,20 +281,26 @@ watch(() => props.loading, (val) => {
     startThinking();
     clearTimeout(autoNextTimeout);
     autoNextTimeout = null;
-  } else {
+  } else if (!props.promptTyping) {
     stopThinking();
     startTyping();
   }
 });
 
-watch(() => props.typing, (val) => {
-  if (!val) {
-    // Cuando termina la animación del prompt, mostrar la respuesta
-    showAgentResponse.value = true;
-  } else {
-    showAgentResponse.value = false;
-  }
+watch(() => props.promptTyping, (val) => {
+  // No hacer nada aquí para evitar resets prematuros
 });
+
+const phrases = [
+  'KAI está configurando su personalidad',
+  'Cargando IA de KAI',
+  'Preparando entorno conversacional'
+];
+const currentPhraseIdx = ref(0);
+const currentPhrase = computed(() => phrases[currentPhraseIdx.value]);
+let phraseInterval = null;
+
+
 
 onMounted(() => {
   if (props.loading) startThinking();
@@ -252,15 +310,22 @@ onMounted(() => {
     visibleMessages.value = parseMessages(currentResponses[0]);
     showCursor.value = false;
   }
-});
+  // Ciclo de frases animadas
+  phraseInterval = setInterval(() => {
+    currentPhraseIdx.value = (currentPhraseIdx.value + 1) % phrases.length;
+  }, 2600);
 
+});
 onBeforeUnmount(() => {
   clearTimeout(typingTimeout);
   clearTimeout(autoNextTimeout);
   clearInterval(dotInterval);
+  clearInterval(phraseInterval);
   typingTimeout = null;
   autoNextTimeout = null;
   dotInterval = null;
+  phraseInterval = null;
+
 });
 </script>
 
@@ -278,6 +343,7 @@ onBeforeUnmount(() => {
   max-width: none;
   width: 100%;
   min-height: 60px;
+  height: 100%;
   transition: opacity 0.3s;
 }
 .agent-chat-outer-glass[style*='display: none'] {
@@ -295,13 +361,13 @@ onBeforeUnmount(() => {
 }
 .chat-messages {
   width: 100%;
-  height: auto;
+  height: 100%;
   min-height: 0;
   max-width: 100%;
-  overflow: visible;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 0.4rem;
   margin: 0;
   padding: 0.7rem 0.7rem 0.7rem 0.7rem;
@@ -540,14 +606,90 @@ onBeforeUnmount(() => {
   transition: opacity 0.2s;
 }
 .fadeInMsgSeq-enter-active {
-  transition: opacity 0.7s cubic-bezier(.4,1.6,.6,1), transform 0.7s cubic-bezier(.4,1.6,.6,1);
+  transition: opacity 0.5s cubic-bezier(.4,1.6,.6,1), transform 0.5s cubic-bezier(.4,1.6,.6,1);
 }
 .fadeInMsgSeq-enter-from {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(12px);
 }
 .fadeInMsgSeq-enter-to {
   opacity: 1;
   transform: translateY(0);
 }
+/* Estilos para el loading del prompt */
+.kai-thinking-placeholder {
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInMsg 0.4s cubic-bezier(.4,1.6,.6,1);
+  background: rgba(24,24,32,0.55) !important;
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.10), 0 2px 8px 0 rgba(56, 189, 248, 0.08) !important;
+  border: 1.5px solid rgba(139, 92, 246, 0.13) !important;
+}
+.kai-thinking-placeholder > .flex,
+.kai-thinking-placeholder > div {
+  flex: 1 1 0%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+.kai-loading-avatar {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.7rem;
+  position: relative;
+}
+.kai-avatar-glow {
+  display: none;
+}
+.kai-avatar-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed 0%, #38bdf8 100%);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: #fff;
+  font-weight: bold;
+}
+.kai-thinking-placeholder .main-loading-text {
+  min-height: 2.2em;
+  font-size: 1.15rem;
+  color: #e5e7eb;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.7rem;
+  transition: opacity 0.4s;
+}
+.spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid #a78bfa;
+  border-top: 2px solid #38bdf8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  margin-right: 0.5em;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
 </style> 

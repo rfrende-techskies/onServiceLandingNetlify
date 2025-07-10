@@ -5,15 +5,224 @@
     "team": "Equipo",
     "clients": "Clientes",
     "contact": "Contacto",
-    "demo": "Demo en vivo"
+    "demo": "Demo"
   },
   "hero": {
     "title_pre": "La nueva generación de",
     "title_highlight": "IA",
     "title_post": "para tu empresa",
-    "subtitle": "Soluciones de inteligencia artificial para potenciar ventas, soporte y operaciones.",
-    "description": "Automatizá la atención y hacé crecer tu negocio con OnService.",
-    "cta_demo": "Comenzar Demo",
-    "cta_usecases": "Ver Casos de Uso"
+    "subtitle": "Soluciones de inteligencia artificial para impulsar ventas, soporte y operaciones.",
+    "description": "Automatiza la atención y haz crecer tu negocio con OnService.IA.",
+    "cta_demo": "Iniciar demostración",
+    "cta_usecases": "Ver casos de uso"
+  },
+  "about": {
+    "title": "¿Quiénes somos?",
+    "subtitle": "Pioneros en la intersección de IA, aviación y atención al cliente",
+    "description": "Somos <span class=\"font-bold text-violet-500 dark:text-violet-400\">OnService</span><span class=\"text-violet-500 dark:text-violet-400 font-bold\">.IA</span>, pioneros en la intersección de <span class=\"text-cyan-500 dark:text-cyan-400 font-bold\">IA</span>, aviación y atención al cliente. Nuestra misión: transformar la experiencia de pasajeros y empresas con tecnología de vanguardia.",
+    "panels": [
+      {
+        "key": "mision",
+        "title": "Misión",
+        "text": "Optimizar procesos críticos y potenciar la atención al cliente en la industria aérea global.",
+        "detail": "Nos enfocamos en la eficiencia operativa, la reducción de tiempos de respuesta y la personalización de la atención, utilizando IA de última generación para resolver los desafíos más complejos del sector aéreo."
+      },
+      {
+        "key": "vision",
+        "title": "Visión",
+        "text": "Hacer que la interacción entre aerolíneas y pasajeros sea más fluida, personalizada y eficaz que nunca.",
+        "detail": "Aspiramos a liderar la transformación digital en la industria, integrando soluciones inteligentes que anticipen las necesidades de los pasajeros y mejoren la experiencia de viaje de principio a fin."
+      },
+      {
+        "key": "valores",
+        "title": "Valores",
+        "text": "Innovación, empatía, excelencia y compromiso con la transformación digital.",
+        "detail": "Creemos en la colaboración, la transparencia y la mejora continua, impulsando la innovación con un fuerte compromiso ético y humano."
+      }
+    ]
+  },
+  "usecases": {
+    "badge": "Soluciones IA para tu producto",
+    "title": "Transforma tu atención al cliente",
+    "description_pre": "Descubre cómo las aerolíneas líderes están revolucionando su servicio al cliente con IA,",
+    "description_highlight": "reduciendo costos hasta un 70%",
+    "description_post": "mientras mejoran la satisfacción del pasajero.",
+    "metrics": {
+      "cost_reduction": "Reducción del 70% en los costos operativos",
+      "availability": "Disponibilidad",
+      "satisfaction": "Mejora del 95% en la satisfacción del cliente",
+      "response_time": "Tiempo de respuesta"
+    },
+    "channels_title": "Integración con todos tus canales",
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "webchat": "Webchat",
+      "telegram": "Telegram"
+    },
+    "cases": [
+      {
+        "icon": "💳",
+        "title": "Cotización y Venta de Boletos",
+        "desc": "Guía al pasajero en la compra de boletos y servicios adicionales de forma personalizada, maximizando ingresos y eficiencia.",
+        "bullets": [
+          "Incremento en ventas directas",
+          "Mejora del ARPU",
+          "Reducción de carga operativa"
+        ],
+        "cta": "Ver más",
+        "longDesc": "El proceso de compra de boletos puede ser complejo y demandar mucho tiempo del personal, especialmente con las variaciones para diferentes tipos de pasajeros y la venta de servicios adicionales. Nuestro agente de IA guía al pasajero a través de un proceso de compra intuitivo directamente en su canal preferido (WhatsApp, Instagram, etc.). La IA puede cotizar vuelos, gestionar información de pasajeros, ofrecer y vender vuelos y ancillaries como selección de asientos o equipaje extra, y facilitar el pago de forma segura. Esto incrementa las ventas directas, mejora el ARPU y reduce la carga operativa, brindando una experiencia de compra fluida y conveniente."
+      },
+      {
+        "icon": "🛫",
+        "title": "Check-in Simplificado",
+        "desc": "Automatiza el proceso de check-in, permitiendo a los pasajeros obtener su pase de abordar desde cualquier canal.",
+        "bullets": [
+          "Check-in 100% digital",
+          "Reducción de colas y errores",
+          "Mayor conveniencia para el pasajero"
+        ],
+        "cta": "Ver más",
+        "longDesc": "El check-in puede ser un cuello de botella, especialmente durante picos de operación o para pasajeros menos familiarizados con los procesos digitales. El bot de IA automatiza el proceso de check-in: verifica el estado del vuelo, recopila y valida la información del pasajero, permite la selección de asiento y emite el pase de abordar con código QR directamente en el canal de chat. Esto reduce la necesidad de kioscos físicos, agiliza el flujo en el aeropuerto y minimiza errores humanos."
+      },
+      {
+        "icon": "🔄",
+        "title": "Cambios Voluntarios de Vuelo",
+        "desc": "Permite a los pasajeros gestionar cambios de vuelo de forma autónoma, aplicando reglas tarifarias automáticamente.",
+        "bullets": [
+          "Autoservicio 24/7",
+          "Consistencia en reglas",
+          "Reducción de carga de agentes"
+        ],
+        "cta": "Ver más",
+        "longDesc": "Los cambios de vuelo suelen ser una fuente de frustración y alta demanda para los centros de contacto. Nuestro agente de IA maneja cambios de vuelo de forma inteligente y automatizada: solicita datos de reserva, consulta reglas tarifarias, presenta alternativas y gestiona el pago de cargos asociados, emitiendo la nueva confirmación. Permite autoservicio 24/7, reduce la carga de agentes y asegura la correcta aplicación de reglas."
+      },
+      {
+        "icon": "⚠️",
+        "title": "Gestión de IROPs y Protección",
+        "desc": "Automatiza la comunicación y reubicación de pasajeros ante retrasos, cancelaciones o desvíos, reduciendo el caos operacional.",
+        "bullets": [
+          "Notificación proactiva",
+          "Opciones flexibles de cambio",
+          "Cumplimiento normativo"
+        ],
+        "cta": "Ver más",
+        "longDesc": "Las interrupciones de vuelos (retrasos, cancelaciones, desvíos) generan estrés y una carga masiva para las aerolíneas. En situaciones de IROPs, nuestro bot de IA notifica proactivamente a los pasajeros afectados, identifica y presenta opciones de vuelos alternativos, permite seleccionar entre diferentes alternativas y procesa la reubicación de forma instantánea. Esto reduce el caos, mejora la experiencia y ayuda a cumplir regulaciones."
+      },
+      {
+        "icon": "❓",
+        "title": "FAQs y Dudas Generales",
+        "desc": "Responde instantáneamente preguntas frecuentes sobre políticas, servicios y procedimientos, 24/7.",
+        "bullets": [
+          "Base de conocimiento dinámica",
+          "Escalamiento inteligente",
+          "Consistencia en la información"
+        ],
+        "cta": "Ver más",
+        "longDesc": "Una gran parte de las interacciones con los clientes son consultas repetitivas sobre políticas, procedimientos y preguntas generales. Nuestro bot de IA es una base de conocimiento inteligente, disponible 24/7, entrenada con reglas y políticas de la aerolínea. Proporciona respuestas inmediatas y precisas, aprende con cada interacción y escala a un agente humano si es necesario, liberando recursos y asegurando consistencia."
+      },
+      {
+        "icon": "⏱️",
+        "title": "Estado de Vuelo en Tiempo Real",
+        "desc": "Proporciona información actualizada sobre vuelos, puertas, retrasos y notificaciones automáticas al pasajero.",
+        "bullets": [
+          "Actualizaciones en tiempo real",
+          "Menos consultas al call center",
+          "Mejora la experiencia pre-vuelo"
+        ],
+        "cta": "Ver más",
+        "longDesc": "Los pasajeros necesitan información actualizada sobre el estado de sus vuelos, especialmente en días de viaje. El bot de IA permite consultar el estado de un vuelo por número, destino, fecha y hora, y se conecta a los sistemas de la aerolínea para obtener información en tiempo real. Puede enviar notificaciones automáticas ante cambios, reduciendo la incertidumbre y mejorando la experiencia."
+      },
+      {
+        "icon": "🧳",
+        "title": "Rastreo y Reporte de Equipajes",
+        "desc": "Permite a los pasajeros rastrear su equipaje y reportar incidencias de forma rápida y estructurada.",
+        "bullets": [
+          "Reducción del estrés del pasajero",
+          "Eficiencia en el reporte",
+          "Disponibilidad 24/7"
+        ],
+        "cta": "Ver más",
+        "longDesc": "La pérdida o demora de equipaje es una de las experiencias más estresantes para un pasajero. Nuestro agente de IA permite rastrear el equipaje ingresando el número de reclamo o etiqueta, y reportar incidencias guiando al pasajero en la recolección de datos y documentación. Esto reduce el estrés, agiliza la gestión y mejora la imagen de la marca."
+      },
+      {
+        "icon": "🛒",
+        "title": "Recuperación de Carritos Abandonados",
+        "desc": "Detecta y contacta proactivamente a usuarios que abandonaron el proceso de compra, recuperando ventas perdidas.",
+        "bullets": [
+          "Incremento directo de ingresos",
+          "Recordatorio inteligente",
+          "Automatización del seguimiento"
+        ],
+        "cta": "Ver más",
+        "longDesc": "Un porcentaje significativo de usuarios inicia la compra de un boleto o ancillaries en línea, pero la abandona antes de finalizarla. Nuestro agente de IA detecta el abandono, contacta proactivamente al usuario con un mensaje personalizado y facilita la reanudación de la compra, recuperando ventas y optimizando el ROI de marketing."
+      },
+      {
+        "icon": "💸",
+        "title": "Reembolsos Automatizados",
+        "desc": "Gestiona solicitudes de reembolso de manera eficiente, segura y transparente para el pasajero.",
+        "bullets": [
+          "Proceso ágil y seguro",
+          "Reducción de carga manual",
+          "Mejora la satisfacción del cliente"
+        ],
+        "cta": "Ver más",
+        "longDesc": "Nuestros agentes de IA gestionan solicitudes de reembolso de manera eficiente y segura, conectándose con los sistemas de la aerolínea para validar la elegibilidad y procesar la devolución. El pasajero recibe información clara y seguimiento del estado de su solicitud, mejorando la transparencia y la satisfacción."
+      }
+    ],
+    "cta": "Solicitar demostración personalizada",
+    "cta_desc": "Descubre cómo OnService.IA puede transformar tu producto en 30 días",
+    "less": "Ver menos"
+  },
+  "brand": "OnService.",
+  "brand_ia": "IA",
+  "sections": {
+    "hero": {
+      "title": "La nueva generación de IA para tu empresa",
+      "subtitle": "Soluciones de inteligencia artificial para impulsar ventas, soporte y operaciones.",
+      "badge": "Innovación en IA"
+    },
+    "demo": {
+      "title": "Prueba la IA en acción",
+      "subtitle": "Interactúa con nuestro demo en vivo y descubre el poder de la automatización.",
+      "badge": "Demo interactivo",
+      "playground_cta": "Acceder al Playground"
+    },
+    "usecases": {
+      "title": "Transforma tu atención al cliente",
+      "subtitle": "Descubre casos de éxito y cómo la IA revoluciona el sector.",
+      "badge": "Soluciones IA para tu producto"
+    },
+    "tech": {
+      "title": "Tecnología de vanguardia",
+      "subtitle": "Utilizamos los modelos de IA más avanzados y las mejores herramientas del mercado.",
+      "badge": "Infraestructura robusta"
+    },
+    "images": {
+      "title": "Ver es creer",
+      "subtitle": "Explora cómo KIUT transforma la atención al cliente con interfaces intuitivas y conversaciones naturales.",
+      "badge": "Galería de experiencias"
+    },
+    "team": {
+      "title": "Nuestro Equipo",
+      "subtitle": "Conoce a los expertos detrás de la innovación.",
+      "badge": "Talento humano"
+    },
+    "clients": {
+      "title": "Empresas que confían en nosotros",
+      "subtitle": "Líderes en sus industrias que han transformado su atención al cliente con KIUT.",
+      "badge": "Confianza empresarial"
+    },
+    "metrics": {
+      "title": "Nuestras Métricas",
+      "subtitle": "Resultados tangibles impulsados por IA.",
+      "badge": "Impacto real"
+    },
+    "pricing": {
+      "title": "Planes y Precios",
+      "subtitle": "Elige la solución que mejor se adapta a tu negocio.",
+      "badge": "Accesibilidad"
+    }
   }
 } 

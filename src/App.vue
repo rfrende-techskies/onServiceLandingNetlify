@@ -8,51 +8,10 @@ import TeamSection from './components/TeamSection.vue';
 import FooterSection from './components/FooterSection.vue';
 import ClientsSection from './components/ClientsSection.vue';
 import ParticleBackground from './components/ParticleBackground.vue';
+import AboutSection from './components/AboutSection.vue';
+import AboutStepper from './components/AboutStepper.vue';
 
-const panels = [
-  {
-    key: 'mision',
-    icon: `<svg class='w-7 h-7 text-violet-600 dark:text-white' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' d='M12 8v4l3 3'/></svg>`,
-    title: 'Misión',
-    color: 'violet',
-    gradient: 'bg-gradient-to-br from-violet-500 to-fuchsia-500',
-    bg: 'bg-violet-100 dark:bg-violet-900',
-    border: 'border-violet-400',
-    iconBg: 'bg-violet-200 dark:bg-violet-700',
-    titleColor: 'text-violet-700 dark:text-violet-200',
-    text: 'Optimizar procesos críticos y potenciar la atención al cliente en la industria aérea global.'
-  },
-  {
-    key: 'vision',
-    icon: `<svg class='w-7 h-7 text-cyan-600 dark:text-white' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' d='M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z'/></svg>`,
-    title: 'Visión',
-    color: 'cyan',
-    gradient: 'bg-gradient-to-br from-cyan-500 to-blue-400',
-    bg: 'bg-cyan-100 dark:bg-cyan-900',
-    border: 'border-cyan-400',
-    iconBg: 'bg-cyan-200 dark:bg-cyan-700',
-    titleColor: 'text-cyan-700 dark:text-cyan-200',
-    text: 'Hacer que la interacción entre aerolíneas y pasajeros sea más fluida, personalizada y eficaz que nunca.'
-  },
-  {
-    key: 'valores',
-    icon: `<svg class='w-7 h-7 text-blue-600 dark:text-white' fill='none' stroke='currentColor' stroke-width='2' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' d='M5 13l4 4L19 7'/></svg>`,
-    title: 'Valores',
-    color: 'blue',
-    gradient: 'bg-gradient-to-br from-blue-500 to-cyan-400',
-    bg: 'bg-blue-100 dark:bg-blue-900',
-    border: 'border-blue-400',
-    iconBg: 'bg-blue-200 dark:bg-blue-700',
-    titleColor: 'text-blue-700 dark:text-blue-200',
-    text: 'Innovación, empatía, excelencia y compromiso con la transformación digital.'
-  }
-];
 
-const selectedPanel = ref('mision');
-
-function selectPanel(key) {
-  selectedPanel.value = key;
-}
 </script>
 
 <template>
@@ -63,65 +22,10 @@ function selectPanel(key) {
       <section class="relative z-10 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-hidden rounded-t-[32px] md:rounded-t-[64px]">
         <DemoSection />
       </section>
-      <section id="about" class="relative py-24 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-hidden">
-        <!-- Particle background -->
-        <div class="absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
-          <ParticleBackground />
-        </div>
-        <div class="relative z-10 max-w-screen-2xl w-full mx-auto px-4 md:px-8 flex flex-col items-center gap-12">
-          <div class="w-[95%] bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800 shadow-2xl dark:shadow-[0_8px_32px_0_rgba(124,58,237,0.10)] rounded-2xl px-8 py-12 animate-fade-in-right">
-            <div class="flex items-center gap-3 mb-8">
-              <span class="inline-flex items-center justify-center w-12 h-12 rounded-full shadow-md border-2 border-violet-200 dark:border-violet-700 bg-gray-100 dark:bg-gray-800">
-                <svg class="w-7 h-7 text-violet-500 dark:text-cyan-300" fill="none" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" fill="currentColor" fill-opacity="0.08" />
-                  <text x="12" y="16" text-anchor="middle" font-size="13" font-family="Inter, Arial, sans-serif" fill="currentColor" font-weight="bold">i</text>
-                </svg>
-              </span>
-              <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-cyan-400 to-blue-400 drop-shadow-lg">
-                ¿Quiénes somos?
-              </h1>
-            </div>
-            <p class="text-lg md:text-xl text-gray-800 dark:text-gray-200 mb-8 font-medium animate-fade-in">
-              Somos <span class="font-bold text-violet-500 dark:text-violet-400">OnService</span>, pioneros en la intersección de <span class="text-cyan-500 dark:text-cyan-400 font-bold">IA</span>, aviación y atención al cliente. Nuestra misión: transformar la experiencia de pasajeros y empresas con tecnología de vanguardia.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mt-6">
-              <div v-for="(panel, idx) in panels" :key="panel.key" @click="selectPanel(panel.key)"
-                :tabindex="0"
-                @keydown.enter.space="selectPanel(panel.key)"
-                :class="[
-                  'group cursor-pointer flex flex-col justify-center items-center transition-all duration-300 rounded-2xl border-2 min-h-[220px] md:min-h-[260px] px-4 md:px-8 py-6 md:py-10 focus:outline-none w-full',
-                  selectedPanel === panel.key
-                    ? 'bg-[#7c3aed] border-[#7c3aed] text-white shadow-2xl scale-105 z-10 ring-2 ring-[#7c3aed]'
-                    : 'bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-800 dark:text-gray-200 shadow-md dark:shadow-xl hover:border-[#7c3aed] hover:shadow-xl hover:scale-105 focus:ring-2 focus:ring-[#7c3aed]',
-                  idx === 0 ? 'animate-fade-in-up delay-100' : idx === 1 ? 'animate-fade-in-up delay-200' : 'animate-fade-in-up delay-300'
-                ]"
-                style="transition: flex-grow 0.5s cubic-bezier(.4,0,.2,1); min-width:0; min-height:0; margin:0;"
-                >
-                <div :class="[
-                  'flex items-center justify-center rounded-full shadow-lg mb-2 transition-all duration-300',
-                  selectedPanel === panel.key
-                    ? 'w-16 h-16 md:w-20 md:h-20 bg-[#6d28d9] text-white drop-shadow-lg'
-                    : 'w-14 h-14 md:w-16 md:h-16 bg-gray-100 dark:bg-gray-800 text-[#7c3aed]'
-                ]" v-html="panel.icon"></div>
-                <h3 :class="['font-extrabold mb-1 transition-colors duration-300 text-center tracking-tight', selectedPanel === panel.key ? 'text-xl md:text-2xl drop-shadow-lg' : 'text-base md:text-lg font-semibold opacity-90']">{{ panel.title }}</h3>
-                <div class="w-full flex-1 flex flex-col justify-center items-center transition-all duration-500 overflow-visible">
-                  <transition name="fade-slide-panel-text">
-                    <div v-if="selectedPanel === panel.key" class="w-full flex flex-col items-center">
-                      <p class="text-base md:text-lg font-medium text-center mb-2 leading-snug tracking-tight text-white drop-shadow-lg break-words" style="word-break:break-word;">{{ panel.text }}</p>
-                      <p v-if="panel.key === 'mision'" class="text-xs md:text-sm lg:text-base text-white/90 text-center leading-snug tracking-tight break-words drop-shadow">Nos enfocamos en la eficiencia operativa, la reducción de tiempos de respuesta y la personalización de la atención, utilizando IA de última generación para resolver los desafíos más complejos del sector aéreo.</p>
-                      <p v-else-if="panel.key === 'vision'" class="text-xs md:text-sm lg:text-base text-white/90 text-center leading-snug tracking-tight break-words drop-shadow">Aspiramos a liderar la transformación digital en la industria, integrando soluciones inteligentes que anticipen las necesidades de los pasajeros y mejoren la experiencia de viaje de principio a fin.</p>
-                      <p v-else-if="panel.key === 'valores'" class="text-xs md:text-sm lg:text-base text-white/90 text-center leading-snug tracking-tight break-words drop-shadow">Creemos en la colaboración, la transparencia y la mejora continua, impulsando la innovación con un fuerte compromiso ético y humano.</p>
-                    </div>
-                  </transition>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <AboutStepper />
       <UseCasesSection />
       <TeamSection />
-      <ClientsSection />
+      <ClientsSection v-if="false" />
     </main>
     <FooterSection />
   </div>

@@ -1,14 +1,11 @@
 <template>
   <section class="py-20 bg-gray-800 dark:bg-gray-200">
     <div class="w-full max-w-[1440px] mx-auto px-6 md:px-10">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-white dark:text-gray-900 mb-4">
-          Tecnología de vanguardia
-        </h2>
-        <p class="text-lg text-gray-300 dark:text-gray-600 max-w-2xl mx-auto">
-          Utilizamos los modelos de IA más avanzados y las mejores herramientas del mercado
-        </p>
-      </div>
+      <TypewriterTitle
+        :i18n-key="'sections.tech.title'"
+        :subtitle-i18n-key="'sections.tech.subtitle'"
+        :badge="{ icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>`, i18nKey: 'sections.tech.badge' }"
+      />
 
       <!-- AI Models Section -->
       <div class="mb-20">

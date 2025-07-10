@@ -1,11 +1,13 @@
 <template>
   <button 
     @click="toggleLanguage" 
-    class="relative p-2 rounded-lg transition-all duration-300 hover:scale-105 focus:outline-none group flex items-center gap-1"
+    class="relative flex items-center justify-center p-2 rounded-lg transition-all duration-300 focus:outline-none border shadow-sm"
     :class="[
-      isDark 
-        ? 'bg-gray-800 text-blue-300 hover:bg-gray-700' 
-        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+      'bg-white/80 dark:bg-gray-900/80',
+      'border-gray-300 dark:border-gray-700',
+      'hover:shadow-md',
+      'backdrop-blur-md',
+      'text-gray-700 dark:text-white'
     ]"
     aria-label="Toggle language"
   >
@@ -38,10 +40,11 @@ const { locale } = useI18n()
 const currentLanguage = ref('es')
 const isMounted = ref(false)
 
-const isDark = computed(() => {
-  if (!isMounted.value) return false
-  return document.documentElement.classList.contains('dark')
-})
+const isDark = ref(false)
+
+function updateIsDark() {
+  isDark.value = document.documentElement.classList.contains('dark')
+}
 
 function getInitialLanguage() {
   if (localStorage.language === 'en' || localStorage.language === 'es') {
@@ -60,6 +63,10 @@ onMounted(() => {
   isMounted.value = true
   currentLanguage.value = getInitialLanguage()
   locale.value = currentLanguage.value
+  updateIsDark()
+  // Escuchar cambios en la clase dark
+  const observer = new MutationObserver(updateIsDark)
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
 })
 
 watch(currentLanguage, (lang) => {

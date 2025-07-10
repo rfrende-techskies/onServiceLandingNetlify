@@ -8,11 +8,16 @@
       <!-- Columna izquierda: texto con fondo glass -->
       <div class="flex-1 flex flex-col items-center justify-center text-center md:pr-8 animate-fade-in-up">
         <div class="w-full bg-white/70 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/30 dark:border-white/10 py-8 md:py-10 flex flex-col items-center">
-          <h1 class="text-3xl md:text-4xl font-extrabold leading-tight tracking-tight mb-7 text-gray-900 dark:text-white">
-            {{ t('hero.title_pre') }} <span class="text-violet-500">{{ t('hero.title_highlight') }}</span> {{ t('hero.title_post') }}
-          </h1>
-          <p class="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-6 font-medium">{{ t('hero.subtitle') }}</p>
-          <p class="text-sm md:text-base text-gray-500 dark:text-gray-300 mb-10 max-w-md mx-auto">{{ t('hero.description') }}</p>
+          <TypewriterTitle
+            :i18n-key="'sections.hero.title'"
+            :subtitle-i18n-key="'sections.hero.subtitle'"
+            :badge="{ icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>`, i18nKey: 'sections.hero.badge' }"
+          />
+          <p class="text-sm md:text-base text-gray-500 dark:text-gray-300 mb-10 max-w-md mx-auto">
+            {{ t('hero.description').split('OnService.IA')[0] }}
+            <span class="font-bold">{{ t('brand') }}</span><span class="text-violet-500 font-bold">{{ t('brand_ia') }}</span>
+            {{ t('hero.description').split('OnService.IA')[1] }}
+          </p>
           <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center">
             <a href="#demo" class="group px-7 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-violet-500 to-cyan-400 shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base">{{ t('hero.cta_demo') }}</a>
             <a href="#usecases" class="group px-7 py-2.5 rounded-xl font-bold text-violet-700 dark:text-cyan-200 bg-white/80 dark:bg-gray-900 border border-violet-200 dark:border-cyan-700 shadow hover:bg-violet-50 dark:hover:bg-gray-800 hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base">{{ t('hero.cta_usecases') }}</a>
@@ -34,6 +39,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import CircuitBackground from './CircuitBackground.vue'
+import TypewriterTitle from './TypewriterTitle.vue'
 const { t } = useI18n()
 </script>
 

@@ -4,216 +4,96 @@
     <div class="absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
       <ParticleBackground />
     </div>
-    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10">
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10 mt-6">
       <!-- Header mejorado -->
-      <div class="text-center mb-20">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 text-sm font-semibold mb-6">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-          Soluciones IA para tu producto
-        </div>
-        <h2 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-violet-600 to-cyan-600 bg-clip-text text-transparent">
-          Transformá tu atención al cliente
-        </h2>
-        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-          Descubrí cómo las aerolíneas líderes están revolucionando su servicio al cliente con IA, 
-          <span class="font-semibold text-violet-600 dark:text-violet-400">reduciendo costos hasta un 70%</span> 
-          mientras mejoran la satisfacción del pasajero.
+      <TypewriterTitle
+        :i18n-key="'sections.usecases.title'"
+        :subtitle-i18n-key="'sections.usecases.subtitle'"
+        :badge="{ icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>`, i18nKey: 'sections.usecases.badge' }"
+      />
+      <p class="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+          {{ t('usecases.description_pre') }}
+          <span class="font-bold text-violet-600">{{ t('usecases.description_highlight') }}</span>
+          {{ t('usecases.description_post') }}
         </p>
-      </div>
 
-      <!-- Métricas impactantes - Simplificadas con violeta -->
+      <!-- Métricas -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
         <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">70%</div>
-          <div class="text-sm text-gray-800 dark:text-gray-300">Reducción de costos</div>
+          <div class="text-sm text-gray-800 dark:text-gray-300">{{ t('usecases.metrics.cost_reduction') }}</div>
         </div>
         <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">24/7</div>
-          <div class="text-sm text-gray-800 dark:text-gray-300">Disponibilidad</div>
+          <div class="text-sm text-gray-800 dark:text-gray-300">{{ t('usecases.metrics.availability') }}</div>
         </div>
         <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">95%</div>
-          <div class="text-sm text-gray-800 dark:text-gray-300">Satisfacción</div>
+          <div class="text-sm text-gray-800 dark:text-gray-300">{{ t('usecases.metrics.satisfaction') }}</div>
         </div>
         <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">3s</div>
-          <div class="text-sm text-gray-800 dark:text-gray-300">Tiempo respuesta</div>
+          <div class="text-sm text-gray-800 dark:text-gray-300">{{ t('usecases.metrics.response_time') }}</div>
         </div>
       </div>
 
-      <!-- Canales de comunicación - Mantenemos los colores -->
+      <!-- Canales de comunicación -->
       <div class="mb-20">
         <h3 class="text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-          Integración con todos tus canales
+          {{ t('usecases.channels_title') }}
         </h3>
         <div class="flex flex-wrap justify-center gap-4">
-          <div class="flex items-center gap-3 px-6 py-3 rounded-xl bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-700/30">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-            </svg>
-            <span class="font-semibold">WhatsApp</span>
-          </div>
-          <div class="flex items-center gap-3 px-6 py-3 rounded-xl bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 border border-pink-200 dark:border-pink-700/30">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-            </svg>
-            <span class="font-semibold">Instagram</span>
-          </div>
-          <div class="flex items-center gap-3 px-6 py-3 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700/30">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-            </svg>
-            <span class="font-semibold">Facebook</span>
-          </div>
-          <div class="flex items-center gap-3 px-6 py-3 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-700/30">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-            <span class="font-semibold">Webchat</span>
-          </div>
-          <div class="flex items-center gap-3 px-6 py-3 rounded-xl bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-700/30">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-            </svg>
-            <span class="font-semibold">Telegram</span>
+          <div v-for="([key, label], idx) in Object.entries(tm('usecases.channels'))" :key="key"
+            :class="[
+              'flex items-center gap-3 px-6 py-3 rounded-xl font-semibold border shadow-sm transition-all duration-200',
+              channelStyles[key]?.bg || 'bg-gray-100 dark:bg-gray-900/30',
+              channelStyles[key]?.text || 'text-gray-700 dark:text-gray-300',
+              channelStyles[key]?.border || 'border-gray-200 dark:border-gray-700/30'
+            ]">
+            <span v-if="channelStyles[key] && channelStyles[key].icon" v-html="channelStyles[key].icon" class="w-6 h-6"></span>
+            <span>{{ label }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Casos de uso mejorados - Fondos neutros -->
-      <div class="grid lg:grid-cols-2 gap-8">
-        <div class="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10">
-          <div class="absolute top-4 right-4 w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
+      <!-- Casos de uso -->
+      <div class="usecases-masonry">
+        <div
+          v-for="(item, idx) in tm('usecases.cases')"
+          :key="item.title"
+          class="usecase-card group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10 flex flex-col mb-8"
+          :class="{ 'ring-4 ring-violet-300/40 dark:ring-violet-500/30 scale-105 z-20': expandedIdx === idx }"
+          style="align-self: start; min-height: unset; break-inside: avoid;"
+        >
+          <div class="text-4xl mb-3 flex items-center justify-between">
+            <span v-if="item.icon" v-html="item.icon"></span>
+            <button
+              @click.stop="toggleExpand(idx)"
+              class="ml-auto px-3 py-1.5 rounded-lg bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-semibold text-sm flex items-center gap-1 transition-all duration-200 hover:bg-violet-200 dark:hover:bg-violet-800/60 focus:outline-none"
+              :aria-expanded="expandedIdx === idx"
+              :aria-controls="'usecase-details-' + idx"
+            >
+              <span>{{ expandedIdx === idx ? t('usecases.less') : t('usecases.more') }}</span>
+              <svg :class="['transition-transform duration-300', expandedIdx === idx ? 'rotate-180' : '']" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
           </div>
-          <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Atención 24/7 Inteligente</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-            Agentes de IA que manejan consultas complejas sobre vuelos, equipaje, reservas y check-in, 
-            proporcionando respuestas instantáneas y precisas en cualquier momento del día.
-          </p>
-          <div class="space-y-3 mb-6">
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Reducción del 70% en costos operativos</span>
+          <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">{{ item.title }}</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{{ item.desc }}</p>
+          <ul class="mb-4 space-y-1">
+            <li v-for="(bullet, bidx) in item.bullets" :key="bidx" class="flex items-center"><span class="mr-2 text-green-400">✔️</span>{{ bullet }}</li>
+          </ul>
+          <transition name="expand-fade">
+            <div
+              v-if="expandedIdx === idx"
+              :id="'usecase-details-' + idx"
+              class="mt-2 rounded-xl bg-gradient-to-br from-violet-100/60 to-cyan-100/40 dark:from-violet-900/30 dark:to-cyan-900/20 text-gray-800 dark:text-gray-100 shadow-inner animate-fade-in-up overflow-hidden"
+              style="padding: 0;"
+            >
+              <div class="p-4">
+                <p class="whitespace-pre-line">{{ item.longDesc }}</p>
+              </div>
             </div>
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Mejora del 95% en satisfacción del cliente</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Tiempo de respuesta promedio: 3 segundos</span>
-            </div>
-          </div>
-          <div class="inline-flex items-center gap-2 text-violet-600 dark:text-violet-400 font-semibold">
-            <span>Ver demo</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
-
-        <div class="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10">
-          <div class="absolute top-4 right-4 w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-          </div>
-          <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Gestión Automatizada de Incidencias</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-            Sistema inteligente que guía a los pasajeros en el reporte de incidencias y reclamaciones, 
-            escalando automáticamente a agentes humanos solo cuando es necesario.
-          </p>
-          <div class="space-y-3 mb-6">
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Resolución 3x más rápida de problemas</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Optimización del 60% en recursos humanos</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Seguimiento automático de casos</span>
-            </div>
-          </div>
-          <div class="inline-flex items-center gap-2 text-violet-600 dark:text-violet-400 font-semibold">
-            <span>Ver demo</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
-
-        <div class="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10">
-          <div class="absolute top-4 right-4 w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-          </div>
-          <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Soporte Operacional Interno</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-            Asistente virtual interno que proporciona acceso instantáneo a FAQs operacionales, 
-            normativas y procedimientos para tripulaciones y personal de tierra.
-          </p>
-          <div class="space-y-3 mb-6">
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Mejora del 80% en comunicación interna</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Reducción del 50% en tiempo de capacitación</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Acceso 24/7 a información crítica</span>
-            </div>
-          </div>
-          <div class="inline-flex items-center gap-2 text-violet-600 dark:text-violet-400 font-semibold">
-            <span>Ver demo</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
-
-        <div class="group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10">
-          <div class="absolute top-4 right-4 w-12 h-12 bg-violet-500 rounded-full flex items-center justify-center">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-            </svg>
-          </div>
-          <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Ventas Automatizadas Post-Reserva</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-            Agentes de IA que ofrecen upgrades, servicios adicionales y gestionan cambios post-reserva, 
-            maximizando el ARPU y mejorando la experiencia del cliente.
-          </p>
-          <div class="space-y-3 mb-6">
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Incremento del 40% en ingresos auxiliares</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Reducción del 65% en carga de centros de contacto</span>
-            </div>
-            <div class="flex items-center gap-3">
-              <div class="w-2 h-2 bg-violet-500 rounded-full"></div>
-              <span class="text-sm text-gray-600 dark:text-gray-400">Personalización automática de ofertas</span>
-            </div>
-          </div>
-          <div class="inline-flex items-center gap-2 text-violet-600 dark:text-violet-400 font-semibold">
-            <span>Ver demo</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
+          </transition>
         </div>
       </div>
 
@@ -223,10 +103,12 @@
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
           </svg>
-          Solicitar Demo Personalizada
+          {{ t('usecases.cta') }}
         </div>
         <p class="text-gray-600 dark:text-gray-300 mt-4 text-sm">
-          Descubrí cómo OnService puede transformar tu producto en 30 días
+          {{ t('usecases.cta_desc').split('OnService.IA')[0] }}
+          <span class="font-bold">{{ t('brand') }}</span><span class="text-violet-500 font-bold">{{ t('brand_ia') }}</span>
+          {{ t('usecases.cta_desc').split('OnService.IA')[1] }}
         </p>
       </div>
     </div>
@@ -234,5 +116,83 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ParticleBackground from './ParticleBackground.vue'
-</script> 
+import TypewriterTitle from './TypewriterTitle.vue'
+
+const { t, tm } = useI18n()
+
+const expandedIdx = ref(null)
+function toggleExpand(idx) {
+  expandedIdx.value = expandedIdx.value === idx ? null : idx
+}
+
+// Colores e iconos de marca para los canales
+const channelStyles = {
+  whatsapp: {
+    bg: 'bg-green-100 dark:bg-green-900/30',
+    text: 'text-green-700 dark:text-green-300',
+    border: 'border-green-200 dark:border-green-700/30',
+    icon: `<svg fill='none' viewBox='0 0 24 24' class='w-6 h-6'><path fill='#25D366' d='M12 2C6.477 2 2 6.477 2 12c0 1.993.583 3.85 1.59 5.41L2 22l4.707-1.553A9.953 9.953 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2Z'/><path fill='#fff' d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.472-.148-.67.15-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.52-.075-.149-.669-1.612-.916-2.21-.242-.58-.487-.5-.67-.51-.173-.008-.372-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.1 3.21 5.077 4.374.71.306 1.263.489 1.695.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.288.173-1.413-.074-.124-.272-.198-.57-.347Z'/></svg>`
+  },
+  instagram: {
+    bg: 'bg-pink-100 dark:bg-pink-900/30',
+    text: 'text-pink-700 dark:text-pink-300',
+    border: 'border-pink-200 dark:border-pink-700/30',
+    icon: `<svg fill='none' viewBox='0 0 24 24' class='w-6 h-6'><rect width='20' height='20' x='2' y='2' rx='5' fill='url(#ig-gradient)'/><defs><linearGradient id='ig-gradient' x1='2' x2='22' y1='2' y2='22' gradientUnits='userSpaceOnUse'><stop stop-color='#F58529'/><stop offset='0.5' stop-color='#DD2A7B'/><stop offset='1' stop-color='#515BD4'/></linearGradient></defs><circle cx='12' cy='12' r='5' fill='#fff'/><circle cx='17.5' cy='6.5' r='1.5' fill='#fff'/></svg>`
+  },
+  facebook: {
+    bg: 'bg-blue-100 dark:bg-blue-900/30',
+    text: 'text-blue-700 dark:text-blue-300',
+    border: 'border-blue-200 dark:border-blue-700/30',
+    icon: `<svg fill='none' viewBox='0 0 24 24' class='w-6 h-6'><rect width='20' height='20' x='2' y='2' rx='5' fill='#1877F3'/><path fill='#fff' d='M15.5 12H13v8h-3v-8H8v-3h2V7.5A3.5 3.5 0 0 1 13.5 4h2.5v3h-2.5A.5.5 0 0 0 13 7.5V9h3l-.5 3Z'/></svg>`
+  },
+  webchat: {
+    bg: 'bg-violet-100 dark:bg-violet-900/30',
+    text: 'text-violet-700 dark:text-violet-300',
+    border: 'border-violet-200 dark:border-violet-700/30',
+    icon: `<svg fill='none' viewBox='0 0 24 24' class='w-6 h-6'><rect width='20' height='20' x='2' y='2' rx='5' fill='#7C3AED'/><path fill='#fff' d='M8 10h8v2H8zm0 4h5v2H8z'/></svg>`
+  },
+  telegram: {
+    bg: 'bg-cyan-100 dark:bg-cyan-900/30',
+    text: 'text-cyan-700 dark:text-cyan-300',
+    border: 'border-cyan-200 dark:border-cyan-700/30',
+    icon: `<svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6"><circle cx="120" cy="120" r="120" fill="#229ED9"/><path d="M180.5 72.5L157.5 180.5C155.5 188.5 150.5 190.5 143.5 186.5L110.5 162.5L94.5 177.5C92.5 179.5 91 181 87.5 181L90.5 146.5L157.5 85.5C160.5 82.5 157 81 153.5 84L77.5 143.5L43.5 132.5C36 130.5 36 125.5 44.5 122.5L170.5 74.5C176.5 72.5 181.5 76.5 180.5 72.5Z" fill="white"/></svg>`
+  }
+}
+</script>
+
+<style scoped>
+.usecases-masonry {
+  columns: 1;
+}
+@media (min-width: 640px) {
+  .usecases-masonry {
+    columns: 2;
+  }
+}
+@media (min-width: 1024px) {
+  .usecases-masonry {
+    columns: 3;
+  }
+}
+.usecase-card {
+  display: block;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  break-inside: avoid;
+}
+.expand-fade-enter-active, .expand-fade-leave-active {
+  transition: max-height 0.38s cubic-bezier(.4,0,.2,1), opacity 0.28s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+}
+.expand-fade-enter-from, .expand-fade-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+.expand-fade-enter-to, .expand-fade-leave-from {
+  opacity: 1;
+  max-height: 500px;
+}
+</style> 

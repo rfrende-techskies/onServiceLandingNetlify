@@ -9,17 +9,17 @@
       <a
         href="#hero"
         class="flex items-center h-12 pr-4 mr-4 border-r border-gray-200 dark:border-white/10 focus:outline-none"
-        aria-label="OnService Home"
+        aria-label="OnService.IA Home"
       >
         <img
           src="/logo-black.png"
-          alt="OnService logo black"
+          alt="OnService.IA logo black"
           class="h-10 md:h-12 w-auto transition-all duration-200 block dark:hidden"
           loading="eager"
         />
         <img
           src="/logo.png"
-          alt="OnService logo"
+          alt="OnService.IA logo"
           class="h-10 md:h-12 w-auto transition-all duration-200 hidden dark:block"
           loading="eager"
         />
@@ -145,10 +145,10 @@ import DarkToggle from './DarkToggle.vue'
 import LanguageToggle from './LanguageToggle.vue'
 
 const navItems = [
+  { label: 'demo', href: '#demo', section: 'demo' },
   { label: 'about', href: '#about', section: 'about' },
   { label: 'usecases', href: '#usecases', section: 'usecases' },
   { label: 'team', href: '#team', section: 'team' },
-  { label: 'clients', href: '#clients', section: 'clients' },
 ]
 
 const activeSection = ref(null)
@@ -160,7 +160,8 @@ function setActive(href) {
   activeSection.value = href
   const el = document.querySelector(href)
   if (el) {
-    const y = el.getBoundingClientRect().top + window.scrollY - 64
+    // Ajustar el scroll para que la sección quede bien visible debajo del header
+    const y = el.getBoundingClientRect().top + window.scrollY - 100
     window.scrollTo({ top: y, behavior: 'smooth' })
   } else {
     window.location.hash = href

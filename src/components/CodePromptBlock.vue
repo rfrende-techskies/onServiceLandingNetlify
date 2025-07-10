@@ -1,13 +1,14 @@
 <template>
-  <div class="code-block-container">
-    <div class="code-block-glass code-block-terminal glass-hero-panel">
-      <div class="terminal-bar flex items-center gap-2 mb-2">
-        <span class="flex-1"></span>
+  <div class="code-block-container min-h-[540px] h-[540px]">
+    <div class="code-block-glass code-block-terminal glass-hero-panel min-h-[540px] h-[540px]">
+      <!-- Tabs mejoradas -->
+      <div class="tabs-bar mb-2">
+        <span class="tabs-bar-bg"></span>
         <span v-for="tab in tabs" :key="tab.key" :class="['example-tab-underline', tab.key === props.tab ? 'active pointer-events-none cursor-default' : '']" @click="tab.key !== props.tab && setTab(tab.key)">
           {{ tab.label }}
         </span>
       </div>
-      <div class="editor-block">
+      <div class="editor-block min-h-[540px] h-[540px]">
         <div v-for="(line, idx) in codeLines" :key="idx" class="editor-line-flex">
           <span class="gutter-line">{{ idx + 1 }}</span>
           <pre class="editor-code-line" v-html="colorizeBlock(line + (showCursor && idx === codeLines.length - 1 ? '<span class=\'editor-cursor\'>|</span>' : ''))"></pre>
@@ -19,7 +20,7 @@
 
 <script setup>
 import { ref, watch, onMounted, computed, onBeforeUnmount } from 'vue';
-const emit = defineEmits(['tab-change', 'typing']);
+const emit = defineEmits(['tab-change', 'typing', 'prompt-typing']);
 
 const props = defineProps({
   tab: String,
@@ -36,14 +37,14 @@ const tabs = computed(() => [
 const animatedText = ref('');
 const showCursor = ref(true);
 let typingTimeout = null;
+let restartTimeout = null;
 
 const currentPrompt = computed(() => props.prompts[props.tab]);
 const currentExampleIdx = computed(() => props.exampleIdx ?? 0);
 
-// NUEVO: Computed para dividir el texto animado en líneas sin agregar líneas vacías extra
+// Computed para dividir el texto animado en líneas, filtrando líneas vacías
 const codeLines = computed(() => {
-  // Split normal, sin agregar línea vacía extra
-  return animatedText.value.split('\n');
+  return animatedText.value.split('\n').filter(line => line.trim() !== '');
 });
 
 function setTab(tabKey) {
@@ -54,10 +55,13 @@ function setTab(tabKey) {
 
 function startTyping() {
   clearTimeout(typingTimeout);
+  clearTimeout(restartTimeout);
   typingTimeout = null;
+  restartTimeout = null;
   animatedText.value = '';
   showCursor.value = true;
   emit('typing', true);
+  emit('prompt-typing', true); // NUEVO: avisar que el prompt está tipeando
   const linesArr = currentPrompt.value?.examples?.[currentExampleIdx.value] || [];
   const fullText = linesArr.join('\n');
   let charIdx = 0;
@@ -65,10 +69,15 @@ function startTyping() {
     if (charIdx <= fullText.length) {
       animatedText.value = fullText.slice(0, charIdx);
       charIdx++;
-      typingTimeout = setTimeout(typeChar, 35);
+      typingTimeout = setTimeout(typeChar, 22); // MÁS RÁPIDO
     } else {
       showCursor.value = false;
       emit('typing', false);
+      emit('prompt-typing', false); // NUEVO: avisar que terminó el typing del prompt
+      // Reiniciar animación después de 6 segundos
+      restartTimeout = setTimeout(() => {
+        startTyping();
+      }, 6000); // MÁS LENTO EL REINICIO
     }
   }
   typeChar();
@@ -95,7 +104,9 @@ watch(() => [props.tab, props.exampleIdx, props.prompts], () => {
 
 onBeforeUnmount(() => {
   clearTimeout(typingTimeout);
+  clearTimeout(restartTimeout);
   typingTimeout = null;
+  restartTimeout = null;
 });
 </script>
 
@@ -105,13 +116,14 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: flex-start;
   min-width: 0;
   max-width: 100%;
   padding: 0;
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
+  min-height: 540px;
+  height: 540px;
 }
 .code-block-glass.code-block-terminal {
   width: 100%;
@@ -121,60 +133,102 @@ onBeforeUnmount(() => {
   box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.10), 0 2px 8px 0 rgba(56, 189, 248, 0.08) !important;
   border: 1.5px solid rgba(139, 92, 246, 0.13) !important;
   border-radius: 1.2rem;
-  padding: 1.2rem 1.2rem;
-  min-height: 0;
-  height: auto;
-  max-height: none;
+  padding: 0.7rem 0.7rem 0.7rem 0.7rem;
+  min-height: 540px;
+  height: 540px;
   z-index: 10;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   font-size: 15px;
 }
-.terminal-bar {
-  align-items: center;
-  min-height: 2.2rem;
+/* TABS PILL UPGRADE */
+.tabs-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+  min-height: 48px;
+  margin-bottom: 0.5rem;
+  background: rgba(40,40,60,0.13);
+  border-radius: 1.2rem 1.2rem 0 0;
+  box-shadow: 0 2px 12px 0 rgba(124,58,237,0.04);
+  padding: 0.12rem 0.12rem 0 0.12rem;
+  gap: 0.4rem;
+}
+.tabs-bar-bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, #ede9fe 0%, #cffafe 100%);
+  opacity: 0.55;
+  border-radius: 2px;
+  z-index: 0;
 }
 .example-tab-underline {
   position: relative;
-  font-size: 0.97rem;
-  padding: 0.13rem 1.1rem 0.13rem 1.1rem;
-  background: none;
+  font-size: 1.08rem;
+  padding: 0.38rem 1.45rem 0.38rem 1.45rem;
+  background: rgba(124,58,237,0.06);
   color: #a78bfa;
   font-weight: 600;
   cursor: pointer;
-  margin-right: 0.2rem;
+  margin-right: 0.1rem;
   border: none;
   outline: none;
-  transition: color 0.18s;
-  border-radius: 0;
+  transition: color 0.22s, box-shadow 0.22s, background 0.22s, border-radius 0.22s;
+  border-radius: 0.7rem 0.7rem 0 0;
   box-shadow: none;
   display: inline-block;
+  z-index: 1;
+}
+.example-tab-underline:last-child {
+  margin-right: 0;
 }
 .example-tab-underline.active {
   color: #fff;
-  background: rgba(124,58,237,0.13);
-  border-radius: 0.7rem;
+  background: rgba(124,58,237,0.06);
+  border-radius: 0.7rem 0.7rem 0 0;
   font-weight: 700;
+  box-shadow: none;
 }
 .example-tab-underline::after {
   content: '';
   display: block;
   position: absolute;
-  left: 18%;
-  right: 18%;
-  bottom: 0.1em;
-  height: 2.5px;
+  left: 50%;
+  right: 50%;
+  bottom: 0.10em;
+  height: 3px;
   background: linear-gradient(90deg, #7c3aed 0%, #38bdf8 100%);
   border-radius: 2px;
   opacity: 0;
-  transform: scaleX(0.7);
-  transition: opacity 0.18s, transform 0.18s;
+  box-shadow: none;
+  transform: scaleX(0.7) translateY(2px);
+  transition: opacity 0.32s cubic-bezier(.4,0,.2,1), transform 0.32s cubic-bezier(.4,0,.2,1), left 0.32s cubic-bezier(.4,0,.2,1), right 0.32s cubic-bezier(.4,0,.2,1), height 0.32s cubic-bezier(.4,0,.2,1);
+  z-index: 3;
 }
 .example-tab-underline.active::after {
   opacity: 1;
-  transform: scaleX(1);
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #7c3aed 0%, #38bdf8 100%);
+  box-shadow: 0 2px 12px 0 rgba(56,189,248,0.18);
+  transform: scaleX(1) translateY(2px);
+}
+.example-tab-underline:not(.active):hover::after,
+.example-tab-underline:not(.active):focus::after {
+  opacity: 0.7;
+  left: 10%;
+  right: 10%;
+  height: 3px;
+  background: linear-gradient(90deg, #a78bfa 0%, #38bdf8 100%);
+  box-shadow: none;
+  transform: scaleX(1.08) translateY(2px);
 }
 .editor-block {
   width: 100%;
@@ -187,13 +241,17 @@ onBeforeUnmount(() => {
   background: rgba(24,24,32,0.55);
   border-radius: 1.2rem;
   box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.08), 0 2px 8px 0 rgba(56, 189, 248, 0.06);
-  padding: 1.1rem 1.2rem;
+  padding: 1.2rem 1.2rem 1.1rem 1.2rem;
   color: #e5e7eb;
   backdrop-filter: blur(16px) saturate(1.1);
   -webkit-backdrop-filter: blur(16px) saturate(1.1);
   border: 1.5px solid rgba(139, 92, 246, 0.13);
   animation: fadeSlideIn 0.9s cubic-bezier(.4,1.6,.6,1);
-  overflow-x: auto;
+  overflow-y: auto;
+  height: 100%;
+  min-height: 0;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 @keyframes fadeSlideIn {
   from { opacity: 0; transform: translateY(32px); }
@@ -295,24 +353,44 @@ onBeforeUnmount(() => {
     max-width: 99vw !important;
     width: 100% !important;
     margin: 0 auto !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     align-items: center !important;
+    min-height: 0 !important;
+    height: 420px !important;
+    max-height: 420px !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   .code-block-glass.code-block-terminal {
     min-width: 0 !important;
     max-width: 99vw !important;
     width: 100% !important;
-    padding: 0.4rem 0.1rem 0.7rem 0.1rem !important;
-    min-height: 120px !important;
-    height: auto !important;
-    max-height: 340px !important;
+    padding: 0.6rem 0.3rem 0.7rem 0.3rem !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    max-height: 100% !important;
     margin: 0 auto !important;
     font-size: 13px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .terminal-bar {
+    min-height: 36px !important;
+    height: 36px !important;
+    max-height: 36px !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
   }
   .editor-block {
     font-size: 13px !important;
-    padding: 0.4rem 0.2rem !important;
+    padding: 0.6rem 0.3rem !important;
     gap: 0.05rem !important;
+    min-height: 0 !important;
+    height: calc(100% - 36px) !important;
+    max-height: calc(100% - 36px) !important;
+    overflow-y: hidden !important;
+    flex-grow: 1 !important;
+    flex-shrink: 1 !important;
   }
   .gutter-line {
     min-width: 1.1em !important;
