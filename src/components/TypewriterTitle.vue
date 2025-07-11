@@ -1,5 +1,5 @@
 <template>
-  <div class="typewriter-title-wrapper text-center mb-16 relative">
+  <div class="typewriter-title-wrapper text-center mb-8 relative">
     <div v-if="badgeText" class="badge-row flex justify-center mb-4">
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full badge-gradient text-white text-sm font-semibold animate-badge-glow">
         <span v-if="badgeIcon" v-html="badgeIcon" class="w-4 h-4"></span>
@@ -9,7 +9,7 @@
     <h2 class="typewriter-title text-3xl md:text-5xl font-extrabold mb-2 bg-gradient-to-r from-violet-500 to-cyan-400 bg-clip-text text-transparent">
       <span>{{ displayedTitle }}</span><span class="typewriter-cursor" :class="{ 'invisible': !showCursor }">|</span>
     </h2>
-    <p v-if="subtitleText" class="typewriter-subtitle text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
+    <p v-if="subtitleText" class="typewriter-subtitle text-xl text-muted-foreground max-w-2xl mx-auto mt-2">
       {{ subtitleText }}
     </p>
   </div>

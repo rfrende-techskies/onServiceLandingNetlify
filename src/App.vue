@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+const forceFirstStep = ref(false);
 import Header from './components/Header.vue';
 import HeroSection from './components/HeroSection.vue';
 import DemoSection from './components/DemoSection.vue';
@@ -16,13 +17,13 @@ import AboutStepper from './components/AboutStepper.vue';
 
 <template>
   <div class="min-h-screen w-full bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white transition-colors duration-300">
-    <Header />
+    <Header :force-first-step="forceFirstStep" />
     <main>
       <HeroSection />
       <section class="relative z-10 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-hidden rounded-t-[32px] md:rounded-t-[64px]">
         <DemoSection />
       </section>
-      <AboutStepper />
+      <AboutStepper :force-first-step="forceFirstStep" />
       <UseCasesSection />
       <TeamSection />
       <ClientsSection v-if="false" />

@@ -1,13 +1,33 @@
 <template>
+  <!-- Hotspot invisible solo en desktop para hover -->
+  <div
+    v-if="isDesktop"
+    style="position:fixed;top:0;left:0;width:100vw;height:70px;z-index:40;"
+    @mouseenter="isHeaderHovered = true"
+    @mouseleave="isHeaderHovered = false"
+  ></div>
   <header
-    class="fixed top-0 left-0 w-full z-50 flex justify-center mt-3 md:mt-4 px-4 md:px-8 pointer-events-none animate-header-fade-in"
+    ref="headerRef"
+    class="fixed top-0 left-0 w-full z-50 flex justify-center mt-3 md:mt-4 px-4 md:px-8 animate-header-fade-in transition-all duration-500"
+    :class="[
+      isDesktop
+        ? (atTop || isHeaderHovered ? 'header-visible' : 'header-hidden')
+        : ''
+    ]"
+    :style="!isDesktop ? { display: 'block' } : {}"
+    @mouseenter="isHeaderHovered = true"
+    @mouseleave="isHeaderHovered = false"
   >
     <nav
-      class="relative z-10 flex items-center py-2 md:py-3 px-6 md:px-10 rounded-2xl bg-white/90 dark:bg-[rgba(41,47,61,0.55)] shadow-2xl border border-white/10 pointer-events-auto w-full max-w-5xl transition-all duration-300 backdrop-blur-xl"
+      :class="[
+        'relative z-10 flex items-center py-2 md:py-3 px-6 md:px-10 rounded-2xl bg-white/90 dark:bg-[rgba(41,47,61,0.55)] shadow-2xl border border-white/10 pointer-events-auto w-full max-w-5xl transition-all duration-300 backdrop-blur-xl',
+        isDesktop && !(atTop || isHeaderHovered) ? 'header-children-hidden' : 'header-children-visible'
+      ]"
     >
       <!-- Logo -->
       <a
-        href="#hero"
+        href="#"
+        @click.prevent="scrollToTop"
         class="flex items-center h-12 pr-4 mr-4 border-r border-gray-200 dark:border-white/10 focus:outline-none"
         aria-label="OnService.IA Home"
       >
@@ -140,7 +160,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, computed, toRefs } from 'vue'
 import DarkToggle from './DarkToggle.vue'
 import LanguageToggle from './LanguageToggle.vue'
 
@@ -151,18 +171,41 @@ const navItems = [
   { label: 'team', href: '#team', section: 'team' },
 ]
 
+const props = defineProps({
+  forceFirstStep: { type: [Object, Boolean], required: false, default: false }
+})
+
 const activeSection = ref(null)
 const atTop = ref(true)
 const menuOpen = ref(false)
 const isDark = ref(false)
+const isScrolling = ref(false)
+const isHeaderHovered = ref(false)
+const isDesktop = ref(window.innerWidth >= 768)
+const headerRef = ref(null)
+function handleResize() {
+  isDesktop.value = window.innerWidth >= 768
+}
 
 function setActive(href) {
   activeSection.value = href
   const el = document.querySelector(href)
   if (el) {
+    // Calcular altura real del header
+    let headerHeight = 0
+    if (headerRef.value) {
+      headerHeight = headerRef.value.offsetHeight
+    }
     // Ajustar el scroll para que la sección quede bien visible debajo del header
-    const y = el.getBoundingClientRect().top + window.scrollY - 100
+    const y = el.getBoundingClientRect().top + window.scrollY - headerHeight + 110
     window.scrollTo({ top: y, behavior: 'smooth' })
+    isScrolling.value = true
+    setTimeout(() => {
+      isScrolling.value = false
+      if (href === '#about' && props.forceFirstStep) {
+        props.forceFirstStep.value = true
+      }
+    }, 700)
   } else {
     window.location.hash = href
   }
@@ -178,8 +221,9 @@ function isActive(href) {
 }
 
 function onScroll() {
+  if (isScrolling.value) return
   const scrollY = window.scrollY
-  atTop.value = scrollY < 80
+  atTop.value = scrollY < 10
   let found = false
   for (let i = navItems.length - 1; i >= 0; i--) {
     const section = document.querySelector(navItems[i].href)
@@ -197,6 +241,10 @@ function onScroll() {
   }
 }
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
 // Dark mode toggle
 function toggleDarkMode() {
   isDark.value = !isDark.value
@@ -208,6 +256,8 @@ function toggleDarkMode() {
     localStorage.setItem('theme', 'light')
   }
 }
+
+// (headerStyle eliminado, ahora todo es por clase)
 
 onMounted(() => {
   window.addEventListener('hashchange', () => {
@@ -224,9 +274,11 @@ onMounted(() => {
     isDark.value = false
     document.documentElement.classList.remove('dark')
   }
+  window.addEventListener('resize', handleResize)
 })
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', onScroll)
+  window.removeEventListener('resize', handleResize)
 })
 </script>
 
@@ -318,5 +370,36 @@ onBeforeUnmount(() => {
 .group:hover .hover-underline {
   opacity: 1;
   transform: scaleX(1);
+}
+@media (min-width: 768px) {
+  header {
+    transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+}
+/* Header animation classes */
+.header-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition: opacity 0.6s cubic-bezier(.4,0,.2,1), transform 0.6s cubic-bezier(.4,0,.2,1);
+  visibility: visible;
+}
+.header-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-24px);
+  transition: opacity 0.6s cubic-bezier(.4,0,.2,1), transform 0.6s cubic-bezier(.4,0,.2,1);
+  visibility: hidden;
+}
+/* Header children animation classes */
+.header-children-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s 0.1s cubic-bezier(.4,0,.2,1), transform 0.4s 0.1s cubic-bezier(.4,0,.2,1);
+}
+.header-children-hidden {
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity 0.3s cubic-bezier(.4,0,.2,1), transform 0.3s cubic-bezier(.4,0,.2,1);
 }
 </style>

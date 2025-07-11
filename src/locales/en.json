@@ -2,7 +2,6 @@
   "header": {
     "about": "About Us",
     "usecases": "Use Cases",
-    "team": "Team",
     "clients": "Clients",
     "contact": "Contact",
     "demo": "Demo"
@@ -18,6 +17,7 @@
   },
   "about": {
     "title": "About Us",
+    "subtitle": "Pioneers at the intersection of AI, aviation, and customer service",
     "description": "We are <span class=\"font-bold text-violet-500 dark:text-violet-400\">OnService</span><span class=\"text-violet-500 dark:text-violet-400 font-bold\">.IA</span>, pioneers at the intersection of <span class=\"text-cyan-500 dark:text-cyan-400 font-bold\">AI</span>, aviation, and customer service. Our mission: to transform the experience of passengers and companies with cutting-edge technology.",
     "panels": [
       {
@@ -37,6 +37,30 @@
         "title": "Values",
         "text": "Innovation, empathy, excellence, and commitment to digital transformation.",
         "detail": "We believe in collaboration, transparency, and continuous improvement, driving innovation with a strong ethical and human commitment."
+      }
+    ]
+  },
+  "aboutStepper": {
+    "steps": [
+      {
+        "title": "Our History",
+        "description": "We are OnService, pioneers at the intersection of AI, aviation, and customer service. Our team combines technological expertise and deep knowledge of the airline industry.",
+        "badge": "Pioneers in AI and Aviation"
+      },
+      {
+        "title": "Our Mission",
+        "description": "We transform customer service and optimize critical processes for airlines, agencies, and aviation companies worldwide.",
+        "badge": "Automate your service"
+      },
+      {
+        "title": "Our Vision",
+        "description": "We make the interaction between airlines and passengers smoother, more personalized, and more efficient than ever, overcoming the challenges of the airline industry.",
+        "badge": "Scale your service"
+      },
+      {
+        "title": "Our Values",
+        "description": "Continuous innovation, data security, and measurable value delivery. We are building the future of customer service in aviation.",
+        "badge": "Innovation and Security"
       }
     ]
   },
@@ -205,8 +229,42 @@
     },
     "team": {
       "title": "Our Team",
-      "subtitle": "Meet the experts behind the innovation.",
-      "badge": "Human Talent"
+      "subtitle": "Our success lies in the experience and passion of our team. At OnService, we bring together brilliant minds with deep expertise in Artificial Intelligence, advanced software development, and specialized knowledge of the aviation sector.",
+      "description": "Each member of our team brings a unique perspective, combining technological innovation with practical understanding of airlines' operational and customer service needs.",
+      "badge": "Human Talent",
+      "members": [
+        {
+          "name": "Alberto Desimone",
+          "position": "CEO",
+          "bio": "Expert in NLP and AI architectures for conversational solutions. Over 10 years in AI development.",
+          "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face",
+          "extra": "AI Experience",
+          "tag1": "AI & NLP",
+          "tag2": "IT Leadership",
+          "tag3": "Aviation"
+        },
+        {
+          "name": "Juan Felipe Restrepo",
+          "position": "CPO",
+          "bio": "Technical leader with expertise in complex system integration and cloud scalability. Previously at technology and aviation companies.",
+          "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop&crop=face",
+          "extra": "Aviation",
+          "tag1": "Cloud Architecture",
+          "tag2": "Systems Integration",
+          "tag3": "Aviation"
+        },
+        {
+          "name": "Alejandro Nardi",
+          "position": "COO",
+          "bio": "Specialist in user experience (UX) and interaction design for digital platforms. Focused on intuitive interfaces for service bots.",
+          "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=500&fit=crop&crop=face",
+          "extra": "UX & Bots",
+          "tag1": "UX/UI Design",
+          "tag2": "Conversational Bots",
+          "tag3": "Digital Platforms"
+        }
+      ],
+      "footer": "Our team is driven by the vision of redefining efficiency and service quality in aviation, using AI as our primary tool. We are proud of the diversity of skills and perspectives that allow us to innovate and deliver cutting-edge solutions to our clients."
     },
     "clients": {
       "title": "Companies that trust us",
@@ -223,5 +281,6 @@
       "subtitle": "Choose the solution that best fits your business.",
       "badge": "Accessibility"
     }
-  }
+  },
+  "footer_copyright": "© 2025 Kiut. All rights reserved."
 } 

@@ -1,11 +1,11 @@
 {
   "header": {
-    "about": "Quiénes somos",
+    "demo": "Demo",
+    "about": "Sobre Nosotros",
     "usecases": "Casos de uso",
     "team": "Equipo",
     "clients": "Clientes",
-    "contact": "Contacto",
-    "demo": "Demo"
+    "contact": "Contacto"
   },
   "hero": {
     "title_pre": "La nueva generación de",
@@ -17,7 +17,7 @@
     "cta_usecases": "Ver casos de uso"
   },
   "about": {
-    "title": "¿Quiénes somos?",
+    "title": "Sobre Nosotros",
     "subtitle": "Pioneros en la intersección de IA, aviación y atención al cliente",
     "description": "Somos <span class=\"font-bold text-violet-500 dark:text-violet-400\">OnService</span><span class=\"text-violet-500 dark:text-violet-400 font-bold\">.IA</span>, pioneros en la intersección de <span class=\"text-cyan-500 dark:text-cyan-400 font-bold\">IA</span>, aviación y atención al cliente. Nuestra misión: transformar la experiencia de pasajeros y empresas con tecnología de vanguardia.",
     "panels": [
@@ -38,6 +38,30 @@
         "title": "Valores",
         "text": "Innovación, empatía, excelencia y compromiso con la transformación digital.",
         "detail": "Creemos en la colaboración, la transparencia y la mejora continua, impulsando la innovación con un fuerte compromiso ético y humano."
+      }
+    ]
+  },
+  "aboutStepper": {
+    "steps": [
+      {
+        "title": "Nuestra Historia",
+        "description": "Somos OnService, pioneros en la intersección de IA, aviación y atención al cliente. Nuestro equipo combina experiencia tecnológica y conocimiento profundo del sector aéreo.",
+        "badge": "Pioneros en IA y Aviación"
+      },
+      {
+        "title": "Nuestra Misión",
+        "description": "Transformamos la atención al cliente y optimizamos procesos críticos para aerolíneas, agencias y empresas de aviación a nivel global.",
+        "badge": "Automatiza tu atención"
+      },
+      {
+        "title": "Nuestra Visión",
+        "description": "Hacemos que la interacción entre aerolíneas y pasajeros sea más fluida, personalizada y eficaz que nunca, superando los desafíos de la industria aérea.",
+        "badge": "Escala tu servicio"
+      },
+      {
+        "title": "Nuestros Valores",
+        "description": "Innovación continua, seguridad de los datos y entrega de valor medible. Construimos el futuro de la atención al cliente en la aviación.",
+        "badge": "Innovación y Seguridad"
       }
     ]
   },
@@ -173,7 +197,8 @@
     ],
     "cta": "Solicitar demostración personalizada",
     "cta_desc": "Descubre cómo OnService.IA puede transformar tu producto en 30 días",
-    "less": "Ver menos"
+    "less": "Ver menos",
+    "more": "Ver más"
   },
   "brand": "OnService.",
   "brand_ia": "IA",
@@ -206,8 +231,42 @@
     },
     "team": {
       "title": "Nuestro Equipo",
-      "subtitle": "Conoce a los expertos detrás de la innovación.",
-      "badge": "Talento humano"
+      "subtitle": "Nuestro éxito reside en la experiencia y la pasión de nuestro equipo. En OnService, reunimos a mentes brillantes con una profunda trayectoria en Inteligencia Artificial, desarrollo de software avanzado y un conocimiento especializado del sector de la aviación.",
+      "description": "Cada miembro de nuestro equipo aporta una perspectiva única, combinando la innovación tecnológica con un entendimiento práctico de las necesidades operacionales y de atención al cliente de las aerolíneas.",
+      "badge": "Talento humano",
+      "members": [
+        {
+          "name": "Alberto Desimone",
+          "position": "CEO",
+          "bio": "Experto en PNL y arquitecturas de IA para soluciones conversacionales. Más de 10 años en desarrollo de IA.",
+          "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face",
+          "extra": "Experiencia IA",
+          "tag1": "IA & PLN",
+          "tag2": "Liderazgo IT",
+          "tag3": "Aviación"
+        },
+        {
+          "name": "Juan Felipe Restrepo",
+          "position": "CPO",
+          "bio": "Líder técnico con expertise en integración de sistemas complejos y escalabilidad en la nube. Previamente en empresas de tecnología y aviación.",
+          "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop&crop=face",
+          "extra": "Aviación",
+          "tag1": "Arquitectura Cloud",
+          "tag2": "Integración de Sistemas",
+          "tag3": "Aviación"
+        },
+        {
+          "name": "Alejandro Nardi",
+          "position": "COO",
+          "bio": "Especialista en experiencia de usuario (UX) y diseño de interacción para plataformas digitales. Enfocado en interfaces intuitivas para bots de servicio.",
+          "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=500&fit=crop&crop=face",
+          "extra": "UX & Bots",
+          "tag1": "UX/UI Design",
+          "tag2": "Bots Conversacionales",
+          "tag3": "Plataformas Digitales"
+        }
+      ],
+      "footer": "Nuestro equipo está impulsado por la visión de redefinir la eficiencia y la calidad del servicio en la aviación, utilizando la IA como nuestra herramienta principal. Estamos orgullosos de la diversidad de habilidades y perspectivas que nos permiten innovar y entregar soluciones de vanguardia a nuestros clientes."
     },
     "clients": {
       "title": "Empresas que confían en nosotros",
@@ -224,5 +283,6 @@
       "subtitle": "Elige la solución que mejor se adapta a tu negocio.",
       "badge": "Accesibilidad"
     }
-  }
+  },
+  "footer_copyright": "© 2025 Kiut. Todos los derechos reservados."
 } 

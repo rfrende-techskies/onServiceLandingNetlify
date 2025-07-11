@@ -13,7 +13,7 @@
       />
       <p class="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
           {{ t('usecases.description_pre') }}
-          <span class="font-bold text-violet-600">{{ t('usecases.description_highlight') }}</span>
+          <span class="font-bold">{{ t('usecases.description_highlight') }}</span>
           {{ t('usecases.description_post') }}
         </p>
 
