@@ -1,10 +1,10 @@
 <template>
-  <section id="usecases" class="relative py-20 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-hidden">
+  <section id="usecases" class="relative py-10 bg-white dark:bg-gray-950 transition-colors duration-300 overflow-hidden">
     <!-- Particle background -->
     <div class="absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
       <ParticleBackground />
     </div>
-    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10 mt-6">
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10 mt-2">
       <!-- Header mejorado -->
       <TypewriterTitle
         :i18n-key="'sections.usecases.title'"
@@ -17,8 +17,72 @@
           {{ t('usecases.description_post') }}
         </p>
 
-      <!-- Métricas -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
+      <!-- Grid de casos de uso -->
+      <div class="usecases-grid mt-10 mb-12">
+        <div
+          v-for="(item, index) in tm('usecases.cases')"
+          :key="item.title"
+          :id="'usecase-tile-' + index"
+          class="usecase-card group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-gray-900/80 border border-gray-200 dark:border-gray-700 shadow-xl transition-all duration-400 p-8 md:p-10 flex flex-col cursor-pointer hover:shadow-2xl hover:-translate-y-1"
+          :class="{
+            'expanded-tile': expandedIdx === index,
+            'expanded-horizontal': expandedIdx === index && index !== tm('usecases.cases').length - 1,
+            'expanded-fullrow': expandedIdx === index && index === tm('usecases.cases').length - 1
+          }"
+          @click="toggleExpand(index)"
+        >
+          <div class="text-4xl mb-3 flex items-center justify-between">
+            <span v-if="item.icon" v-html="item.icon" class="w-8 h-8 flex items-center justify-center"></span>
+            <button
+              @click.stop="toggleExpand(index)"
+              class="ml-auto px-3 py-1.5 rounded-lg bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-semibold text-sm flex items-center gap-1 transition-all duration-200 hover:bg-violet-200 dark:hover:bg-violet-800/60 focus:outline-none focus:ring-2 focus:ring-violet-400 shadow-sm hover:shadow-md"
+              :aria-expanded="expandedIdx === index"
+              :aria-controls="'usecase-details-' + index"
+              role="button"
+              tabindex="0"
+            >
+              <span>{{ expandedIdx === index ? t('usecases.less') : t('usecases.more') }}</span>
+              <svg :class="['w-4 h-4 transition-transform duration-300', expandedIdx === index ? 'rotate-90' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">{{ item.title }}</h3>
+          <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{{ item.desc }}</p>
+          <ul class="mb-4 space-y-1">
+            <li v-for="(bullet, bidx) in item.bullets" :key="bidx" class="flex items-center"><span class="mr-2 text-green-400">✔️</span>{{ bullet }}</li>
+          </ul>
+          <transition name="expand-fade">
+            <div
+              v-if="expandedIdx === index"
+              :id="'usecase-details-' + index"
+              class="expanded-content mt-2 rounded-xl border border-violet-200 dark:border-violet-800 bg-white/95 dark:bg-gray-900/95 text-gray-800 dark:text-gray-100 shadow-lg animate-fade-in-up overflow-hidden p-5"
+            >
+              <p class="whitespace-pre-line">{{ item.longDesc }}</p>
+            </div>
+          </transition>
+        </div>
+      </div>
+
+      <!-- Integraciones (canales de comunicación) -->
+      <div class="mb-12">
+        <h3 class="text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">
+          {{ t('usecases.channels_title') }}
+        </h3>
+        <div class="flex flex-wrap justify-center gap-4">
+          <div v-for="([key, label], idx) in Object.entries(tm('usecases.channels'))" :key="key"
+            :class="[
+              'flex items-center gap-3 px-6 py-3 rounded-xl font-semibold border shadow-sm transition-all duration-200',
+              channelStyles[key]?.bg || 'bg-gray-100 dark:bg-gray-900/30',
+              channelStyles[key]?.text || 'text-gray-700 dark:text-gray-300',
+              channelStyles[key]?.border || 'border-gray-200 dark:border-gray-700/30'
+            ]">
+            <span v-if="channelStyles[key] && channelStyles[key].icon" v-html="channelStyles[key].icon" class="w-6 h-6"></span>
+            <span>{{ label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tiles de métricas -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
         <div class="text-center p-8 rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
           <div class="text-3xl md:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">70%</div>
           <div class="text-sm text-gray-800 dark:text-gray-300">{{ t('usecases.metrics.cost_reduction') }}</div>
@@ -37,78 +101,16 @@
         </div>
       </div>
 
-      <!-- Canales de comunicación -->
-      <div class="mb-20">
-        <h3 class="text-2xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-          {{ t('usecases.channels_title') }}
-        </h3>
-        <div class="flex flex-wrap justify-center gap-4">
-          <div v-for="([key, label], idx) in Object.entries(tm('usecases.channels'))" :key="key"
-            :class="[
-              'flex items-center gap-3 px-6 py-3 rounded-xl font-semibold border shadow-sm transition-all duration-200',
-              channelStyles[key]?.bg || 'bg-gray-100 dark:bg-gray-900/30',
-              channelStyles[key]?.text || 'text-gray-700 dark:text-gray-300',
-              channelStyles[key]?.border || 'border-gray-200 dark:border-gray-700/30'
-            ]">
-            <span v-if="channelStyles[key] && channelStyles[key].icon" v-html="channelStyles[key].icon" class="w-6 h-6"></span>
-            <span>{{ label }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Casos de uso -->
-      <div class="usecases-masonry">
-        <div
-          v-for="(item, idx) in tm('usecases.cases')"
-          :key="item.title"
-          class="usecase-card group relative overflow-hidden rounded-3xl bg-white/80 dark:bg-white/10 backdrop-blur-lg border border-gray-200 dark:border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 p-8 md:p-10 flex flex-col mb-8"
-          :class="{ 'ring-4 ring-violet-300/40 dark:ring-violet-500/30 scale-105 z-20': expandedIdx === idx }"
-          style="align-self: start; min-height: unset; break-inside: avoid;"
-        >
-          <div class="text-4xl mb-3 flex items-center justify-between">
-            <span v-if="item.icon" v-html="item.icon"></span>
-            <button
-              @click.stop="toggleExpand(idx)"
-              class="ml-auto px-3 py-1.5 rounded-lg bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300 font-semibold text-sm flex items-center gap-1 transition-all duration-200 hover:bg-violet-200 dark:hover:bg-violet-800/60 focus:outline-none"
-              :aria-expanded="expandedIdx === idx"
-              :aria-controls="'usecase-details-' + idx"
-            >
-              <span>{{ expandedIdx === idx ? t('usecases.less') : t('usecases.more') }}</span>
-              <svg :class="['transition-transform duration-300', expandedIdx === idx ? 'rotate-180' : '']" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-          </div>
-          <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">{{ item.title }}</h3>
-          <p class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{{ item.desc }}</p>
-          <ul class="mb-4 space-y-1">
-            <li v-for="(bullet, bidx) in item.bullets" :key="bidx" class="flex items-center"><span class="mr-2 text-green-400">✔️</span>{{ bullet }}</li>
-          </ul>
-          <transition name="expand-fade">
-            <div
-              v-if="expandedIdx === idx"
-              :id="'usecase-details-' + idx"
-              class="mt-2 rounded-xl bg-gradient-to-br from-violet-100/60 to-cyan-100/40 dark:from-violet-900/30 dark:to-cyan-900/20 text-gray-800 dark:text-gray-100 shadow-inner animate-fade-in-up overflow-hidden"
-              style="padding: 0;"
-            >
-              <div class="p-4">
-                <p class="whitespace-pre-line">{{ item.longDesc }}</p>
-              </div>
-            </div>
-          </transition>
-        </div>
-      </div>
-
-      <!-- CTA final -->
-      <div class="text-center mt-16">
+      <!-- CTA final (botón grande) -->
+      <div class="text-center mt-10">
         <div class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-violet-500 to-cyan-500 text-white font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
           </svg>
-          {{ t('usecases.cta') }}
+          Request personalized demo
         </div>
         <p class="text-gray-600 dark:text-gray-300 mt-4 text-sm">
-          {{ t('usecases.cta_desc').split('OnService.IA')[0] }}
-          <span class="font-bold">{{ t('brand') }}</span><span class="text-violet-500 font-bold">{{ t('brand_ia') }}</span>
-          {{ t('usecases.cta_desc').split('OnService.IA')[1] }}
+          Discover how <span class="font-bold">OnService.<span class="text-violet-500">AI</span></span> can transform your product in 30 days
         </p>
       </div>
     </div>
@@ -125,7 +127,18 @@ const { t, tm } = useI18n()
 
 const expandedIdx = ref(null)
 function toggleExpand(idx) {
-  expandedIdx.value = expandedIdx.value === idx ? null : idx
+  if (expandedIdx.value === idx) {
+    expandedIdx.value = null
+  } else {
+    expandedIdx.value = idx
+    // Scroll automático al tile expandido
+    setTimeout(() => {
+      const el = document.getElementById('usecase-tile-' + idx)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }, 200)
+  }
 }
 
 // Colores e iconos de marca para los canales
@@ -164,24 +177,55 @@ const channelStyles = {
 </script>
 
 <style scoped>
-.usecases-masonry {
-  columns: 1;
-}
-@media (min-width: 640px) {
-  .usecases-masonry {
-    columns: 2;
-  }
+.usecases-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem 2rem;
+  row-gap: 2.5rem;
 }
 @media (min-width: 1024px) {
-  .usecases-masonry {
-    columns: 3;
+  .usecases-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 .usecase-card {
-  display: block;
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   break-inside: avoid;
+  transition: box-shadow 0.3s, transform 0.3s, z-index 0.3s, background 0.3s, border 0.3s, grid-column 0.4s cubic-bezier(.4,0,.2,1);
+  z-index: 1;
+  cursor: pointer;
+  background: rgba(255,255,255,0.85);
+}
+.dark .usecase-card {
+  background: rgba(24,24,32,0.85);
+}
+.usecase-card.expanded-tile {
+  z-index: 10;
+  box-shadow: 0 0 0 3px #a78bfa44, 0 16px 40px 0 rgba(124, 58, 237, 0.13), 0 2px 8px 0 #38bdf822;
+  border: 2px solid #a78bfa33;
+  background: rgba(255,255,255,0.97);
+}
+.dark .usecase-card.expanded-tile {
+  background: rgba(24,24,32,0.97);
+  border: 2px solid #7c3aed44;
+  box-shadow: 0 0 0 3px #7c3aed44, 0 16px 40px 0 rgba(124, 58, 237, 0.13), 0 2px 8px 0 #38bdf822;
+}
+@media (min-width: 1024px) {
+  .usecase-card {
+    grid-column: span 1;
+  }
+  .usecase-card.expanded-horizontal {
+    grid-column: span 2;
+  }
+  .usecase-card.expanded-fullrow {
+    grid-column: 1 / -1;
+  }
+}
+.expanded-content {
+  transition: box-shadow 0.3s, background 0.3s, border 0.3s, max-height 0.4s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 4px 24px 0 rgba(124, 58, 237, 0.10), 0 1px 4px 0 #38bdf822;
+  max-height: 600px;
 }
 .expand-fade-enter-active, .expand-fade-leave-active {
   transition: max-height 0.38s cubic-bezier(.4,0,.2,1), opacity 0.28s cubic-bezier(.4,0,.2,1);
@@ -193,6 +237,6 @@ const channelStyles = {
 }
 .expand-fade-enter-to, .expand-fade-leave-from {
   opacity: 1;
-  max-height: 500px;
+  max-height: 600px;
 }
 </style> 

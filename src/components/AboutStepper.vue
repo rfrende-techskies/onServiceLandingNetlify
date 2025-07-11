@@ -10,6 +10,7 @@
       <ParticleBackground />
     </div>
 
+    <div class="w-full max-w-[1440px] mx-auto px-6 md:px-10">
     <!-- Desktop Layout (md y superior) -->
     <div class="hidden md:flex flex-row w-full min-h-screen items-start">
       <!-- Stepper y contenido (izquierda) -->
@@ -105,7 +106,7 @@
                 
                 <div class="text-left">
                   <p class="text-base leading-relaxed text-gray-700 dark:text-gray-300">
-                    {{ step.description() }}
+                    {{ step.descriptionParts()[0] }}
                   </p>
                   <span
                     v-if="step.badge()"
@@ -154,7 +155,7 @@
     <!-- Mobile Layout (menor a md) restaurado -->
     <div class="md:hidden flex flex-col w-full min-h-screen">
       <!-- Título con Typewriter -->
-      <div class="w-full px-6 pt-12 pb-8">
+      <div class="w-full px-3 pt-6 pb-4">
         <TypewriterTitle
           i18nKey="about.title"
           subtitleI18nKey="about.subtitle"
@@ -165,7 +166,7 @@
         />
       </div>
       <!-- Cards horizontales con scroll -->
-      <div class="flex-1 px-6 pb-8">
+      <div class="flex-1 px-2 pb-4">
         <div class="relative">
           <!-- Scroll horizontal container -->
           <div 
@@ -200,7 +201,7 @@
                     {{ step.title() }}
                   </h3>
                   <p class="text-gray-700 dark:text-gray-300 text-base leading-relaxed">
-                    {{ step.description() }}
+                    {{ step.descriptionParts()[0] }}
                   </p>
                 </div>
               </div>
@@ -223,6 +224,7 @@
         </div>
       </div>
     </div>
+  </div>
   </section>
 </template>
 
@@ -231,6 +233,7 @@ import { ref, onMounted, onBeforeUnmount, watch, computed, nextTick } from "vue"
 import { useI18n } from 'vue-i18n';
 import ParticleBackground from "./ParticleBackground.vue";
 import TypewriterTitle from "./TypewriterTitle.vue";
+import OnServiceAI from './OnServiceAI.vue';
 
 const { t } = useI18n();
 
@@ -246,28 +249,28 @@ const steps = [
   {
     key: "historia",
     title: () => t('aboutStepper.steps[0].title'),
-    description: () => t('aboutStepper.steps[0].description'),
+    descriptionParts: () => t('aboutStepper.steps[0].description').split('{brand}'),
     badge: () => t('aboutStepper.steps[0].badge'),
     image: "/mision-stepper2.png",
   },
   {
     key: "mision",
     title: () => t('aboutStepper.steps[1].title'),
-    description: () => t('aboutStepper.steps[1].description'),
+    descriptionParts: () => [t('aboutStepper.steps[1].description'), ''],
     badge: () => t('aboutStepper.steps[1].badge'),
     image: "/ia-generated-02.png",
   },
   {
     key: "vision",
     title: () => t('aboutStepper.steps[2].title'),
-    description: () => t('aboutStepper.steps[2].description'),
+    descriptionParts: () => [t('aboutStepper.steps[2].description'), ''],
     badge: () => t('aboutStepper.steps[2].badge'),
     image: "/vision-stepper3.png",
   },
   {
     key: "valores",
     title: () => t('aboutStepper.steps[3].title'),
-    description: () => t('aboutStepper.steps[3].description'),
+    descriptionParts: () => [t('aboutStepper.steps[3].description'), ''],
     badge: () => t('aboutStepper.steps[3].badge'),
     image: "/ia-generated-04.png",
   },

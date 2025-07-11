@@ -29,17 +29,17 @@
         href="#"
         @click.prevent="scrollToTop"
         class="flex items-center h-12 pr-4 mr-4 border-r border-gray-200 dark:border-white/10 focus:outline-none"
-        aria-label="OnService.IA Home"
+                    aria-label="OnService.AI Home"
       >
         <img
           src="/logo-black.png"
-          alt="OnService.IA logo black"
+                      alt="OnService.AI logo black"
           class="h-10 md:h-12 w-auto transition-all duration-200 block dark:hidden"
           loading="eager"
         />
         <img
           src="/logo.png"
-          alt="OnService.IA logo"
+                      alt="OnService.AI logo"
           class="h-10 md:h-12 w-auto transition-all duration-200 hidden dark:block"
           loading="eager"
         />

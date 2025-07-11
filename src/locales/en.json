@@ -4,21 +4,22 @@
     "usecases": "Use Cases",
     "clients": "Clients",
     "contact": "Contact",
-    "demo": "Demo"
+    "demo": "Demo",
+    "team": "Team"
   },
   "hero": {
     "title_pre": "The new generation of",
     "title_highlight": "AI",
     "title_post": "for your business",
     "subtitle": "Artificial intelligence solutions to boost sales, support and operations.",
-    "description": "Automate customer service and grow your business with OnService.IA.",
+    "description": "Automate customer service and grow your business with {brand}",
     "cta_demo": "Start Demo",
     "cta_usecases": "View Use Cases"
   },
   "about": {
     "title": "About Us",
     "subtitle": "Pioneers at the intersection of AI, aviation, and customer service",
-    "description": "We are <span class=\"font-bold text-violet-500 dark:text-violet-400\">OnService</span><span class=\"text-violet-500 dark:text-violet-400 font-bold\">.IA</span>, pioneers at the intersection of <span class=\"text-cyan-500 dark:text-cyan-400 font-bold\">AI</span>, aviation, and customer service. Our mission: to transform the experience of passengers and companies with cutting-edge technology.",
+    "description": "We are {brand}, pioneers at the intersection of <span class=\"text-cyan-500 dark:text-cyan-400 font-bold\">AI</span>, aviation, and customer service. Our mission: to transform the experience of passengers and companies with cutting-edge technology",
     "panels": [
       {
         "key": "mision",
@@ -44,7 +45,7 @@
     "steps": [
       {
         "title": "Our History",
-        "description": "We are OnService, pioneers at the intersection of AI, aviation, and customer service. Our team combines technological expertise and deep knowledge of the airline industry.",
+        "description": "Pioneers at the intersection of AI, aviation, and {brand} customer service. Our team combines technological expertise and deep knowledge of the airline industry.",
         "badge": "Pioneers in AI and Aviation"
       },
       {
@@ -195,8 +196,9 @@
       }
     ],
     "cta": "Request personalized demo",
-    "cta_desc": "Discover how OnService.IA can transform your product in 30 days",
-    "less": "Show less"
+    "cta_desc": "Discover how {brand} can transform your product in 30 days",
+    "less": "Show less",
+    "more": "Show more"
   },
   "brand": "OnService.",
   "brand_ia": "AI",
@@ -229,14 +231,14 @@
     },
     "team": {
       "title": "Our Team",
-      "subtitle": "Our success lies in the experience and passion of our team. At OnService, we bring together brilliant minds with deep expertise in Artificial Intelligence, advanced software development, and specialized knowledge of the aviation sector.",
-      "description": "Each member of our team brings a unique perspective, combining technological innovation with practical understanding of airlines' operational and customer service needs.",
+      "subtitle": "Our success lies in the experience and passion of our team. At {brand}, we bring together brilliant minds with deep expertise in Artificial Intelligence, advanced software development, and specialized knowledge of the aviation sector",
+      "description": "Each member of our team brings a unique perspective, combining technological innovation with practical understanding of airlines' operational and customer service needs ",
       "badge": "Human Talent",
       "members": [
         {
           "name": "Alberto Desimone",
           "position": "CEO",
-          "bio": "Expert in NLP and AI architectures for conversational solutions. Over 10 years in AI development.",
+          "bio": "Expert in NLP and AI architectures for conversational solutions. Over 10 years in AI development. Leads multidisciplinary teams and delivers innovative AI projects for global clients.",
           "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop&crop=face",
           "extra": "AI Experience",
           "tag1": "AI & NLP",
@@ -246,7 +248,7 @@
         {
           "name": "Juan Felipe Restrepo",
           "position": "CPO",
-          "bio": "Technical leader with expertise in complex system integration and cloud scalability. Previously at technology and aviation companies.",
+          "bio": "Technical leader with expertise in complex system integration and cloud scalability. Extensive experience in technology and aviation companies. Passionate about building robust, scalable solutions.",
           "image": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop&crop=face",
           "extra": "Aviation",
           "tag1": "Cloud Architecture",
@@ -256,7 +258,7 @@
         {
           "name": "Alejandro Nardi",
           "position": "COO",
-          "bio": "Specialist in user experience (UX) and interaction design for digital platforms. Focused on intuitive interfaces for service bots.",
+          "bio": "Specialist in user experience (UX) and interaction design for digital platforms. Focused on intuitive interfaces for service bots. Dedicated to creating seamless and engaging digital experiences.",
           "image": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&h=500&fit=crop&crop=face",
           "extra": "UX & Bots",
           "tag1": "UX/UI Design",

@@ -72,7 +72,7 @@ const clientLogos = [
   { src: '/avianca.png', alt: 'Avianca' },
   { src: '/clic.png', alt: 'Clic' },
   { src: '/vite.svg', alt: 'Vite' },
-  { src: '/logo.png', alt: 'OnService.IA' },
+          { src: '/logo.png', alt: 'OnService.AI' },
   { src: '/aws-partner-badge.png', alt: 'AWS Partner', badge: true, label: 'Partner oficial de AWS' },
 ];
 

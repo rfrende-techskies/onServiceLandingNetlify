@@ -5,7 +5,7 @@
       <ParticleBackground />
     </div>
     
-    <div class="relative z-10 max-w-screen-2xl w-full mx-auto px-4 md:px-8">
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-2 md:px-10">
       <!-- Header con TypewriterTitle -->
       <div class="text-center mb-8">
         <TypewriterTitle 
@@ -32,11 +32,7 @@
               <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Nuestra Historia</h3>
             </div>
             <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-              Somos <span class="font-bold text-violet-600 dark:text-violet-400">OnService</span>, los primeros en la intersección de la 
-              <span class="font-bold text-cyan-600 dark:text-cyan-400">inteligencia artificial</span>, 
-              <span class="font-bold text-blue-600 dark:text-blue-400">aviación</span> y 
-              <span class="font-bold text-violet-600 dark:text-violet-400">atención al cliente</span>. 
-              Estamos generando una nueva experiencia al cliente con un equipo de expertos con profundo conocimiento en tecnología, IA y las complejidades operacionales del sector aéreo.
+              {{ aboutDescParts[0] }}<OnServiceAI />{{ aboutDescParts[1] }}
             </p>
           </div>
 
@@ -84,7 +80,7 @@
             <p class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
               Estamos comprometidos con la <span class="font-bold text-violet-600 dark:text-violet-400">innovación continua</span>, la 
               <span class="font-bold text-cyan-600 dark:text-cyan-400">seguridad de los datos</span> y la entrega de un 
-              <span class="font-bold text-blue-600 dark:text-blue-400">valor medible</span>. En OnService, no solo desarrollamos tecnología; construimos el futuro de la atención al cliente en la aviación.
+              <span class="font-bold text-blue-600 dark:text-blue-400">valor medible</span>. En OnService.AI, no solo desarrollamos tecnología; construimos el futuro de la atención al cliente en la aviación.
             </p>
           </div>
         </div>
@@ -129,6 +125,10 @@
 <script setup>
 import TypewriterTitle from './TypewriterTitle.vue';
 import ParticleBackground from './ParticleBackground.vue';
+import OnServiceAI from './OnServiceAI.vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+const aboutDescParts = t('about.description').split('{brand}')
 </script>
 
 <style scoped>

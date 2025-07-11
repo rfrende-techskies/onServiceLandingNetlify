@@ -8,7 +8,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta oficial OnService.IA
+        // Paleta oficial OnService.AI
         'onservice': {
           // Acentos principales
           'violet': '#7C3AED',
