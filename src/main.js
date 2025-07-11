@@ -4,7 +4,6 @@ import App from './App.vue'
 import { createI18n } from 'vue-i18n'
 import es from './locales/es.json'
 import en from './locales/en.json'
-import MasonryWall from '@yeger/vue-masonry-wall'
 
 const lang = (localStorage.language || 'es').split('-')[0];
 const i18n = createI18n({
