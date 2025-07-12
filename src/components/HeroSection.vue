@@ -1,29 +1,38 @@
 <template>
-  <section class="relative w-full min-h-[calc(100vh-80px)] pt-26 pb-20 flex items-center justify-center bg-transparent overflow-hidden">
+  <section class="relative w-full min-h-[calc(100vh-80px)] pt-10 md:pt-26 pb-20 flex items-center justify-center bg-transparent overflow-hidden">
     <!-- Circuit background decorativo -->
     <div class="absolute inset-0 w-full h-full z-0 pointer-events-none select-none">
       <CircuitBackground />
     </div>
-    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10 flex flex-col-reverse md:flex-row items-center justify-center gap-8 md:gap-20 min-h-[60vh] md:min-h-[60vh] mt-20">
+    <div class="relative z-10 w-full max-w-[1440px] mx-auto px-2 md:px-10 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-20 min-h-[60vh] md:min-h-[60vh] mt-14 md:mt-20">
       <!-- Columna izquierda: texto con fondo glass -->
-      <div class="flex-1 flex flex-col items-center justify-center text-center md:pr-8 animate-fade-in-up">
-        <div class="w-full bg-white/70 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/30 dark:border-white/10 py-8 md:py-10 flex flex-col items-center">
-          <TypewriterTitle
-            :i18n-key="'sections.hero.title'"
-            :subtitle-i18n-key="'sections.hero.subtitle'"
-            :badge="{ icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>`, i18nKey: 'sections.hero.badge' }"
-          />
-          <p class="text-sm md:text-base text-gray-500 dark:text-gray-300 mb-10 max-w-md mx-auto">
+      <div class="flex-1 flex flex-col items-center justify-center text-center md:pr-8 animate-fade-in-up order-1 md:order-none">
+        <div class="w-full bg-white/70 dark:bg-white/10 backdrop-blur-xl rounded-2xl shadow-xl shadow-black/10 border border-white/30 dark:border-white/10 py-10 md:py-12 flex flex-col items-center min-h-[420px] md:min-h-[340px] lg:min-h-[420px]">
+          <!-- Ajuste de min-height para evitar saltos de layout del typewriter -->
+          <div class="w-full flex flex-col items-center justify-center">
+            <TypewriterTitle
+              :i18n-key="'sections.hero.title'"
+              :subtitle-i18n-key="'sections.hero.subtitle'"
+              :badge="{ icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>`, i18nKey: 'sections.hero.badge' }"
+              class="hero-typewriter-minheight"
+              fixedTitleHeight="min-h-[4.5rem] md:min-h-[6.5rem]"
+            />
+          </div>
+          <p class="text-sm md:text-base text-gray-500 dark:text-gray-300 mb-8 max-w-md mx-auto">
             {{ heroDescParts[0] }}<OnServiceAI />{{ heroDescParts[1] }}
           </p>
-          <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center">
-            <a href="#demo" class="group px-7 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-violet-500 to-cyan-400 shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base">{{ t('hero.cta_demo') }}</a>
-            <a href="#usecases" class="group px-7 py-2.5 rounded-xl font-bold text-violet-700 dark:text-cyan-200 bg-white/80 dark:bg-gray-900 border border-violet-200 dark:border-cyan-700 shadow hover:bg-violet-50 dark:hover:bg-gray-800 hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base">{{ t('hero.cta_usecases') }}</a>
+          <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center px-2">
+            <a href="#demo" class="group px-6 md:px-7 py-2.5 rounded-xl font-bold text-white bg-gradient-to-r from-violet-500 to-cyan-400 shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base mx-0 sm:mx-0">
+              {{ t('hero.cta_demo') }}
+            </a>
+            <a href="#usecases" class="group px-6 md:px-7 py-2.5 rounded-xl font-bold text-violet-700 dark:text-cyan-200 bg-white/80 dark:bg-gray-900 border border-violet-200 dark:border-cyan-700 shadow hover:bg-violet-50 dark:hover:bg-gray-800 hover:scale-105 hover:shadow-2xl transition-all duration-200 flex items-center justify-center gap-2 text-base mx-0 sm:mx-0">
+              {{ t('hero.cta_usecases') }}
+            </a>
           </div>
         </div>
       </div>
       <!-- Columna derecha: imagen con glow -->
-      <div class="flex-1 flex items-center justify-center w-full md:w-auto mb-8 md:mb-0 animate-fade-in-up delay-150">
+      <div class="flex-1 flex items-center justify-center w-full md:w-auto mb-8 md:mb-0 animate-fade-in-up delay-150 order-2 md:order-none">
         <div class="relative flex items-center justify-center">
           <!-- Glow/gradiente detrás del celular -->
           <div class="absolute -inset-6 md:-inset-8 rounded-full bg-gradient-to-br from-violet-400/30 via-cyan-300/20 to-white/0 blur-2xl z-0"></div>
@@ -60,5 +69,27 @@ const heroDescParts = t('hero.description').split('{brand}')
 }
 .animate-badge-glow {
   animation: badge-glow 2.2s infinite;
+}
+
+/* Ajuste para el min-height del typewriter para evitar saltos */
+.hero-typewriter-minheight {
+  min-height: 5.5rem;
+}
+@media (min-width: 768px) {
+  .hero-typewriter-minheight {
+    min-height: 7.5rem;
+  }
+}
+
+/* Botones en mobile: margen horizontal y tamaño más armónico */
+@media (max-width: 640px) {
+  .group {
+    width: 100%;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  .flex-col.sm\:flex-row {
+    gap: 0.75rem;
+  }
 }
 </style> 

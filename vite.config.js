@@ -22,7 +22,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           'three': ['three'],
-          'gsap': ['gsap'],
           'vue': ['vue'],
         },
       },
@@ -30,6 +29,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
   },
   optimizeDeps: {
-    include: ['three', 'gsap'],
+    include: ['three'],
   },
 })

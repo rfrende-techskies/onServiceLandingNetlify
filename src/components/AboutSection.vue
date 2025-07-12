@@ -7,7 +7,7 @@
     
     <div class="relative z-10 w-full max-w-[1440px] mx-auto px-2 md:px-10">
       <!-- Header con TypewriterTitle -->
-      <div class="text-center mb-8">
+      <div class="text-center mb-12">
         <TypewriterTitle 
           i18nKey="about.title" 
           subtitleI18nKey="about.subtitle"

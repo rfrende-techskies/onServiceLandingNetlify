@@ -1,14 +1,14 @@
 <template>
-  <div class="code-block-container min-h-[540px] h-[540px]">
-    <div class="code-block-glass code-block-terminal glass-hero-panel min-h-[540px] h-[540px]">
+  <div class="w-full flex flex-col items-stretch justify-stretch h-full min-h-0">
+    <div class="bg-[rgba(24,24,32,0.85)] backdrop-blur-2xl border border-white/30 dark:border-white/10 rounded-2xl shadow-2xl shadow-black/10 w-full h-full min-h-0 flex flex-col p-4 md:p-6 min-h-0 h-full">
       <!-- Tabs mejoradas -->
-      <div class="tabs-bar mb-2">
+      <div class="tabs-bar">
         <span class="tabs-bar-bg"></span>
         <span v-for="tab in tabs" :key="tab.key" :class="['example-tab-underline', tab.key === props.tab ? 'active pointer-events-none cursor-default' : '']" @click="tab.key !== props.tab && setTab(tab.key)">
           {{ tab.label }}
         </span>
       </div>
-      <div class="editor-block min-h-[540px] h-[540px]">
+      <div class="editor-block flex-1 w-full h-full min-h-0 bg-transparent p-0 flex flex-col items-stretch">
         <div v-for="(line, idx) in codeLines" :key="idx" class="editor-line-flex">
           <span class="gutter-line">{{ idx + 1 }}</span>
           <pre class="editor-code-line" v-html="colorizeBlock(line + (showCursor && idx === codeLines.length - 1 ? '<span class=\'editor-cursor\'>|</span>' : ''))"></pre>
@@ -111,46 +111,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.code-block-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  min-width: 0;
-  max-width: 100%;
-  padding: 0;
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-  min-height: 540px;
-  height: 540px;
-}
-.code-block-glass.code-block-terminal {
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  background: rgba(24,24,32,0.85) !important;
-  box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.10), 0 2px 8px 0 rgba(56, 189, 248, 0.08) !important;
-  border: 1.5px solid rgba(139, 92, 246, 0.13) !important;
-  border-radius: 1.2rem;
-  padding: 0.7rem 0.7rem 0.7rem 0.7rem;
-  min-height: 540px;
-  height: 540px;
-  z-index: 10;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  font-size: 15px;
-}
-/* TABS PILL UPGRADE */
 .tabs-bar {
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
   position: relative;
   width: 100%;
+  margin-bottom: 0.3rem;
   min-height: 48px;
-  margin-bottom: 0.5rem;
   background: rgba(40,40,60,0.13);
   border-radius: 1.2rem 1.2rem 0 0;
   box-shadow: 0 2px 12px 0 rgba(124,58,237,0.04);
@@ -238,14 +206,14 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
-  background: rgba(24,24,32,0.55);
+  background: transparent;
   border-radius: 1.2rem;
-  box-shadow: 0 8px 32px 0 rgba(124, 58, 237, 0.08), 0 2px 8px 0 rgba(56, 189, 248, 0.06);
-  padding: 1.2rem 1.2rem 1.1rem 1.2rem;
+  box-shadow: none;
+  padding: 0;
   color: #e5e7eb;
   backdrop-filter: blur(16px) saturate(1.1);
   -webkit-backdrop-filter: blur(16px) saturate(1.1);
-  border: 1.5px solid rgba(139, 92, 246, 0.13);
+  border: none;
   animation: fadeSlideIn 0.9s cubic-bezier(.4,1.6,.6,1);
   overflow-y: auto;
   height: 100%;
@@ -330,56 +298,26 @@ onBeforeUnmount(() => {
   51%, 100% { opacity: 0; }
 }
 @media (max-width: 900px) {
-  .code-block-glass.code-block-terminal {
-    min-height: 140px;
-    height: auto;
-    max-height: none;
+  .bg-\[rgba\(24\,24\,32\,0\.85\)\] {
+    min-height: 470px !important;
+    height: 470px !important;
+  }
+  .prompt-glass-inner {
     padding: 0.8rem 0.7rem;
+    min-height: 420px;
+    height: 420px;
   }
   .editor-block {
     font-size: 15px !important;
     padding: 0.8rem 0.7rem;
   }
 }
-@media (min-width: 768px) {
-  .code-block-glass.code-block-terminal {
-    padding-top: 1.1rem;
-    padding-bottom: 2.5rem;
-  }
-}
 @media (max-width: 768px) {
-  .code-block-container {
-    min-width: 0 !important;
-    max-width: 99vw !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    justify-content: flex-start !important;
-    align-items: center !important;
-    min-height: 0 !important;
-    height: 420px !important;
-    max-height: 420px !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  .code-block-glass.code-block-terminal {
-    min-width: 0 !important;
-    max-width: 99vw !important;
-    width: 100% !important;
+  .prompt-glass-inner {
     padding: 0.6rem 0.3rem 0.7rem 0.3rem !important;
     min-height: 0 !important;
     height: 100% !important;
     max-height: 100% !important;
-    margin: 0 auto !important;
-    font-size: 13px !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  .terminal-bar {
-    min-height: 36px !important;
-    height: 36px !important;
-    max-height: 36px !important;
-    flex-shrink: 0 !important;
-    flex-grow: 0 !important;
   }
   .editor-block {
     font-size: 13px !important;
@@ -411,12 +349,6 @@ onBeforeUnmount(() => {
     line-height: 1.25 !important;
   }
 }
-.code-block-container, .editor-block, .editor-line-flex, .editor-code-line {
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-  text-align: left !important;
-}
 pre.editor-code-line {
   font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
   font-size: clamp(14px, 1.1vw, 16px);
@@ -428,5 +360,13 @@ pre.editor-code-line {
   border: none !important;
   margin: 0;
   padding: 0;
+}
+.editor-line-flex:first-child {
+  margin-top: 33px;
+}
+@media (max-width: 768px) {
+  .editor-line-flex:first-child {
+    margin-top: 5px;
+  }
 }
 </style> 

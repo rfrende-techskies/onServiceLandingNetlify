@@ -5,7 +5,7 @@
       <ParticleBackground />
     </div>
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
+      <div class="text-center mb-20">
         <TypewriterTitle
           :i18n-key="'sections.clients.title'"
           :subtitle-i18n-key="'sections.clients.subtitle'"

@@ -7,7 +7,7 @@
     
     <div class="relative z-10 w-full max-w-[1440px] mx-auto px-6 md:px-10">
       <!-- Header con Typewriter -->
-      <div class="text-center mb-16">
+      <div class="text-center mb-20">
         <TypewriterTitle
           :i18n-key="'sections.team.title'"
           :subtitle-i18n-key="'sections.team.subtitle'"
@@ -18,7 +18,7 @@
         />
         
         <!-- Descripción adicional -->
-        <p class="mt-8 text-lg text-gray-600 dark:text-gray-300 max-w-5xl md:text-left md:mx-auto md:justify-center leading-relaxed md:leading-loose">
+        <p class="mt-10 text-lg text-gray-600 dark:text-gray-300 max-w-5xl md:text-left md:mx-auto md:justify-center leading-relaxed md:leading-loose">
           {{ teamDescParts[0] }}<OnServiceAI />{{ teamDescParts[1] }}
         </p>
       </div>
