@@ -202,6 +202,7 @@
   },
   "brand": "OnService.",
   "brand_ia": "AI",
+  "teamBrandLine": "Each member of our team brings a unique perspective, combining technological innovation with practical understanding of airlines' operational and customer service needs. {brand}",
   "sections": {
     "hero": {
       "title": "The new generation of AI for your business",
@@ -231,8 +232,8 @@
     },
     "team": {
       "title": "Our Team",
-      "subtitle": "Our success lies in the experience and passion of our team. At {brand}, we bring together brilliant minds with deep expertise in Artificial Intelligence, advanced software development, and specialized knowledge of the aviation sector",
-      "description": "Each member of our team brings a unique perspective, combining technological innovation with practical understanding of airlines' operational and customer service needs ",
+      "subtitle": "Our success lies in the experience and passion of our team. At {brand} we bring together brilliant minds with deep expertise in Artificial Intelligence, advanced software development, and specialized knowledge of the aviation sector",
+      "description": "Each member of our team brings a unique perspective, combining technological innovation with practical understanding of airlines' operational and customer service needs. {brand}",
       "badge": "Human Talent",
       "members": [
         {
@@ -284,5 +285,6 @@
       "badge": "Accessibility"
     }
   },
+  "cta_brand_line": "Discover how <brand /> can transform your product in 30 days",
   "footer_copyright": "© 2025 Kiut. All rights reserved."
 } 

@@ -15,7 +15,7 @@
               :subtitle-i18n-key="'sections.hero.subtitle'"
               :badge="{ icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>`, i18nKey: 'sections.hero.badge' }"
               class="hero-typewriter-minheight"
-              fixedTitleHeight="min-h-[4.5rem] md:min-h-[6.5rem]"
+              fixedTitleHeight="min-h-[5.2rem] md:min-h-[7.2rem]"
             />
           </div>
           <p class="text-sm md:text-base text-gray-500 dark:text-gray-300 mb-8 max-w-md mx-auto">

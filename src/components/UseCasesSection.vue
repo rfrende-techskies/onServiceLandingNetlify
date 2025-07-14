@@ -11,6 +11,7 @@
           :i18n-key="'sections.usecases.title'"
           :subtitle-i18n-key="'sections.usecases.subtitle'"
           :badge="{ icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>`, i18nKey: 'sections.usecases.badge' }"
+          fixed-title-height="min-h-[5.2rem] md:min-h-[7.2rem]"
         />
       </div>
       <p class="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">

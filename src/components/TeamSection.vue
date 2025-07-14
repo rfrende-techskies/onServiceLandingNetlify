@@ -15,12 +15,34 @@
             icon: `<svg class='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z'/></svg>`, 
             i18nKey: 'sections.team.badge' 
           }"
-        />
+          align="center"
+          max-width="max-w-3xl"
+          margin-bottom="mb-10"
+          subtitle-margin-top="mt-6"
+          subtitle-position="bottom"
+        >
+          <template #brand>
+            <OnServiceAI />
+          </template>
+        </TypewriterTitle>
         
         <!-- Descripción adicional -->
-        <p class="mt-10 text-lg text-gray-600 dark:text-gray-300 max-w-5xl md:text-left md:mx-auto md:justify-center leading-relaxed md:leading-loose">
-          {{ teamDescParts[0] }}<OnServiceAI />{{ teamDescParts[1] }}
-        </p>
+        <template v-if="teamDescParts.length === 2">
+          <p class="mt-8 text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed md:leading-loose text-center">
+            {{ teamDescParts[0] }}
+          </p>
+          <div class="flex justify-center my-2">
+            <OnServiceAI />
+          </div>
+          <p class="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed md:leading-loose text-center">
+            {{ teamDescParts[1] }}
+          </p>
+        </template>
+        <template v-else>
+          <p class="mt-8 text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed md:leading-loose text-center">
+            {{ t('teamBrandLine') }}
+          </p>
+        </template>
       </div>
 
       <!-- Grid de miembros del equipo -->
@@ -118,7 +140,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { useI18n, I18nT } from 'vue-i18n';
 import ParticleBackground from './ParticleBackground.vue';
 import TypewriterTitle from './TypewriterTitle.vue';
 import teamData from '../data/team.js';
@@ -158,7 +180,7 @@ const tagKeyShort = (tagKey) => {
   return shortMap[t(tagKey)] || t(tagKey);
 };
 
-const teamDescParts = t('sections.team.description').split('{brand}')
+const teamDescParts = t('teamBrandLine').split('{brand}');
 </script>
 
 <style scoped>

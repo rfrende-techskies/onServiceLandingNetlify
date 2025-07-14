@@ -1,20 +1,37 @@
 <template>
-  <div class="typewriter-title-wrapper text-center mb-8 relative">
+  <div :class="[
+    'typewriter-title-wrapper',
+    align === 'center' ? 'text-center' : align === 'left' ? 'text-left' : 'text-right',
+    marginBottom,
+    'relative',
+    maxWidth,
+    align === 'center' ? 'mx-auto' : align === 'right' ? 'ml-auto' : ''
+  ]">
     <div v-if="badgeText" class="badge-row flex justify-center mb-6">
       <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full badge-gradient text-white text-sm font-semibold animate-badge-glow">
         <span v-if="badgeIcon" v-html="badgeIcon" class="w-4 h-4"></span>
         <span>{{ badgeText }}</span>
       </div>
     </div>
-    <!-- Wrapper con min-height fijo solo si se pasa la prop -->
+    <div v-if="subtitleText && subtitlePosition === 'top'" :class="['typewriter-subtitle', subtitleMarginTop]">
+      <i18n-t :keypath="subtitleI18nKey">
+        <template #brand>
+          <slot name="brand"></slot>
+        </template>
+      </i18n-t>
+    </div>
     <div :class="['title-container relative', fixedTitleHeight ? fixedTitleHeight : '']">
       <h2 class="typewriter-title text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-violet-500 to-cyan-400 bg-clip-text text-transparent leading-tight">
         <span class="title-text">{{ displayedTitle }}</span>
         <span class="typewriter-cursor" :class="{ 'invisible': !showCursor }" aria-hidden="true">|</span>
       </h2>
     </div>
-    <p v-if="subtitleText" class="typewriter-subtitle text-xl text-muted-foreground max-w-2xl mx-auto mt-4">
-      {{ subtitleText }}
+    <p v-if="subtitleText && subtitlePosition === 'bottom'" :class="['typewriter-subtitle', subtitleMarginTop]">
+      <i18n-t :keypath="subtitleI18nKey">
+        <template #brand>
+          <slot name="brand"></slot>
+        </template>
+      </i18n-t>
     </p>
   </div>
 </template>
@@ -27,7 +44,12 @@ const props = defineProps({
   i18nKey: { type: String, required: true },
   subtitleI18nKey: { type: String, default: '' },
   badge: { type: Object, default: null }, // { icon, text, i18nKey }
-  fixedTitleHeight: { type: String, default: '' } // ej: 'min-h-[4.5rem] md:min-h-[6.5rem]'
+  fixedTitleHeight: { type: String, default: '' },
+  align: { type: String, default: 'center', validator: v => ['center', 'left', 'right'].includes(v) },
+  maxWidth: { type: String, default: 'max-w-2xl' },
+  marginBottom: { type: String, default: 'mb-8' },
+  subtitleMarginTop: { type: String, default: 'mt-4' },
+  subtitlePosition: { type: String, default: 'bottom', validator: v => ['top', 'bottom'].includes(v) },
 });
 
 const { t } = useI18n();

@@ -1,0 +1,21 @@
+{
+  "name": "OnService.AI",
+  "short_name": "OnServiceAI",
+  "description": "A solution powered by artificial intelligence that optimizes sales and customer service for airlines.",
+  "start_url": "https://www.onservice.ai/",
+  "display": "standalone",
+  "background_color": "#181C23",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "https://www.onservice.ai/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://www.onservice.ai/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+} 
