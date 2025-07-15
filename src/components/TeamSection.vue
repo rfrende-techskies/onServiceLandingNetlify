@@ -168,19 +168,20 @@ const handleImageLoad = (idx) => {
 // Función para acortar los textos de los tags si es necesario
 const tagKeyShort = (tagKey) => {
   const shortMap = {
-    'Cloud Architecture': 'Cloud',
-    'Systems Integration': 'Integration',
-    'Digital Platforms': 'Platforms',
-    'AI & NLP': 'AI & NLP',
-    'IT Leadership': 'Leadership',
-    'Aviation': 'Aviation',
-    'UX/UI Design': 'UX/UI',
-    'Conversational Bots': 'Bots',
+    'sections.team.members.0.tag1': 'AI & NLP',
+    'sections.team.members.0.tag2': 'Leadership',
+    'sections.team.members.0.tag3': 'Aviation',
+    'sections.team.members.1.tag1': 'Cloud',
+    'sections.team.members.1.tag2': 'Integration',
+    'sections.team.members.1.tag3': 'Aviation',
+    'sections.team.members.2.tag1': 'UX/UI',
+    'sections.team.members.2.tag2': 'Bots',
+    'sections.team.members.2.tag3': 'Platforms',
   };
-  return shortMap[t(tagKey)] || t(tagKey);
+  return shortMap[tagKey] || t(tagKey);
 };
 
-const teamDescParts = t('teamBrandLine').split('{brand}');
+const teamDescParts = computed(() => t('teamBrandLine').split('{brand}'));
 </script>
 
 <style scoped>

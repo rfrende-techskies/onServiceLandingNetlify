@@ -77,6 +77,8 @@
       "satisfaction": "Mejora del 95% en la satisfacción del cliente",
       "response_time": "Tiempo de respuesta"
     },
+    "request_demo": "Solicitar demostración personalizada",
+    "discover_transform": "Descubre cómo {brand} puede transformar tu producto en 30 días",
     "channels_title": "Integración con todos tus canales",
     "channels": {
       "whatsapp": "WhatsApp",
@@ -196,7 +198,6 @@
       }
     ],
     "cta": "Solicitar demostración personalizada",
-    "cta_desc": "Descubre cómo {brand} puede transformar tu producto en 30 días",
     "less": "Ver menos",
     "more": "Ver más"
   },
@@ -207,7 +208,7 @@
     "hero": {
       "title": "La nueva generación de IA para tu empresa",
       "subtitle": "Soluciones de inteligencia artificial para impulsar ventas, soporte y operaciones.",
-      "badge": "Innovación en IA"
+      "badge": "Revolución IA en Aviación"
     },
     "demo": {
       "title": "Prueba la IA en acción",

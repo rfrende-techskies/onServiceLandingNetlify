@@ -110,10 +110,15 @@
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
           </svg>
-          Request personalized demo
+          {{ t('usecases.request_demo') }}
         </div>
         <p class="text-gray-600 dark:text-gray-300 mt-4 text-sm">
-          Discover how <span class="font-bold">OnService.<span class="text-violet-500">AI</span></span> can transform your product in 30 days
+          <template v-if="discoverTransformParts.length === 2">
+            {{ discoverTransformParts[0] }}<OnServiceAI />{{ discoverTransformParts[1] }}
+          </template>
+          <template v-else>
+            {{ t('usecases.discover_transform') }}
+          </template>
         </p>
       </div>
     </div>
@@ -121,14 +126,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ParticleBackground from './ParticleBackground.vue'
 import TypewriterTitle from './TypewriterTitle.vue'
+import OnServiceAI from './OnServiceAI.vue'
 
 const { t, tm } = useI18n()
 
 const expandedIdx = ref(null)
+const discoverTransformParts = computed(() => {
+  const text = t('usecases.discover_transform')
+  console.log('UseCases discover_transform:', text)
+  return text.split('{brand}')
+})
 function toggleExpand(idx) {
   if (expandedIdx.value === idx) {
     expandedIdx.value = null

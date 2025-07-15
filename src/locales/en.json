@@ -77,6 +77,8 @@
       "satisfaction": "95% customer satisfaction improvement",
       "response_time": "Response time"
     },
+    "request_demo": "Request personalized demo",
+    "discover_transform": "Discover how {brand} can transform your product in 30 days",
     "channels_title": "Integration with all your channels",
     "channels": {
       "whatsapp": "WhatsApp",
@@ -196,7 +198,6 @@
       }
     ],
     "cta": "Request personalized demo",
-    "cta_desc": "Discover how {brand} can transform your product in 30 days",
     "less": "Show less",
     "more": "Show more"
   },
@@ -207,7 +208,7 @@
     "hero": {
       "title": "The new generation of AI for your business",
       "subtitle": "AI solutions to boost sales, support, and operations.",
-      "badge": "AI Innovation"
+      "badge": "AI Revolution in Aviation"
     },
     "demo": {
       "title": "Try AI in Action",
