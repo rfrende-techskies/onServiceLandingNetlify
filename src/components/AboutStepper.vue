@@ -105,13 +105,13 @@
                 </div>
                 
                 <div class="text-left">
-                  <p class="text-base leading-relaxed text-gray-700 dark:text-gray-300">
+                  <p class="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
                     {{ step.descriptionParts()[0] }}
                   </p>
                   <span
                     v-if="step.badge()"
                     :class="[
-                      'inline-block mt-3 px-3 py-1 rounded-full text-xs font-semibold',
+                      'inline-block mt-3 px-3 py-1 rounded-full text-sm font-semibold',
                       idx % 2 === 0 ? 'bg-violet-100 text-violet-700' : 'bg-cyan-100 text-cyan-700'
                     ]"
                   >
@@ -200,7 +200,7 @@
                   <h3 class="text-xl font-bold mb-3 text-violet-700 dark:text-cyan-300">
                     {{ step.title() }}
                   </h3>
-                  <p class="text-gray-700 dark:text-gray-300 text-base leading-relaxed">
+                  <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
                     {{ step.descriptionParts()[0] }}
                   </p>
                 </div>
@@ -289,7 +289,7 @@ const progressHeight = computed(() => {
 
 // Responsive IMAGE_VISUAL_OFFSET
 const IMAGE_VISUAL_OFFSET = computed(() =>
-  window.innerWidth < 768 ? 120 : (activeStep.value === 3 ? 200 : 300)
+  window.innerWidth < 768 ? 120 : (activeStep.value === 3 ? 200 : 280)
 );
 
 // Posiciones de los iconos decorativos por step (puedes tunear y agregar más)
@@ -360,14 +360,14 @@ function circleIconStyle(i) {
 
 function handleDesktopScroll() {
   if (window.innerWidth < 768) return;
-  // 1. Visibilidad de la imagen (ajustado para aparecer/desaparecer más tarde)
+  // 1. Visibilidad de la imagen (ajustado para aparecer/desaparecer más temprano)
   const viewportCenter = window.scrollY + window.innerHeight / 2;
   if (aboutSection.value) {
     const sectionRect = aboutSection.value.getBoundingClientRect();
     const sectionTop = window.scrollY + sectionRect.top;
     const sectionBottom = sectionTop + sectionRect.height;
     const sectionHeight = sectionRect.height;
-    const min = sectionTop + sectionHeight * 0.25;
+    const min = sectionTop + sectionHeight * 0.15;
     const max = sectionTop + sectionHeight * 0.98;
     showImage.value = viewportCenter > min && viewportCenter < max;
   }
@@ -527,23 +527,23 @@ const imageLoaded = ref(false);
 }
 .grow-desc {
   animation: growFontDesc 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  font-size: 1.5rem !important;
+  font-size: 1.7rem !important;
   opacity: 1;
   line-height: 1.7;
 }
 .shrink-desc {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   opacity: 0.7;
   transition: font-size 0.5s, opacity 0.5s;
   line-height: 1.6;
 }
 @keyframes growFontDesc {
   0% {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     opacity: 0.7;
   }
   100% {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     opacity: 1;
   }
 }
