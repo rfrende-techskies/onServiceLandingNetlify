@@ -44,6 +44,8 @@
           <!-- Glow/gradiente detrás del celular -->
           <div class="absolute -inset-6 md:-inset-8 rounded-full bg-gradient-to-br from-violet-400/30 via-cyan-300/20 to-white/0 blur-2xl z-0"></div>
           <img src="/hero-mano-cel.png" alt="Mockup celular IA" class="relative w-[320px] md:w-[400px] max-w-full h-auto object-contain rounded-3xl shadow-2xl shadow-black/20 z-10" />
+          <!-- Pelotas flotantes de redes sociales -->
+          <FloatingSocialBalls />
         </div>
       </div>
     </div>
@@ -56,6 +58,7 @@ import { computed } from 'vue'
 import CircuitBackground from './CircuitBackground.vue'
 import TypewriterTitle from './TypewriterTitle.vue'
 import OnServiceAI from './OnServiceAI.vue'
+import FloatingSocialBalls from './FloatingSocialBalls.vue'
 const { t } = useI18n()
 const heroDescParts = computed(() => {
   const text = t('hero.description')
